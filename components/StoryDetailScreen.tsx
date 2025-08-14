@@ -107,6 +107,14 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   const thumbnailImage = story?.media.thumbnailImage;
   const allImages = storyImages.length > 0 ? storyImages : (thumbnailImage ? [thumbnailImage] : ['/images/sample.png']);
   
+  console.log('StoryDetailScreen Debug:', {
+    storyId,
+    storyImages,
+    thumbnailImage,
+    allImages,
+    storyMedia: story?.media
+  });
+  
   const galleryImages = allImages.map((url, index) => ({
     id: index,
     url: url,
@@ -355,12 +363,30 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                   className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
                     currentImageIsLocked ? 'filter blur-[6px]' : ''
                   }`}
-                  style={{ backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/sample.png'}')` }}
+                  style={{ 
+                    backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/sample.png'}')`,
+                    backgroundColor: '#2a2a2a' // Fallback background color
+                  }}
                   onError={(e) => {
+                    console.log('Image load error, using fallback');
                     const target = e.target as HTMLElement;
                     target.style.backgroundImage = "url('/images/sample.png')";
                   }}
-                />
+                >
+                  {/* Additional fallback: show sample.png as img if background fails */}
+                  {(!galleryImages[currentImageIndex]?.url || galleryImages[currentImageIndex]?.url === '/images/sample.png') && (
+                    <img 
+                      src="/images/sample.png" 
+                      alt="Story image" 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.log('Fallback image also failed to load');
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                </div>
                 
                 {/* Lock Overlay - Only show when current image is locked */}
                 {currentImageIsLocked && (
