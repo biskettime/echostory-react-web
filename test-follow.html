@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팔로우 테스트</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1b1b; color: white; }
+        .container { max-width: 600px; margin: 0 auto; }
+        button { background: #dc5903; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #e6850e; }
+        .log { background: #2a2b2b; padding: 10px; margin: 10px 0; border-radius: 5px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>팔로우 테스트</h1>
+        
+        <div>
+            <button onclick="checkFollowedCreators()">팔로우 상태 확인</button>
+            <button onclick="addFollowedCreator('1')">크리에이터 1 팔로우</button>
+            <button onclick="addFollowedCreator('2')">크리에이터 2 팔로우</button>
+            <button onclick="addFollowedCreator('3')">크리에이터 3 팔로우</button>
+            <button onclick="clearFollowedCreators()">팔로우 초기화</button>
+        </div>
+        
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+            console.log(message);
+        }
+
+        function checkFollowedCreators() {
+            const followedCreators = JSON.parse(localStorage.getItem('followedCreators') || '[]');
+            log('현재 팔로우한 크리에이터: ' + JSON.stringify(followedCreators));
+        }
+
+        function addFollowedCreator(creatorId) {
+            const followedCreators = JSON.parse(localStorage.getItem('followedCreators') || '[]');
+            if (!followedCreators.includes(creatorId)) {
+                followedCreators.push(creatorId);
+                localStorage.setItem('followedCreators', JSON.stringify(followedCreators));
+                log('크리에이터 ' + creatorId + ' 팔로우 추가됨');
+            } else {
+                log('크리에이터 ' + creatorId + '는 이미 팔로우 중');
+            }
+            checkFollowedCreators();
+        }
+
+        function clearFollowedCreators() {
+            localStorage.setItem('followedCreators', JSON.stringify([]));
+            log('팔로우 목록 초기화됨');
+            checkFollowedCreators();
+        }
+
+        // 페이지 로드 시 현재 상태 확인
+        window.onload = function() {
+            log('페이지 로드됨');
+            checkFollowedCreators();
+        };
+    </script>
+</body>
+</html>
+

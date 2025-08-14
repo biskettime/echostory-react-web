@@ -1,0 +1,9 @@
+<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="150" height="150" fill="#4A90E2" rx="8"/>
+<circle cx="75" cy="60" r="25" fill="#E6F3FF"/>
+<circle cx="68" cy="55" r="3" fill="#000"/>
+<circle cx="82" cy="55" r="3" fill="#000"/>
+<path d="M63 65 Q75 72 87 65" stroke="#1E90FF" strokeWidth="2" fill="none"/>
+<rect x="50" y="85" width="50" height="50" rx="8" fill="#87CEEB"/>
+<text x="75" y="130" text-anchor="middle" fill="#fff" fontSize="10">Profile 2</text>
+</svg>
