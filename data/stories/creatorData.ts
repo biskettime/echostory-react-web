@@ -58,7 +58,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_003',
     handle: '@ballet_dreams',
     displayName: 'BalletDreams',
-    profileImage: '/images/thumbnail3.svg',
+    // profileImage 제거하여 creator.png 테스트
     bio: '전직 발레리나 출신 작가. 예술과 완벽주의, 그리고 인간의 취약함에 대한 이야기를 씁니다.',
     joinDate: '2023-06-10T00:00:00Z',
     stats: {
