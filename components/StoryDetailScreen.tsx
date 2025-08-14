@@ -114,6 +114,14 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     allImages,
     storyMedia: story?.media
   });
+
+  // Clear localStorage cache if old data detected
+  if (thumbnailImage && thumbnailImage.includes('character-')) {
+    console.log('Detected old character image data, clearing localStorage...');
+    localStorage.removeItem('storyDatabase');
+    localStorage.removeItem('sampleStoriesInitialized');
+    window.location.reload();
+  }
   
   const galleryImages = allImages.map((url, index) => ({
     id: index,
