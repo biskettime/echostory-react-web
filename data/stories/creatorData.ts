@@ -6,7 +6,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_user',
     handle: '@creator_user',
     displayName: 'User Creator',
-    profileImage: '/images/story-thumbnail-6.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '사용자가 생성한 스토리의 기본 크리에이터입니다.',
     joinDate: '2024-01-01T00:00:00Z',
     stats: {
@@ -21,7 +21,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_001',
     handle: '@stupid_dog',
     displayName: 'StupidDog',
-    profileImage: '/images/thumbnail1.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '일상의 소소한 이야기를 좋아하는 창작자입니다. 완벽하지 않은 캐릭터들의 인간적인 면을 그리는 것을 즐깁니다.',
     joinDate: '2023-05-15T00:00:00Z',
     stats: {
@@ -40,7 +40,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_002',
     handle: '@camel_yK1q',
     displayName: 'CamelWriter',
-    profileImage: '/images/thumbnail2.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '다양한 문화와 언어에 관심이 많은 작가입니다. 특히 일본-한국 문화 교류 스토리를 전문으로 합니다.',
     joinDate: '2023-08-22T00:00:00Z',
     stats: {
@@ -76,7 +76,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_004',
     handle: '@book_lover',
     displayName: 'BookLover',
-    profileImage: '/images/story-thumbnail-1.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '고전 문학과 신비로운 이야기를 사랑하는 도서관 사서. 지식과 비밀이 얽힌 스토리를 전문으로 합니다.',
     joinDate: '2023-04-03T00:00:00Z',
     stats: {
@@ -94,7 +94,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_005',
     handle: '@coffee_dreams',
     displayName: 'CoffeeDreams',
-    profileImage: '/images/story-thumbnail-2.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '카페 사장 출신 작가. 따뜻한 일상과 소소한 행복, 그리고 꿈을 향한 여정을 그립니다.',
     joinDate: '2023-07-18T00:00:00Z',
     stats: {
@@ -113,7 +113,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_006',
     handle: '@pixel_queen',
     displayName: 'PixelQueen',
-    profileImage: '/images/story-thumbnail-3.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '프로게이머 출신 스토리텔러. 게임 문화와 e스포츠, 그리고 디지털 세대의 이야기를 다룹니다.',
     joinDate: '2023-09-05T00:00:00Z',
     stats: {
@@ -132,7 +132,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_007',
     handle: '@melody_heart',
     displayName: 'MelodyHeart',
-    profileImage: '/images/story-thumbnail-4.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '클래식 음악을 사랑하는 작가. 음악가들의 내면과 예술적 갈등을 섬세하게 그려냅니다.',
     joinDate: '2023-03-12T00:00:00Z',
     stats: {
@@ -150,7 +150,7 @@ const creators: CreatorInfo[] = [
     id: 'creator_008',
     handle: '@wanderlust_girl',
     displayName: 'WanderlustGirl',
-    profileImage: '/images/story-thumbnail-5.svg',
+    // profileImage 제거 - creator.png 사용
     bio: '세계 여행가이자 블로거. 여행과 모험, 그리고 자유로운 영혼의 이야기를 전합니다.',
     joinDate: '2023-10-01T00:00:00Z',
     stats: {
