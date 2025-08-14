@@ -68,8 +68,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-jiyeon.svg',
-      storyImages: ['/images/character-jiyeon.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -146,8 +146,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-yuki.svg',
-      storyImages: ['/images/character-yuki.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -224,8 +224,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-suyeon.svg',
-      storyImages: ['/images/character-suyeon.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -301,8 +301,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-seoyeon.svg',
-      storyImages: ['/images/character-seoyeon.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -378,8 +378,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-mina.svg',
-      storyImages: ['/images/character-mina.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -455,8 +455,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-hayoung.svg',
-      storyImages: ['/images/character-hayoung.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -532,8 +532,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-jiwon.svg',
-      storyImages: ['/images/character-jiwon.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -609,8 +609,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/character-sohee.svg',
-      storyImages: ['/images/character-sohee.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -685,8 +685,8 @@ CEO로서의 책임감과 개인적인 감정 사이에서 갈등하고 있다.`
     },
     
     media: {
-      thumbnailImage: '/images/character-minjun.svg',
-      storyImages: ['/images/character-minjun.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -762,8 +762,8 @@ CEO로서의 책임감과 개인적인 감정 사이에서 갈등하고 있다.`
     },
     
     media: {
-      thumbnailImage: '/images/character-jihoon.svg',
-      storyImages: ['/images/character-jihoon.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
@@ -839,8 +839,8 @@ CEO로서의 책임감과 개인적인 감정 사이에서 갈등하고 있다.`
     },
     
     media: {
-      thumbnailImage: '/images/character-seungho.svg',
-      storyImages: ['/images/character-seungho.svg'],
+      thumbnailImage: '/images/sample.png',
+      storyImages: ['/images/sample.png'],
       backgroundMusic: undefined
     },
     
