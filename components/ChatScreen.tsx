@@ -87,14 +87,14 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     
     // Initialize chat session
     if (story && storyId) {
-      console.log('ChatScreen - 채팅 세션 초기화 시작');
+      console.log('ChatScreen - Chat session initialization started');
       const session = getOrCreateChatSession(
         storyId,
         story.content.characterName,
         story.media.thumbnailImage
       );
       setCurrentChatSession(session);
-      console.log('ChatScreen - 채팅 세션 생성됨:', session);
+      console.log('ChatScreen - Chat session created:', session);
       
       // Load existing messages from session if any
       if (session.messages.length > 0) {
@@ -108,30 +108,30 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
         
         // Replace initial messages with loaded ones
         setMessages(loadedMessages);
-        console.log('ChatScreen - 기존 메시지 로드됨:', loadedMessages.length, '개');
+        console.log('ChatScreen - Existing messages loaded:', loadedMessages.length, 'messages');
         
         // Mark messages as read
         markChatAsRead(session.id);
       }
     } else {
-      console.error('ChatScreen - 스토리 데이터가 없습니다. storyId:', storyId, 'story:', story);
+      console.error('ChatScreen - No story data found. storyId:', storyId, 'story:', story);
     }
   }, [storyId, story]);
   
-  // 스토리가 없으면 에러 화면 표시
+  // Show error screen if no story
   if (!story) {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-[#1a1b1b] text-white p-8">
-        <h2 className="text-xl font-bold mb-4">스토리를 찾을 수 없습니다</h2>
+        <h2 className="text-xl font-bold mb-4">Story Not Found</h2>
         <p className="text-gray-400 mb-6 text-center">
-          요청하신 스토리 (ID: {storyId})를 찾을 수 없습니다.<br/>
-          스토리가 삭제되었거나 존재하지 않을 수 있습니다.
+          The requested story (ID: {storyId}) could not be found.<br/>
+          The story may have been deleted or does not exist.
         </p>
         <button
           onClick={onBack}
           className="bg-[#dc5903] text-white px-6 py-2 rounded-md hover:bg-[#e6850e] transition-colors"
         >
-          돌아가기
+          Go Back
         </button>
       </div>
     );
@@ -178,7 +178,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   // Initialize messages with narration from story data
   const [messages, setMessages] = useState<Message[]>(() => {
     const initialNarration = story?.startSituation?.startingSituation || 
-      `${characterName}과의 만남이 시작됩니다.`;
+      `Your encounter with ${characterName} begins.`;
     
     return [
       {
@@ -250,13 +250,13 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     // For now, return a generic response
     // TODO: Implement character-specific responses based on story data
     const genericResponses = [
-      "그렇게 생각하시는군요.",
-      "흥미로운 말씀이네요.",
-      "더 자세히 말씀해 주시겠어요?",
-      "그런 일이 있었군요.",
-      "어떻게 생각하세요?",
-      "정말 그런가요?",
-      "이해합니다."
+      "I see what you mean.",
+      "That's interesting.",
+      "Could you tell me more about that?",
+      "That must have been quite an experience.",
+      "What do you think about that?",
+      "Is that really so?",
+      "I understand."
     ];
     return genericResponses[Math.floor(Math.random() * genericResponses.length)];
   }, []);
@@ -434,7 +434,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const handleVoiceSelect = useCallback((voiceName: string) => {
     console.log('Voice selected:', voiceName);
     setCurrentVoice(voiceName);
-    // 보이스 선택 후 채팅 세팅으로 돌아가기
+    // Return to chat settings after voice selection
     setShowVoiceSettings(false);
     setShowChatSettings(true);
   }, []);
@@ -611,7 +611,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           <span className={`text-[12px] font-medium whitespace-nowrap transition-colors duration-200 ${
             isStoryMode ? 'text-white' : 'text-[rgba(255,255,255,0.7)]'
           }`}>
-            소설 모드
+            Story Mode
           </span>
           
           {/* Ant Design Style Switch */}

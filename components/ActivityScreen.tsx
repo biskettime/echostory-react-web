@@ -66,7 +66,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   const [realChatSessions, setRealChatSessions] = useState<ChatSession[]>([]);
   const [likedStories, setLikedStories] = useState<any[]>([]);
   const [favoritedStories, setFavoritedStories] = useState<any[]>([]);
-  // 크리에이터 데이터는 이제 useState로 관리됩니다
+  // Creator data is now managed with useState
   const [creators, setCreators] = useState<Creator[]>([]);
 
   // Load real chat sessions
@@ -105,19 +105,19 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     }
   }, [activeTab]);
 
-  // 실제 크리에이터 데이터 로드
+  // Load actual creator data
   useEffect(() => {
     const loadCreators = () => {
       try {
         const allCreators = getAllCreators();
         const mappedCreators: Creator[] = allCreators.slice(0, 3).map((creator, index) => ({
-          id: index + 1, // ActivityScreen용 숫자 ID
+          id: index + 1, // Numeric ID for ActivityScreen
           name: creator.displayName,
           profileImage: creator.profileImage || "/images/thumbnail1.svg",
           bio: creator.bio || "No creator description available.",
           specialties: creator.badges || ["General"],
           followerCount: creator.stats.followers,
-          characterCount: Math.floor(Math.random() * 50) + 10, // 임시 데이터
+          characterCount: Math.floor(Math.random() * 50) + 10, // Temporary data
           storyCount: creator.stats.totalStories,
           isFollowing: false,
           followedDate: undefined,
@@ -253,9 +253,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     
     console.log('Creator clicked:', creator.name, 'Numeric ID:', creator.id, 'Actual ID:', actualCreatorId);
     
-    // Creator를 CreatorInfo로 변환
+    // Convert Creator to CreatorInfo
     const creatorInfo = {
-      id: actualCreatorId || creator.id.toString(), // 실제 크리에이터 ID 사용
+      id: actualCreatorId || creator.id.toString(), // Use actual creator ID
       handle: `@${creator.name.toLowerCase().replace(/\s+/g, '_')}`,
       displayName: creator.name,
       profileImage: creator.profileImage,
@@ -486,7 +486,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
 
   const handleTabChange = (tab: ActivityTab) => {
     setActiveTab(tab);
-    // 탭 변경 시 선택된 앨범 초기화
+    // Reset selected album when tab changes
     if (tab !== 'album') {
       setSelectedAlbum(null);
     }
@@ -498,27 +498,27 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   };
 
   const handleRemoveFavorite = (characterId: number, event: React.MouseEvent) => {
-    event.stopPropagation(); // 부모 클릭 이벤트 방지
+    event.stopPropagation(); // Prevent parent click event
     // TODO: Implement actual favorite removal logic
     console.log('Remove favorite:', characterId);
   };
 
   const handleFollowToggle = (creatorId: number, event: React.MouseEvent) => {
-    event.stopPropagation(); // 부모 클릭 이벤트 방지
+    event.stopPropagation(); // Prevent parent click event
     
     console.log('Follow toggle clicked:', creatorId);
     
-    // 크리에이터 배열에서 해당 크리에이터 찾기
+    // Find the creator in the creators array
     const creatorIndex = creators.findIndex(c => c.id === creatorId);
     console.log('Creator index:', creatorIndex);
     if (creatorIndex !== -1) {
-      // 현재 크리에이터 정보
+      // Current creator info
       const currentCreator = creators[creatorIndex];
       const newIsFollowing = !currentCreator.isFollowing;
       
       console.log('Current follow status:', currentCreator.isFollowing, '-> New status:', newIsFollowing);
       
-      // 로컬 스토리지에 팔로우 상태 저장
+      // Save follow status to localStorage
       const followedCreators = JSON.parse(localStorage.getItem('followedCreators') || '[]');
       if (newIsFollowing) {
         if (!followedCreators.includes(creatorId.toString())) {
@@ -532,7 +532,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
       }
       localStorage.setItem('followedCreators', JSON.stringify(followedCreators));
       
-      // 상태 업데이트
+      // Update state
       setCreators(prevCreators => {
         const updatedCreators = prevCreators.map((creator, index) => {
           if (index === creatorIndex) {
@@ -574,14 +574,14 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                         id: parseInt(session.id.split('_')[0]) || 1,
                         characterName: session.characterName,
                         characterImage: session.characterImage,
-                        lastMessage: lastMessage?.content || '대화를 시작해보세요',
+                        lastMessage: lastMessage?.content || 'Start a conversation',
                         lastMessageTime: getRelativeTime(session.lastMessageAt),
                         unreadCount: session.unreadCount,
                         isOnline: true
                       })}
                       className="flex items-center p-4 hover:bg-[#2a2b2b] cursor-pointer transition-colors"
                     >
-                      {/* 캐릭터 이미지 */}
+                      {/* Character image */}
                       <div className="relative flex-shrink-0 mr-3">
                         <img
                           src={session.characterImage}
@@ -614,7 +614,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                           </div>
                         </div>
                         <p className="text-gray-400 text-sm truncate">
-                          {lastMessage?.content || '대화를 시작해보세요'}
+                          {lastMessage?.content || 'Start a conversation'}
                         </p>
                       </div>
                     </div>
@@ -632,10 +632,10 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         );
       case 'album':
         if (selectedAlbum) {
-          // 선택된 캐릭터의 앨범 상세 보기
+          // Selected character's album detail view
           return (
             <div className="flex flex-col h-full">
-              {/* 앨범 헤더 */}
+              {/* Album header */}
               <div className="flex items-center p-4 border-b border-[#424242]">
                 <button
                   onClick={handleBackToAlbumList}
@@ -654,11 +654,11 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                 />
                 <div>
                   <h2 className="text-white font-medium">{selectedAlbum.characterName}</h2>
-                  <p className="text-gray-400 text-sm">{selectedAlbum.unlockedPhotos.length}장의 사진</p>
+                  <p className="text-gray-400 text-sm">{selectedAlbum.unlockedPhotos.length} photos</p>
                 </div>
               </div>
 
-              {/* 사진 그리드 */}
+              {/* Photo grid */}
               <div className="flex-1 overflow-y-auto p-4">
                 <div className="grid grid-cols-2 gap-3">
                   {selectedAlbum.unlockedPhotos.map((photo) => (
@@ -668,7 +668,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     >
                       <img
                         src={photo.imageUrl}
-                        alt={photo.description || '해금된 사진'}
+                        alt={photo.description || 'Unlocked photo'}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -687,7 +687,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             </div>
           );
         } else {
-          // 캐릭터 앨범 목록 보기
+          // Character album list view
           return (
             <div className="flex-1 overflow-y-auto">
               {characterAlbums.length > 0 ? (
@@ -698,7 +698,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                       onClick={() => handleAlbumClick(album)}
                       className="flex items-center p-4 bg-[#2a2b2b] rounded-lg hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                     >
-                      {/* 캐릭터 이미지 */}
+                      {/* Character image */}
                       <img
                         src={album.characterImage}
                         alt={album.characterName}
@@ -709,13 +709,13 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                         }}
                       />
 
-                      {/* 앨범 정보 */}
+                      {/* Album info */}
                       <div className="flex-1">
                         <h3 className="text-white font-medium mb-1">{album.characterName}</h3>
-                        <p className="text-gray-400 text-sm">{album.unlockedPhotos.length}장의 해금된 사진</p>
+                        <p className="text-gray-400 text-sm">{album.unlockedPhotos.length} unlocked photos</p>
                       </div>
 
-                      {/* 미리보기 이미지들 */}
+                      {/* Preview images */}
                       <div className="flex space-x-1">
                         {album.unlockedPhotos.slice(0, 3).map((photo, index) => (
                           <img
@@ -853,7 +853,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     onClick={() => handleCreatorClick(creator)}
                     className="bg-[#2a2b2b] rounded-lg p-4 hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                   >
-                    {/* 크리에이터 헤더 */}
+                    {/* Creator header */}
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center">
                         <img
@@ -869,14 +869,14 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                           <div className="flex items-center">
                             <h3 className="text-white font-medium mr-2">{creator.name}</h3>
                             {creator.isVerified && (
-                              <CheckCircle className="w-4 h-4 text-blue-400" title="인증된 크리에이터" />
+                              <CheckCircle className="w-4 h-4 text-blue-400" title="Verified Creator" />
                             )}
                           </div>
-                          <p className="text-gray-400 text-sm">팔로워 {creator.followerCount.toLocaleString()}명</p>
+                          <p className="text-gray-400 text-sm">{creator.followerCount.toLocaleString()} followers</p>
                         </div>
                       </div>
 
-                      {/* 팔로우 버튼 */}
+                      {/* Follow button */}
                       <button
                         onClick={(e) => handleFollowToggle(creator.id, e)}
                         className={`flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
@@ -888,23 +888,23 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                         {creator.isFollowing ? (
                           <>
                             <UserCheck className="w-4 h-4 mr-1" />
-                            팔로잉
+                            Following
                           </>
                         ) : (
                           <>
                             <UserPlus className="w-4 h-4 mr-1" />
-                            팔로우
+                            Follow
                           </>
                         )}
                       </button>
                     </div>
 
-                    {/* 크리에이터 소개 */}
+                    {/* Creator introduction */}
                     <p className="text-gray-300 text-sm mb-3 line-clamp-2">
                       {creator.bio}
                     </p>
 
-                    {/* 전문 분야 */}
+                    {/* Specialties */}
                     <div className="flex flex-wrap gap-2 mb-3">
                       {creator.specialties.map((specialty, index) => (
                         <span
@@ -916,15 +916,15 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                       ))}
                     </div>
 
-                    {/* 작품 통계 */}
+                    {/* Work statistics */}
                     <div className="flex items-center justify-between text-sm text-gray-400">
                       <div className="flex space-x-4">
-                        <span>캐릭터 {creator.characterCount}개</span>
-                        <span>스토리 {creator.storyCount}개</span>
+                        <span>{creator.characterCount} characters</span>
+                        <span>{creator.storyCount} stories</span>
                       </div>
                       {creator.isFollowing && creator.followedDate && (
                         <span className="text-xs">
-                          {new Date(creator.followedDate).toLocaleDateString('ko-KR')} 팔로우
+                          Followed {new Date(creator.followedDate).toLocaleDateString('en-US')}
                         </span>
                       )}
                     </div>
@@ -953,7 +953,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     <div className="flex flex-col h-full bg-[#1a1b1b] text-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-[#424242]">
-        <h1 className="text-xl font-bold">활동</h1>
+        <h1 className="text-xl font-bold">Activity</h1>
       </div>
 
       {/* Tab Navigation */}
@@ -986,9 +986,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             onClose={() => setShowCreatorProfile(false)}
             creator={selectedCreatorInfo}
             onFollowChange={(creatorId, isFollowing) => {
-              // 팔로우 상태 변경 시 ActivityScreen의 상태도 업데이트
+              // Update ActivityScreen state when follow status changes
               console.log('Follow status changed from creator profile:', creatorId, isFollowing);
-              // 이벤트 발생
+              // Dispatch event
               window.dispatchEvent(new CustomEvent('followStateChanged', { 
                 detail: { creatorId: parseInt(creatorId.toString()), isFollowing } 
               }));
