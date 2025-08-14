@@ -62,11 +62,8 @@ export function validateCharacterData(story: CreatedStoryData): boolean {
 
 // 캐릭터 이미지 경로 생성
 export function generateCharacterImagePath(characterName: string): string {
-  const cleanName = characterName
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
-  return `/images/character-${cleanName}.svg`;
+  // Always return sample.png as fallback instead of character-*.svg
+  return '/images/sample.png';
 }
 
 // 캐릭터 태그 정리 (중복 제거 및 정렬)
