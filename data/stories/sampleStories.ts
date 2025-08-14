@@ -941,6 +941,16 @@ export function initializeSampleStories() {
     console.log('초기화할 샘플 스토리 개수:', sampleStories.length);
     console.log('샘플 스토리 ID들:', sampleStories.map(s => s.id));
     
+    // Clear localStorage to ensure fresh data
+    const shouldClearCache = !localStorage.getItem('sampleStoriesCacheCleared_v2');
+    if (shouldClearCache) {
+      console.log('🔄 Clearing localStorage cache for fresh story data...');
+      localStorage.removeItem('echostory_stories');
+      localStorage.removeItem('echostory_chat_sessions');
+      localStorage.setItem('sampleStoriesCacheCleared_v2', 'true');
+      console.log('✅ localStorage cache cleared');
+    }
+    
     // 각 샘플 스토리를 데이터베이스에 추가 (기존 ID 유지)
     sampleStories.forEach(story => {
       // addStoryWithId 함수를 사용하여 기존 ID 유지하면서 추가
