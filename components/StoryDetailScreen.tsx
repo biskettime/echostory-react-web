@@ -355,7 +355,11 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                   className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
                     currentImageIsLocked ? 'filter blur-[6px]' : ''
                   }`}
-                  style={{ backgroundImage: `url('${galleryImages[currentImageIndex]?.url}')` }}
+                  style={{ backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/sample.png'}')` }}
+                  onError={(e) => {
+                    const target = e.target as HTMLElement;
+                    target.style.backgroundImage = "url('/images/sample.png')";
+                  }}
                 />
                 
                 {/* Lock Overlay - Only show when current image is locked */}
@@ -504,7 +508,11 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                         className={`absolute inset-0 bg-cover bg-center rounded-lg ${
                           !image.isUnlocked ? 'filter blur-[2px]' : ''
                         }`}
-                        style={{ backgroundImage: `url('${image.url}')` }}
+                        style={{ backgroundImage: `url('${image.url || '/images/sample.png'}')` }}
+                        onError={(e) => {
+                          const target = e.target as HTMLElement;
+                          target.style.backgroundImage = "url('/images/sample.png')";
+                        }}
                       />
                       
                       {/* Locked Overlay */}
