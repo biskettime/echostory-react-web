@@ -760,12 +760,12 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     className="flex items-center p-4 bg-[#2a2b2b] rounded-lg hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                   >
                     <img
-                      src={story.media?.thumbnailImage || '/images/thumbnail1.svg'}
+                      src={story.media?.thumbnailImage || '/images/sample.png'}
                       alt={story.title}
                       className="w-16 h-16 rounded-lg mr-4 object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = '/images/thumbnail1.svg';
+                        target.src = '/images/sample.png';
                       }}
                     />
                     <div className="flex-1 min-w-0">
@@ -804,12 +804,12 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     className="flex items-center p-4 bg-[#2a2b2b] rounded-lg hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                   >
                     <img
-                      src={story.media?.thumbnailImage || '/images/thumbnail1.svg'}
+                      src={story.media?.thumbnailImage || '/images/sample.png'}
                       alt={story.title}
                       className="w-16 h-16 rounded-lg mr-4 object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = '/images/thumbnail1.svg';
+                        target.src = '/images/sample.png';
                       }}
                     />
                     <div className="flex-1 min-w-0">
