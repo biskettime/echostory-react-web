@@ -115,15 +115,12 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     storyMedia: story?.media
   });
 
-  // Clear localStorage cache if old data detected
-  if (thumbnailImage && thumbnailImage.includes('character-')) {
-    console.log('Detected old character image data, clearing localStorage...');
-    localStorage.removeItem('storyDatabase');
-    localStorage.removeItem('sampleStoriesInitialized');
-    window.location.reload();
-  }
+  // Force fallback to sample.png if character-*.svg detected
+  const safeThumbnailImage = thumbnailImage && thumbnailImage.includes('character-') ? '/images/sample.png' : thumbnailImage;
+  const safeStoryImages = storyImages.map(img => img && img.includes('character-') ? '/images/sample.png' : img);
+  const safeAllImages = allImages.map(img => img && img.includes('character-') ? '/images/sample.png' : img);
   
-  const galleryImages = allImages.map((url, index) => ({
+  const galleryImages = safeAllImages.map((url, index) => ({
     id: index,
     url: url,
     isSelected: index === currentThumbnailIndex,
