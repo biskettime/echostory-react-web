@@ -1,13 +1,13 @@
 import { CreatorInfo } from './types';
 
-// 크리에이터 데이터베이스 (메모리 저장)
+// Creator database (in-memory storage)
 const creators: CreatorInfo[] = [
   {
     id: 'creator_user',
     handle: '@creator_user',
     displayName: 'User Creator',
-    // profileImage 제거 - creator.png 사용
-    bio: '사용자가 생성한 스토리의 기본 크리에이터입니다.',
+    // profileImage removed - use creator.png
+    bio: 'Default creator for user-generated stories.',
     joinDate: '2024-01-01T00:00:00Z',
     stats: {
       totalStories: 1,
@@ -21,8 +21,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_001',
     handle: '@stupid_dog',
     displayName: 'StupidDog',
-    // profileImage 제거 - creator.png 사용
-    bio: '일상의 소소한 이야기를 좋아하는 창작자입니다. 완벽하지 않은 캐릭터들의 인간적인 면을 그리는 것을 즐깁니다.',
+    // profileImage removed - use creator.png
+    bio: 'A creator who loves small everyday stories. Enjoys depicting the human side of imperfect characters.',
     joinDate: '2023-05-15T00:00:00Z',
     stats: {
       totalStories: 12,
@@ -40,8 +40,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_002',
     handle: '@camel_yK1q',
     displayName: 'CamelWriter',
-    // profileImage 제거 - creator.png 사용
-    bio: '다양한 문화와 언어에 관심이 많은 작가입니다. 특히 일본-한국 문화 교류 스토리를 전문으로 합니다.',
+    // profileImage removed - use creator.png
+    bio: 'A writer interested in diverse cultures and languages. Specializes in Japan-Korea cultural exchange stories.',
     joinDate: '2023-08-22T00:00:00Z',
     stats: {
       totalStories: 8,
@@ -58,8 +58,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_003',
     handle: '@ballet_dreams',
     displayName: 'BalletDreams',
-    // profileImage 제거하여 creator.png 테스트
-    bio: '전직 발레리나 출신 작가. 예술과 완벽주의, 그리고 인간의 취약함에 대한 이야기를 씁니다.',
+    // profileImage removed to test creator.png
+    bio: 'Former ballerina turned writer. Writes about art, perfectionism, and human vulnerability.',
     joinDate: '2023-06-10T00:00:00Z',
     stats: {
       totalStories: 6,
@@ -76,8 +76,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_004',
     handle: '@book_lover',
     displayName: 'BookLover',
-    // profileImage 제거 - creator.png 사용
-    bio: '고전 문학과 신비로운 이야기를 사랑하는 도서관 사서. 지식과 비밀이 얽힌 스토리를 전문으로 합니다.',
+    // profileImage removed - use creator.png
+    bio: 'A librarian who loves classical literature and mysterious stories. Specializes in stories where knowledge and secrets intertwine.',
     joinDate: '2023-04-03T00:00:00Z',
     stats: {
       totalStories: 15,
@@ -94,8 +94,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_005',
     handle: '@coffee_dreams',
     displayName: 'CoffeeDreams',
-    // profileImage 제거 - creator.png 사용
-    bio: '카페 사장 출신 작가. 따뜻한 일상과 소소한 행복, 그리고 꿈을 향한 여정을 그립니다.',
+    // profileImage removed - use creator.png
+    bio: 'Former cafe owner turned writer. Depicts warm daily life, small happiness, and journeys toward dreams.',
     joinDate: '2023-07-18T00:00:00Z',
     stats: {
       totalStories: 9,
@@ -113,8 +113,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_006',
     handle: '@pixel_queen',
     displayName: 'PixelQueen',
-    // profileImage 제거 - creator.png 사용
-    bio: '프로게이머 출신 스토리텔러. 게임 문화와 e스포츠, 그리고 디지털 세대의 이야기를 다룹니다.',
+    // profileImage removed - use creator.png
+    bio: 'Former pro gamer turned storyteller. Covers gaming culture, esports, and digital generation stories.',
     joinDate: '2023-09-05T00:00:00Z',
     stats: {
       totalStories: 11,
@@ -132,8 +132,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_007',
     handle: '@melody_heart',
     displayName: 'MelodyHeart',
-    // profileImage 제거 - creator.png 사용
-    bio: '클래식 음악을 사랑하는 작가. 음악가들의 내면과 예술적 갈등을 섬세하게 그려냅니다.',
+    // profileImage removed - use creator.png
+    bio: 'A writer who loves classical music. Delicately portrays the inner lives and artistic conflicts of musicians.',
     joinDate: '2023-03-12T00:00:00Z',
     stats: {
       totalStories: 7,
@@ -150,8 +150,8 @@ const creators: CreatorInfo[] = [
     id: 'creator_008',
     handle: '@wanderlust_girl',
     displayName: 'WanderlustGirl',
-    // profileImage 제거 - creator.png 사용
-    bio: '세계 여행가이자 블로거. 여행과 모험, 그리고 자유로운 영혼의 이야기를 전합니다.',
+    // profileImage removed - use creator.png
+    bio: 'World traveler and blogger. Shares stories of travel, adventure, and free spirits.',
     joinDate: '2023-10-01T00:00:00Z',
     stats: {
       totalStories: 13,
@@ -168,7 +168,7 @@ const creators: CreatorInfo[] = [
   }
 ];
 
-// 크리에이터 관련 함수들
+// Creator-related functions
 export function getCreatorById(creatorId: string): CreatorInfo | undefined {
   const creator = creators.find(creator => creator.id === creatorId);
   if (creator && !creator.profileImage) {
@@ -181,7 +181,7 @@ export function getCreatorById(creatorId: string): CreatorInfo | undefined {
 }
 
 export function getCreatorByHandle(handle: string): CreatorInfo | undefined {
-  // handle이 @로 시작하지 않으면 추가
+  // Add @ if handle doesn't start with @
   const normalizedHandle = handle.startsWith('@') ? handle : `@${handle}`;
   return creators.find(creator => creator.handle === normalizedHandle);
 }

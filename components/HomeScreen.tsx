@@ -30,12 +30,12 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
 
   // Initialize sample stories and load data
   useEffect(() => {
-    console.log('HomeScreen 초기화 시작');
+    console.log('HomeScreen initialization started');
     try {
       initializeSampleStories();
       loadStories();
     } catch (error) {
-      console.error('HomeScreen 초기화 중 오류:', error);
+      console.error('Error during HomeScreen initialization:', error);
     }
   }, []);
 

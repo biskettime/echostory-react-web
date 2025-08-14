@@ -114,8 +114,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           id: index + 1, // ActivityScreen용 숫자 ID
           name: creator.displayName,
           profileImage: creator.profileImage || "/images/thumbnail1.svg",
-          bio: creator.bio || "크리에이터 소개가 없습니다.",
-          specialties: creator.badges || ["일반"],
+          bio: creator.bio || "No creator description available.",
+          specialties: creator.badges || ["General"],
           followerCount: creator.stats.followers,
           characterCount: Math.floor(Math.random() * 50) + 10, // 임시 데이터
           storyCount: creator.stats.totalStories,
@@ -125,25 +125,25 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         }));
         
         setCreators(mappedCreators);
-        console.log('로드된 크리에이터들:', mappedCreators);
+        console.log('Loaded creators:', mappedCreators);
         
-        // ID 매핑 저장 (실제 ID -> 숫자 ID)
+        // Save ID mapping (actual ID -> numeric ID)
         const idMapping: { [key: string]: number } = {};
         allCreators.slice(0, 3).forEach((creator, index) => {
           idMapping[creator.id] = index + 1;
         });
         localStorage.setItem('creatorIdMapping', JSON.stringify(idMapping));
-        console.log('ID 매핑 저장:', idMapping);
+        console.log('ID mapping saved:', idMapping);
       } catch (error) {
-        console.error('크리에이터 로드 중 오류:', error);
-        // 오류 발생시 기본 데이터 사용
+        console.error('Error loading creators:', error);
+        // Use default data on error
         setCreators([
           {
             id: 1,
-            name: "미라클 스튜디오",
+            name: "Miracle Studio",
             profileImage: "/images/thumbnail1.svg",
-            bio: "판타지와 로맨스 장르를 전문으로 하는 창작 스튜디오입니다.",
-            specialties: ["판타지", "로맨스"],
+            bio: "A creative studio specializing in fantasy and romance genres.",
+            specialties: ["Fantasy", "Romance"],
             followerCount: 15420,
             characterCount: 28,
             storyCount: 45,
@@ -164,14 +164,14 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
       try {
         const followedCreatorIds = JSON.parse(localStorage.getItem('followedCreators') || '[]');
         const idMapping = JSON.parse(localStorage.getItem('creatorIdMapping') || '{}');
-        console.log('로컬 스토리지에서 불러온 팔로우 ID들:', followedCreatorIds);
-        console.log('ID 매핑:', idMapping);
-        console.log('현재 크리에이터들:', creators.map(c => ({ id: c.id, name: c.name })));
+        console.log('Followed creator IDs from localStorage:', followedCreatorIds);
+        console.log('ID mapping:', idMapping);
+        console.log('Current creators:', creators.map(c => ({ id: c.id, name: c.name })));
         
-        // 기존 데이터가 잘못된 형식이면 초기화
+        // Reset if existing data is in wrong format
         if (followedCreatorIds.length > 0 && typeof followedCreatorIds[0] === 'string' && 
             followedCreatorIds[0].startsWith('creator_') && followedCreatorIds[0] !== 'creator_user') {
-          console.log('잘못된 형식의 팔로우 데이터 발견, 초기화합니다.');
+          console.log('Found incorrect format follow data, resetting.');
           localStorage.setItem('followedCreators', JSON.stringify([]));
           setCreators(prevCreators => 
             prevCreators.map(creator => ({
@@ -185,23 +185,23 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         
         setCreators(prevCreators => {
           const updatedCreators = prevCreators.map(creator => {
-            // 실제 크리에이터 ID를 숫자 ID로 변환하여 확인
+            // Convert actual creator ID to numeric ID for verification
             const isFollowing = followedCreatorIds.some((actualId: string) => {
               const mappedId = idMapping[actualId];
               return mappedId === creator.id;
             });
-            console.log(`크리에이터 ${creator.name} (ID: ${creator.id}) 팔로우 상태: ${isFollowing}`);
+            console.log(`Creator ${creator.name} (ID: ${creator.id}) follow status: ${isFollowing}`);
             return {
               ...creator,
               isFollowing,
               followedDate: isFollowing ? new Date().toISOString().split('T')[0] : undefined
             };
           });
-          console.log('업데이트된 크리에이터들:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+          console.log('Updated creators:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
           return updatedCreators;
         });
       } catch (error) {
-        console.error('팔로우 상태 로딩 중 오류:', error);
+        console.error('Error loading follow status:', error);
         localStorage.setItem('followedCreators', JSON.stringify([])); // Clear on error
       }
     };
@@ -209,13 +209,13 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     if (creators.length > 0) {
       loadFollowedCreators();
     }
-  }, [creators.length]); // creators가 로드된 후에 실행
+  }, [creators.length]); // Execute after creators are loaded
 
-  // 팔로우 상태 변경 이벤트 감지
+  // Detect follow status change events
   useEffect(() => {
     const handleFollowStateChanged = (event: CustomEvent) => {
       const { creatorId, isFollowing } = event.detail;
-      console.log('팔로우 상태 변경 이벤트 감지:', creatorId, isFollowing);
+      console.log('Follow status change event detected:', creatorId, isFollowing);
       
       setCreators(prevCreators => {
         const updatedCreators = prevCreators.map(creator => {
@@ -229,7 +229,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           }
           return creator;
         });
-        console.log('이벤트로 인한 크리에이터 상태 업데이트:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+        console.log('Creator status update due to event:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
         return updatedCreators;
       });
     };
@@ -241,17 +241,17 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     };
   }, []);
 
-  // 크리에이터 프로필 모달 상태
+  // Creator profile modal state
   const [showCreatorProfile, setShowCreatorProfile] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState<Creator | null>(null);
   const [selectedCreatorInfo, setSelectedCreatorInfo] = useState<any>(null);
 
   const handleCreatorClick = (creator: Creator) => {
-    // 실제 크리에이터 ID 찾기
+    // Find actual creator ID
     const idMapping = JSON.parse(localStorage.getItem('creatorIdMapping') || '{}');
     const actualCreatorId = Object.keys(idMapping).find(key => idMapping[key] === creator.id);
     
-    console.log('크리에이터 클릭:', creator.name, '숫자 ID:', creator.id, '실제 ID:', actualCreatorId);
+    console.log('Creator clicked:', creator.name, 'Numeric ID:', creator.id, 'Actual ID:', actualCreatorId);
     
     // Creator를 CreatorInfo로 변환
     const creatorInfo = {
@@ -275,85 +275,84 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     setShowCreatorProfile(true);
   };
 
-  // 샘플 대화방 데이터
+  // Sample chat room data
   const chatRooms: ChatRoom[] = [
     {
       id: 1,
-      characterName: "아리아",
+      characterName: "Aria",
       characterImage: "/images/thumbnail1.svg",
-      lastMessage: "안녕하세요! 오늘 어떤 이야기를 나누고 싶으신가요?",
-      lastMessageTime: "방금 전",
+      lastMessage: "Hello! What story would you like to share today?",
+      lastMessageTime: "Just now",
       unreadCount: 2,
       isOnline: true
     },
     {
       id: 2,
-      characterName: "루나",
+      characterName: "Luna",
       characterImage: "/images/thumbnail2.svg",
-      lastMessage: "그 이야기 정말 재미있었어요! 계속 들려주세요.",
-      lastMessageTime: "5분 전",
+      lastMessage: "That story was really interesting! Please continue.",
+      lastMessageTime: "5 minutes ago",
       unreadCount: 0,
       isOnline: true
     },
     {
       id: 3,
-      characterName: "제이든",
+      characterName: "Jayden",
       characterImage: "/images/thumbnail3.svg",
-      lastMessage: "내일 또 만나요! 좋은 꿈 꾸세요~",
-      lastMessageTime: "1시간 전",
+      lastMessage: "See you tomorrow! Sweet dreams~",
+      lastMessageTime: "1 hour ago",
       unreadCount: 1,
       isOnline: false
     }
   ];
 
-  // 실제 대화 세션에서 앨범 데이터 생성
+    // Generate album data from actual chat sessions
   const generateAlbumsFromSessions = () => {
     const albums: CharacterAlbum[] = [];
-    
+
     realChatSessions.forEach(session => {
-      // 해당 세션의 스토리 정보 가져오기
+      // Get story information for this session
       const story = getStory(session.storyId);
       
-      // 스토리 이미지들 가져오기
+      // Get story images
       const storyImages = story?.media?.storyImages || [];
       const thumbnailImage = story?.media?.thumbnailImage;
       
-      // 모든 사용 가능한 이미지들 수집
+      // Collect all available images
       const allAvailableImages = [
         ...(thumbnailImage ? [thumbnailImage] : []),
         ...storyImages
       ].filter(Boolean);
       
-      // 각 세션에서 사진 메시지들을 찾아서 추가
+      // Find photo messages in each session and add them
       const photoMessages = session.messages.filter(message => 
         message.type === 'image' || 
-        message.content.includes('사진') || 
+        message.content.includes('photo') || 
         message.content.includes('image') ||
-        message.content.includes('photo') ||
-        message.content.includes('그림') ||
-        message.content.includes('이미지')
+        message.content.includes('picture') ||
+        message.content.includes('pic')
       );
       
-      // 메시지에서 찾은 이미지들도 추가
+      // Add images found in messages
       const messageImages = photoMessages.map(message => 
         message.type === 'image' ? message.content : null
       ).filter((img): img is string => Boolean(img));
       
-      // 전체 이미지 목록 (중복 제거)
+      // Complete image list (remove duplicates)
       const totalImages = [...new Set([...allAvailableImages, ...messageImages])];
       
-      // 이미지가 없으면 sample.png 추가
+      // Add sample.png if no images
       if (totalImages.length === 0) {
         totalImages.push('/images/sample.png');
       }
       
-      // 사진이 2개 이상이거나 대화가 충분히 진행된 경우 앨범 생성
+      // Create album if there are 2+ photos or sufficient conversation
       if (totalImages.length >= 2 || session.messages.length >= 5) {
         const unlockedPhotos = totalImages.map((imageUrl, index) => ({
           id: index + 1,
           imageUrl: imageUrl,
           unlockedDate: new Date(session.lastMessageAt).toISOString().split('T')[0],
-          description: index === 0 ? "메인 이미지" : `해금된 사진 ${index + 1}`
+          description: index === 0 ? "Main Image" : `Unlocked Photo ${index + 1}`
         }));
         
         albums.push({
@@ -365,49 +364,49 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
       }
     });
     
-    // 앨범이 없는 경우 샘플 앨범 추가
+    // Add sample albums if no albums exist
     if (albums.length === 0) {
-      // haruka 스토리 앨범 추가
+      // Add haruka story album
       const harukaStory = getStory('story_004');
       if (harukaStory) {
         albums.push({
           characterId: 4,
-          characterName: "하루카 (Haruka)",
+          characterName: "Haruka",
           characterImage: harukaStory.media.thumbnailImage,
           unlockedPhotos: harukaStory.media.storyImages.map((imageUrl, index) => ({
             id: index + 1,
             imageUrl: imageUrl,
             unlockedDate: "2024-01-18",
-            description: index === 0 ? "메인 포트레이트" : 
-                        index === 1 ? "연습실에서" :
-                        index === 2 ? "무대 위에서" : "일상 모습"
+            description: index === 0 ? "Main Portrait" : 
+                        index === 1 ? "In Practice Room" :
+                        index === 2 ? "On Stage" : "Daily Life"
           }))
         });
       }
       
-      // 기본 샘플 앨범
+      // Default sample album
       albums.push({
         characterId: 1,
-        characterName: "아리아",
+        characterName: "Aria",
         characterImage: "/images/thumbnail1.svg",
         unlockedPhotos: [
           {
             id: 1,
             imageUrl: "/images/story-thumbnail-1.svg",
             unlockedDate: "2024-01-15",
-            description: "첫 만남의 순간"
+            description: "First Meeting"
           },
           {
             id: 2,
             imageUrl: "/images/story-thumbnail-2.svg",
             unlockedDate: "2024-01-16",
-            description: "함께한 산책"
+            description: "Walking Together"
           },
           {
             id: 3,
             imageUrl: "/images/story-thumbnail-3.svg",
             unlockedDate: "2024-01-17",
-            description: "특별한 하루"
+            description: "Special Day"
           }
         ]
       });
@@ -416,55 +415,55 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     return albums;
   };
 
-  // 앨범 데이터 상태
+  // Album data state
   const [characterAlbums, setCharacterAlbums] = useState<CharacterAlbum[]>([]);
 
-  // 대화 세션이 변경될 때마다 앨범 데이터 업데이트
+  // Update album data whenever chat sessions change
   useEffect(() => {
     const albums = generateAlbumsFromSessions();
     setCharacterAlbums(albums);
-    console.log('생성된 앨범들:', albums);
+    console.log('Generated albums:', albums);
   }, [realChatSessions]);
 
-  // 샘플 즐겨찾기 캐릭터 데이터
+  // Sample favorite character data
   const favoriteCharacters: FavoriteCharacter[] = [
     {
       id: 1,
-      name: "아리아",
+      name: "Aria",
       image: "/images/thumbnail1.svg",
-      description: "밝고 활발한 성격의 소녀. 항상 긍정적이고 모험을 좋아합니다.",
-      category: "판타지",
+      description: "A bright and cheerful girl. Always positive and loves adventure.",
+      category: "Fantasy",
       isFavorited: true,
       favoritedDate: "2024-01-15"
     },
     {
       id: 3,
-      name: "제이든",
+      name: "Jayden",
       image: "/images/thumbnail3.svg",
-      description: "신비로운 마법사. 지혜롭고 차분한 성격으로 많은 비밀을 간직하고 있습니다.",
-      category: "판타지",
+      description: "A mysterious wizard. Wise and calm, holding many secrets.",
+      category: "Fantasy",
       isFavorited: true,
       favoritedDate: "2024-01-18"
     },
     {
       id: 4,
-      name: "소피아",
+      name: "Sophia",
       image: "/images/story-thumbnail-4.svg",
-      description: "우아한 공주님. 품위 있고 따뜻한 마음을 가진 캐릭터입니다.",
-      category: "로맨스",
+      description: "An elegant princess. A character with grace and a warm heart.",
+      category: "Romance",
       isFavorited: true,
       favoritedDate: "2024-01-20"
     }
   ];
 
-  // 크리에이터 데이터는 이제 useState로 관리됩니다
+  // Creator data is now managed with useState
 
   const tabs = [
-    { id: 'chat' as const, icon: MessageCircle, label: '대화중' },
-    { id: 'album' as const, icon: Image, label: '앨범' },
-    { id: 'favorites' as const, icon: Bookmark, label: '즐겨찾기' },
-    { id: 'likes' as const, icon: Heart, label: '좋아요' },
-    { id: 'creator' as const, icon: Users, label: '팔로우' }
+    { id: 'chat' as const, icon: MessageCircle, label: 'Chats' },
+    { id: 'album' as const, icon: Image, label: 'Album' },
+    { id: 'favorites' as const, icon: Bookmark, label: 'Favorites' },
+    { id: 'likes' as const, icon: Heart, label: 'Likes' },
+    { id: 'creator' as const, icon: Users, label: 'Following' }
   ];
 
   const handleChatRoomClick = (chatRoom: ChatRoom) => {
@@ -473,7 +472,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     if (session && onNavigateToChat) {
       onNavigateToChat(session.storyId);
     } else {
-      console.log('채팅방 클릭:', chatRoom.characterName);
+      console.log('Chat room clicked:', chatRoom.characterName);
     }
   };
 
@@ -494,30 +493,30 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   };
 
   const handleFavoriteCharacterClick = (character: FavoriteCharacter) => {
-    // TODO: 캐릭터 상세 화면으로 이동하는 로직 구현
-    console.log('즐겨찾기 캐릭터 클릭:', character.name);
+    // TODO: Implement logic to navigate to character detail screen
+    console.log('Favorite character clicked:', character.name);
   };
 
   const handleRemoveFavorite = (characterId: number, event: React.MouseEvent) => {
     event.stopPropagation(); // 부모 클릭 이벤트 방지
-    // TODO: 실제 즐겨찾기 제거 로직 구현
-    console.log('즐겨찾기 제거:', characterId);
+    // TODO: Implement actual favorite removal logic
+    console.log('Remove favorite:', characterId);
   };
 
   const handleFollowToggle = (creatorId: number, event: React.MouseEvent) => {
     event.stopPropagation(); // 부모 클릭 이벤트 방지
     
-    console.log('팔로우 토글 클릭됨:', creatorId);
+    console.log('Follow toggle clicked:', creatorId);
     
     // 크리에이터 배열에서 해당 크리에이터 찾기
     const creatorIndex = creators.findIndex(c => c.id === creatorId);
-    console.log('크리에이터 인덱스:', creatorIndex);
+    console.log('Creator index:', creatorIndex);
     if (creatorIndex !== -1) {
       // 현재 크리에이터 정보
       const currentCreator = creators[creatorIndex];
       const newIsFollowing = !currentCreator.isFollowing;
       
-      console.log('현재 팔로우 상태:', currentCreator.isFollowing, '-> 새로운 상태:', newIsFollowing);
+      console.log('Current follow status:', currentCreator.isFollowing, '-> New status:', newIsFollowing);
       
       // 로컬 스토리지에 팔로우 상태 저장
       const followedCreators = JSON.parse(localStorage.getItem('followedCreators') || '[]');
@@ -547,12 +546,12 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           return creator;
         });
         
-        console.log('업데이트된 크리에이터들:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+        console.log('Updated creators:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
         return updatedCreators;
       });
       
-      console.log(`${newIsFollowing ? '팔로우' : '언팔로우'}:`, currentCreator.name);
-      console.log('저장된 팔로우 목록:', followedCreators);
+      console.log(`${newIsFollowing ? 'Follow' : 'Unfollow'}:`, currentCreator.name);
+      console.log('Saved follow list:', followedCreators);
     }
   };
 
@@ -625,8 +624,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
               <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                 <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                <p className="text-gray-400 text-lg mb-2">진행 중인 대화가 없습니다</p>
-                <p className="text-gray-500 text-sm">캐릭터와 대화를 시작해보세요!</p>
+                <p className="text-gray-400 text-lg mb-2">No ongoing conversations</p>
+                <p className="text-gray-500 text-sm">Start a conversation with a character!</p>
               </div>
             )}
           </div>
@@ -742,8 +741,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
               ) : (
                 <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                   <Image className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                  <p className="text-gray-400 text-lg mb-2">해금된 앨범이 없습니다</p>
-                  <p className="text-gray-500 text-sm">캐릭터와 대화하여 사진을 2장 이상 해금해보세요!</p>
+                  <p className="text-gray-400 text-lg mb-2">No unlocked albums</p>
+                  <p className="text-gray-500 text-sm">Chat with characters to unlock 2 or more photos!</p>
                 </div>
               )}
             </div>
@@ -787,8 +786,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
                           <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
               <Bookmark className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-              <p className="text-gray-400 text-lg mb-2">즐겨찾기한 스토리가 없습니다</p>
-              <p className="text-gray-500 text-sm">스토리 상세페이지에서 책갈피 아이콘을 눌러보세요</p>
+              <p className="text-gray-400 text-lg mb-2">No favorite stories</p>
+              <p className="text-gray-500 text-sm">Try tapping the bookmark icon on story detail pages</p>
             </div>
             )}
           </div>
@@ -831,8 +830,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
                           <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
               <Heart className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-              <p className="text-gray-400 text-lg mb-2">좋아요한 스토리가 없습니다</p>
-              <p className="text-gray-500 text-sm">스토리 상세페이지에서 하트 아이콘을 눌러보세요</p>
+              <p className="text-gray-400 text-lg mb-2">No liked stories</p>
+              <p className="text-gray-500 text-sm">Try tapping the heart icon on story detail pages</p>
             </div>
             )}
           </div>
@@ -842,8 +841,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           <div className="flex-1 overflow-y-auto">
             {(() => {
               const followedCreators = creators.filter(creator => creator.isFollowing);
-              console.log('팔로우 크리에이터 필터링 결과:', followedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
-              console.log('전체 크리에이터 상태:', creators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+              console.log('Followed creators filtering result:', followedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+              console.log('All creators status:', creators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
               
               if (followedCreators.length > 0) {
                 return (
@@ -937,8 +936,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                 return (
                   <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                     <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                    <p className="text-gray-400 text-lg mb-2">팔로우한 크리에이터가 없습니다</p>
-                    <p className="text-gray-500 text-sm">마음에 드는 크리에이터를 팔로우해보세요</p>
+                    <p className="text-gray-400 text-lg mb-2">No followed creators</p>
+                    <p className="text-gray-500 text-sm">Follow creators you like</p>
                   </div>
                 );
               }
@@ -988,7 +987,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             creator={selectedCreatorInfo}
             onFollowChange={(creatorId, isFollowing) => {
               // 팔로우 상태 변경 시 ActivityScreen의 상태도 업데이트
-              console.log('크리에이터 프로필에서 팔로우 상태 변경:', creatorId, isFollowing);
+              console.log('Follow status changed from creator profile:', creatorId, isFollowing);
               // 이벤트 발생
               window.dispatchEvent(new CustomEvent('followStateChanged', { 
                 detail: { creatorId: parseInt(creatorId.toString()), isFollowing } 
