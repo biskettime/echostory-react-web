@@ -589,7 +589,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                           className="w-12 h-12 rounded-full bg-gray-600"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
-                            target.src = '/images/thumbnail1.svg';
+                            target.src = '/images/sample.png';
                           }}
                         />
                         {/* 온라인 상태 표시 */}

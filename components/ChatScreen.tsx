@@ -73,8 +73,11 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     ...story.media.storyImages
   ].filter(Boolean) : [];
   
+  // Force fallback to sample.png if character-*.svg detected
+  const safeStoryImages = storyImages.map(img => img && img.includes('character-') ? '/images/sample.png' : img);
+  
   // If no images, use sample.png
-  const finalStoryImages = storyImages.length > 0 ? storyImages : ['/images/sample.png'];
+  const finalStoryImages = safeStoryImages.length > 0 ? safeStoryImages : ['/images/sample.png'];
   console.log('ChatScreen - storyId:', storyId, 'story:', story);
 
   // Initialize sample stories and get story data
@@ -802,7 +805,13 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                       <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
                         <div 
                           className="bg-no-repeat bg-size-[100%_150%] bg-top-left rounded-[14.5px] shrink-0 size-[28.99px]"
-                          style={{ backgroundImage: `url('${story?.media?.storyImages?.[0] || story?.media?.thumbnailImage || imgThumbnail}')` }}
+                          style={{ 
+                            backgroundImage: `url('${
+                              (finalStoryImages[0] && !finalStoryImages[0].includes('character-')) 
+                                ? finalStoryImages[0] 
+                                : '/images/sample.png'
+                            }')` 
+                          }}
                         />
                       </div>
                       <div className="flex flex-col gap-1 flex-1">
