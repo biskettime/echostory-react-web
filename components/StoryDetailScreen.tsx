@@ -752,8 +752,8 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                       {/* Message */}
                       <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                         <div className="[text-shadow:rgba(0,0,0,0.6)_0px_0px_10px] flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[22px] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-center text-nowrap whitespace-pre">
-                          <p className="block mb-0">The lock will be released when you meet the</p>
-                          <p className="block">conditions set by the creator.</p>
+                          <p className="block mb-0">{t('storyDetail.unlockMessage1')}</p>
+                          <p className="block">{t('storyDetail.unlockMessage2')}</p>
                         </div>
                       </div>
                       
@@ -764,7 +764,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                       >
                         <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                           <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.125px] text-center text-nowrap">
-                            <p className="block leading-[normal] whitespace-pre">Unlock</p>
+                            <p className="block leading-[normal] whitespace-pre">{t('storyDetail.unlockButton')}</p>
                           </div>
                         </div>
                       </button>

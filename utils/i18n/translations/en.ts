@@ -222,6 +222,9 @@ export const en = {
     storySettingsPlaceholder: 'Enter story settings...',
     characterNamePlaceholder: 'Character name',
     characterDescriptionPlaceholder: 'Enter character description...',
+    unlockMessage1: 'The lock will be released when you meet the',
+    unlockMessage2: 'conditions set by the creator.',
+    unlockButton: 'Unlock',
     tags: {
       female: '#Female',
       male: '#Male',

@@ -222,6 +222,9 @@ export const ko = {
     storySettingsPlaceholder: '스토리 설정을 입력하세요...',
     characterNamePlaceholder: '캐릭터 이름',
     characterDescriptionPlaceholder: '캐릭터 묘사를 입력하세요...',
+    unlockMessage1: '크리에이터가 설정한 조건을 만족하면',
+    unlockMessage2: '잠금이 해제됩니다.',
+    unlockButton: '해금하기',
     tags: {
       female: '#여성',
       male: '#남성',
