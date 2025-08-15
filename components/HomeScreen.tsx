@@ -161,12 +161,18 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
   };
 
   const StoryImage = ({ story, className }: { story: CreatedStoryData; className: string }) => {
-    const [imageSrc, setImageSrc] = useState<string>(getStoryThumbnailWithFallback(story));
+    const [imageSrc, setImageSrc] = useState<string>('/images/echostory.png');
     
     useEffect(() => {
       const loadCharacterImage = async () => {
         if (!story?.content.characterName) {
-          setImageSrc(getStoryThumbnailWithFallback(story));
+          // Try story thumbnail first, fallback to echostory logo
+          const storyThumbnail = getStoryThumbnailWithFallback(story);
+          if (storyThumbnail && !storyThumbnail.includes('echostory.png')) {
+            setImageSrc(storyThumbnail);
+          } else {
+            setImageSrc('/images/echostory.png');
+          }
           return;
         }
         
@@ -192,8 +198,13 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
           }
         }
         
-        // No character image found, use story thumbnail
-        setImageSrc(getStoryThumbnailWithFallback(story));
+        // No character image found, try story thumbnail first, then echostory logo
+        const storyThumbnail = getStoryThumbnailWithFallback(story);
+        if (storyThumbnail && !storyThumbnail.includes('echostory.png')) {
+          setImageSrc(storyThumbnail);
+        } else {
+          setImageSrc('/images/echostory.png');
+        }
       };
       
       loadCharacterImage();
@@ -207,9 +218,9 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
           className={className}
           loading="lazy"
           onError={(e) => {
-            // Fallback to sample.png if image fails to load
+            // Fallback to echostory.png if image fails to load
             const target = e.target as HTMLImageElement;
-            target.src = '/images/sample.png';
+            target.src = '/images/echostory.png';
           }}
         />
       </div>
@@ -298,11 +309,25 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
         {/* Story Creation Promotion */}
         <div className="mx-4 mb-6">
           <div 
-            className="relative cursor-pointer group overflow-hidden rounded-xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30"
+            className="relative cursor-pointer group overflow-hidden rounded-xl h-[140px] bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600"
             onClick={handleCreateClick}
           >
-            <div className="flex items-center justify-between p-4">
-              <div className="flex-1">
+            {/* Background image positioned on the right, cropped from chest up */}
+            <div 
+              className="absolute top-0 right-0 w-[60%] h-full opacity-80"
+              style={{
+                backgroundImage: 'url(/data/creator.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat'
+              }}
+            ></div>
+            
+            {/* Subtle overlay for text readability without covering the image */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent"></div>
+            
+            <div className="relative flex items-center p-4">
+              <div className="flex-1 max-w-[55%]">
                 <div className="flex items-center mb-2">
                   <img 
                     src="/images/echostory.png" 
@@ -322,14 +347,17 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                     Creator
                   </div>
                 </div>
-                <h3 className="text-white font-medium mb-1">
+                <h3 className="text-white font-semibold mb-1 drop-shadow-xl">
                   If you find a story you like
                 </h3>
-                <p className="text-white/80 text-sm">
+                <p className="text-white text-sm drop-shadow-lg font-medium">
                   Create your own
                 </p>
               </div>
             </div>
+            
+            {/* Hover effect */}
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         </div>
 

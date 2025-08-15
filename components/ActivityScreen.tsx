@@ -62,12 +62,12 @@ interface ActivityScreenProps {
 
 // Simple character image component for Activity screen
 function ActivityCharacterImage({ characterName, className }: { characterName: string; className: string }) {
-  const [imageSrc, setImageSrc] = useState<string>('/images/sample.png');
+  const [imageSrc, setImageSrc] = useState<string>('/images/echostory.png');
   
   useEffect(() => {
     const loadCharacterImage = async () => {
       if (!characterName) {
-        setImageSrc('/images/sample.png');
+        setImageSrc('/images/echostory.png');
         return;
       }
       
@@ -118,7 +118,7 @@ function ActivityCharacterImage({ characterName, className }: { characterName: s
       }
       
       console.log(`❌ Activity - No character image found for: ${characterName}`);
-      setImageSrc('/images/sample.png');
+      setImageSrc('/images/echostory.png');
     };
     
     loadCharacterImage();
@@ -131,7 +131,7 @@ function ActivityCharacterImage({ characterName, className }: { characterName: s
       className={className}
       onError={(e) => {
         const target = e.target as HTMLImageElement;
-        target.src = '/images/sample.png';
+        target.src = '/images/echostory.png';
       }}
     />
   );
@@ -457,9 +457,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           ...storyImages
         ].filter(Boolean);
         
-        // Add sample.png if no images at all
+        // Add echostory.png if no images at all
         if (albumImages.length === 0) {
-          albumImages.push('/images/sample.png');
+          albumImages.push('/images/echostory.png');
         }
       }
       

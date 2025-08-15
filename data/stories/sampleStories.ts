@@ -68,8 +68,8 @@ Only you and Teacher Jiyeon are in the classroom, and an awkward silence flows.`
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -146,8 +146,8 @@ The library is quiet except for the sound of turning pages and typing.`,
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -224,8 +224,8 @@ The atmosphere is comfortable yet somehow charged with unspoken feelings.`,
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -302,12 +302,12 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
+      thumbnailImage: '/images/echostory.png',
       storyImages: [
-        '/images/sample.png',
-        '/images/sample.png',
-        '/images/sample.png',
-        '/images/sample.png'
+        '/images/echostory.png',
+        '/images/echostory.png',
+        '/images/echostory.png',
+        '/images/echostory.png'
       ],
       backgroundMusic: undefined
     },
@@ -370,8 +370,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -432,8 +432,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -494,8 +494,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -556,8 +556,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -618,8 +618,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -680,8 +680,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -742,8 +742,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -804,8 +804,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -866,8 +866,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -928,8 +928,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -990,8 +990,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -1052,8 +1052,8 @@ Sweat drips down her face, and her movements are becoming sloppy from exhaustion
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     

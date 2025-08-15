@@ -68,8 +68,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -146,8 +146,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -224,8 +224,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -301,8 +301,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -378,8 +378,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -455,8 +455,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -532,8 +532,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -609,8 +609,8 @@ export const sampleStories: CreatedStoryData[] = [
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -685,8 +685,8 @@ CEO로서의 책임감과 개인적인 감정 사이에서 갈등하고 있다.`
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -762,8 +762,8 @@ CEO로서의 책임감과 개인적인 감정 사이에서 갈등하고 있다.`
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     
@@ -839,8 +839,8 @@ CEO로서의 책임감과 개인적인 감정 사이에서 갈등하고 있다.`
     },
     
     media: {
-      thumbnailImage: '/images/sample.png',
-      storyImages: ['/images/sample.png'],
+      thumbnailImage: '/images/echostory.png',
+      storyImages: ['/images/echostory.png'],
       backgroundMusic: undefined
     },
     

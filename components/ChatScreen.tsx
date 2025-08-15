@@ -58,6 +58,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const [backgroundImageEnabled, setBackgroundImageEnabled] = useState(true);
   const [currentVoice, setCurrentVoice] = useState('Korean Female');
   const [showVoiceSelector, setShowVoiceSelector] = useState(false);
+  const [responsiveVoiceReady, setResponsiveVoiceReady] = useState(false);
   const [userNickname, setUserNickname] = useState(nickname);
   const [userInfo, setUserInfo] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -135,23 +136,83 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
 
   // Test voice function
   const handleTestVoice = (voice: { name: string; testText: string }) => {
-    if (typeof (window as any).responsiveVoice === 'undefined') {
-      console.error('❌ ResponsiveVoice not loaded');
+    console.log('🔍 Testing voice:', voice.name, 'with text:', voice.testText);
+    
+    // Check if ResponsiveVoice is loaded and ready
+    if (typeof (window as any).responsiveVoice === 'undefined' || !responsiveVoiceReady) {
+      console.warn('⚠️ ResponsiveVoice not ready, using browser TTS fallback');
+      
+      // Fallback to browser TTS
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(voice.testText);
+      
+      // Set language based on voice
+      if (voice.name.includes('Korean')) {
+        utterance.lang = 'ko-KR';
+      } else if (voice.name.includes('Japanese')) {
+        utterance.lang = 'ja-JP';
+      } else {
+        utterance.lang = 'en-US';
+      }
+      
+      utterance.rate = voice.name.includes('Male') ? 0.8 : 0.9;
+      utterance.pitch = voice.name.includes('Male') ? 0.9 : 1.0;
+      utterance.volume = 0.9;
+      
+      utterance.onstart = () => console.log('🎵 Browser TTS test started:', voice.name);
+      utterance.onend = () => console.log('🎵 Browser TTS test completed:', voice.name);
+      utterance.onerror = (e) => console.error('❌ Browser TTS test error:', e);
+      
+      window.speechSynthesis.speak(utterance);
       return;
     }
+
+    console.log('✅ ResponsiveVoice is ready');
+    
+    // Check if ResponsiveVoice voice support is available
+    if (!(window as any).responsiveVoice.voiceSupport()) {
+      console.error('❌ ResponsiveVoice voice support not available, using browser TTS');
+      
+      // Fallback to browser TTS
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(voice.testText);
+      utterance.lang = voice.name.includes('Korean') ? 'ko-KR' : 'en-US';
+      utterance.rate = 0.8;
+      window.speechSynthesis.speak(utterance);
+      return;
+    }
+
+    console.log('✅ ResponsiveVoice voice support available');
 
     // Cancel any ongoing speech
     (window as any).responsiveVoice.cancel();
     
-    // Play test audio
+    // Play test audio with ResponsiveVoice
+    console.log('🎵 Starting ResponsiveVoice test...');
     (window as any).responsiveVoice.speak(voice.testText, voice.name, {
       rate: voice.name.includes('Male') ? 0.85 : 0.9,
       pitch: voice.name.includes('Male') ? 0.9 : 1.0,
       volume: 0.9,
-      onstart: () => console.log('🎵 Testing voice:', voice.name),
-      onend: () => console.log('🎵 Voice test completed'),
-      onerror: (e: any) => console.error('❌ Voice test error:', e)
+      onstart: () => {
+        console.log('🎵 ResponsiveVoice test started:', voice.name);
+      },
+      onend: () => {
+        console.log('🎵 ResponsiveVoice test completed:', voice.name);
+      },
+      onerror: (e: any) => {
+        console.error('❌ ResponsiveVoice test error:', e);
+        console.log('🔄 Trying browser TTS fallback...');
+        
+        // Fallback to browser TTS on error
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(voice.testText);
+        utterance.lang = voice.name.includes('Korean') ? 'ko-KR' : 'en-US';
+        utterance.rate = 0.8;
+        window.speechSynthesis.speak(utterance);
+      }
     });
+    
+    console.log('🎵 ResponsiveVoice test command sent');
   };
 
   // Gallery state for story images
@@ -167,12 +228,34 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     ...story.media.storyImages
   ].filter(Boolean) : [];
   
-  // Force fallback to sample.png if character-*.svg detected
-  const safeStoryImages = storyImages.map(img => img && img.includes('character-') ? '/images/sample.png' : img);
+  // Force fallback to echostory.png if character-*.svg detected
+  const safeStoryImages = storyImages.map(img => img && img.includes('character-') ? '/images/echostory.png' : img);
   
-  // If no images, use sample.png
-  const finalStoryImages = safeStoryImages.length > 0 ? safeStoryImages : ['/images/sample.png'];
+  // If no images, use echostory.png
+  const finalStoryImages = safeStoryImages.length > 0 ? safeStoryImages : ['/images/echostory.png'];
   console.log('ChatScreen - storyId:', storyId, 'story:', story);
+
+  // Check ResponsiveVoice loading status
+  useEffect(() => {
+    const checkResponsiveVoice = () => {
+      if (typeof (window as any).responsiveVoice !== 'undefined') {
+        console.log('✅ ResponsiveVoice loaded successfully');
+        setResponsiveVoiceReady(true);
+        
+        // List available voices for debugging
+        if ((window as any).responsiveVoice.getVoices) {
+          const voices = (window as any).responsiveVoice.getVoices();
+          console.log('🎵 Available ResponsiveVoice voices:', voices);
+        }
+      } else {
+        console.log('⏳ ResponsiveVoice not yet loaded, retrying...');
+        setTimeout(checkResponsiveVoice, 500);
+      }
+    };
+
+    // Start checking after a short delay
+    setTimeout(checkResponsiveVoice, 1000);
+  }, []);
 
   // Close voice selector when clicking outside
   useEffect(() => {
@@ -247,8 +330,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   
   const characterName = story.content.characterName || story.title || 'Character';
   
-  // 캐릭터 이미지 동적 로딩
-  const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
+  // 캐릭터 이미지 동적 로딩 - EchoStory 로고로 시작
+  const [characterImageSrc, setCharacterImageSrc] = useState<string>('/images/echostory.png');
   
   // 캐릭터 이미지 상태 변경 시 로그 출력
   useEffect(() => {
@@ -301,7 +384,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
       // 캐릭터 이미지가 없으면 스토리 이미지나 기본 이미지 사용
       const fallbackImage = (finalStoryImages[0] && !finalStoryImages[0].includes('character-')) 
         ? finalStoryImages[0] 
-        : '/images/sample.png';
+        : '/images/echostory.png';
       console.log('❌ No character image found, using fallback:', fallbackImage);
       setCharacterImageSrc(fallbackImage);
     };
@@ -937,7 +1020,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                             onError={(e) => {
                               console.log('❌ Character image failed to load in message:', characterImageSrc);
                               const target = e.target as HTMLImageElement;
-                              target.src = '/images/sample.png';
+                              target.src = '/images/echostory.png';
                             }}
                           />
                         </div>
@@ -1030,7 +1113,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                             characterImageSrc || 
                             (finalStoryImages[0] && !finalStoryImages[0].includes('character-')) 
                               ? finalStoryImages[0] 
-                              : '/images/sample.png'
+                              : '/images/echostory.png'
                           }
                           alt="Character avatar"
                           className="rounded-[14.5px] shrink-0 size-[28.99px] object-cover"
@@ -1038,7 +1121,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                           onError={(e) => {
                             console.log('❌ Character image failed to load in first message:', characterImageSrc);
                             const target = e.target as HTMLImageElement;
-                            target.src = '/images/sample.png';
+                            target.src = '/images/echostory.png';
                           }}
                         />
                       </div>

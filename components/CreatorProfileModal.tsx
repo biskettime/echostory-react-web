@@ -237,7 +237,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
                       {story.content?.characterName ? (
                         <StoryThumbnailImage
                           characterName={story.content.characterName}
-                          fallbackImage={story.media?.thumbnailImage || '/images/sample.png'}
+                          fallbackImage={story.media?.thumbnailImage || '/images/echostory.png'}
                           alt={story.title}
                           className="w-full h-full object-cover"
                         />

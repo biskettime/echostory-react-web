@@ -208,7 +208,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
       ...storyImages,
       ...(thumbnailImage && !storyImages.includes(thumbnailImage) ? [thumbnailImage] : [])
     ];
-    finalAllImages = storyAndThumbnailImages.length > 0 ? storyAndThumbnailImages : ['/images/sample.png'];
+    finalAllImages = storyAndThumbnailImages.length > 0 ? storyAndThumbnailImages : ['/images/echostory.png'];
     console.log(`📸 StoryDetail - No character images found, using story images:`, finalAllImages);
   }
   
@@ -221,16 +221,16 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     finalImagesCount: finalAllImages.length,
     finalAllImages,
     usingOnlyCharacterImages: isCharacterImagesLoaded && characterImages.length > 0,
-    willShowSampleImage: finalAllImages.includes('/images/sample.png'),
+    willShowEchoStoryImage: finalAllImages.includes('/images/echostory.png'),
     loadingState: !isCharacterImagesLoaded ? 'Loading character images...' : 'Loaded'
   });
 
-  // Force fallback to sample.png if character-*.svg detected (but keep character images)
+  // Force fallback to echostory.png if character-*.svg detected (but keep character images)
   const safeAllImages = finalAllImages.map(img => {
     if (img && img.startsWith('/data/ch_img/')) {
       return img; // Keep character images as-is
     }
-    return img && img.includes('character-') ? '/images/sample.png' : img;
+    return img && img.includes('character-') ? '/images/echostory.png' : img;
   });
   
   // Only create gallery images if character image loading is complete
@@ -493,19 +493,19 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                       currentImageIsLocked ? 'filter blur-[6px]' : ''
                     }`}
                     style={{ 
-                      backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/sample.png'}')`,
+                      backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/echostory.png'}')`,
                       backgroundColor: '#2a2a2a' // Fallback background color
                     }}
                     onError={(e) => {
                       console.log('Image load error, using fallback');
                       const target = e.target as HTMLElement;
-                      target.style.backgroundImage = "url('/images/sample.png')";
+                      target.style.backgroundImage = "url('/images/echostory.png')";
                     }}
                   >
-                    {/* Additional fallback: show sample.png as img if background fails */}
-                    {(!galleryImages[currentImageIndex]?.url || galleryImages[currentImageIndex]?.url === '/images/sample.png') && (
+                    {/* Additional fallback: show echostory.png as img if background fails */}
+                    {(!galleryImages[currentImageIndex]?.url || galleryImages[currentImageIndex]?.url === '/images/echostory.png') && (
                       <img 
-                        src="/images/sample.png" 
+                        src="/images/echostory.png" 
                         alt="Story image" 
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -665,10 +665,10 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                         className={`absolute inset-0 bg-cover bg-center rounded-lg ${
                           !image.isUnlocked ? 'filter blur-[2px]' : ''
                         }`}
-                        style={{ backgroundImage: `url('${image.url || '/images/sample.png'}')` }}
+                        style={{ backgroundImage: `url('${image.url || '/images/echostory.png'}')` }}
                         onError={(e) => {
                           const target = e.target as HTMLElement;
-                          target.style.backgroundImage = "url('/images/sample.png')";
+                          target.style.backgroundImage = "url('/images/echostory.png')";
                         }}
                       />
                       

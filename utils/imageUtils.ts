@@ -99,7 +99,7 @@ export async function findAllAvailableImages(characterName: string): Promise<str
  * @returns 기본 이미지 경로
  */
 export function getDefaultImage(): string {
-  return '/images/sample.png';
+  return '/images/echostory.png';
 }
 
 /**

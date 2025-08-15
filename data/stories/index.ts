@@ -201,17 +201,17 @@ export const getStoryDashboardData = () => {
 
 // 이미지 유틸리티 함수들
 export const getStoryImageWithFallback = (imageUrl?: string): string => {
-  return imageUrl || '/images/sample.png';
+  return imageUrl || '/images/echostory.png';
 };
 
 export const getStoryThumbnailWithFallback = (story: CreatedStoryData): string => {
-  return story.media.thumbnailImage || '/images/sample.png';
+  return story.media.thumbnailImage || '/images/echostory.png';
 };
 
 export const getStoryImagesWithFallback = (story: CreatedStoryData): string[] => {
   const images = story.media.storyImages || [];
   if (images.length === 0) {
-    return ['/images/sample.png'];
+    return ['/images/echostory.png'];
   }
   return images;
 };
