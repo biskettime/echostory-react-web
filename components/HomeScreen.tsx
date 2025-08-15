@@ -340,7 +340,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
               className="absolute top-0 right-0 w-[60%] h-full opacity-80"
               style={{
                 backgroundImage: 'url(/data/creator.png)',
-                backgroundSize: 'cover',
+                backgroundSize: '100% 100%',
                 backgroundPosition: 'center top',
                 backgroundRepeat: 'no-repeat'
               }}

@@ -547,6 +547,19 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
       if (currentChatSession) {
         addChatMessage(currentChatSession.id, 'user', messageContent);
       }
+      
+      // Update chat message count for image unlocking
+      const currentCount = parseInt(localStorage.getItem(`chatMessages_${storyId}`) || '0', 10);
+      const newCount = currentCount + 1;
+      localStorage.setItem(`chatMessages_${storyId}`, newCount.toString());
+      
+      // Log for debugging
+      console.log(`📊 Chat message count updated: ${newCount} (unlocked images: ${Math.min(1 + Math.floor(newCount / 10), 10)})`);
+      
+      // Dispatch custom event to notify StoryDetailScreen of count change
+      window.dispatchEvent(new CustomEvent('chatMessageCountUpdated', { 
+        detail: { storyId, count: newCount } 
+      }));
 
       // Simulate character response
       const responseTimeout = setTimeout(() => {

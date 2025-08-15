@@ -55,6 +55,44 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   const [currentThumbnailIndex, setCurrentThumbnailIndex] = useState(0);
   const thumbnailContainerRef = useRef<HTMLDivElement>(null);
   
+  // Chat message tracking for image unlocking
+  const [chatMessageCount, setChatMessageCount] = useState(0);
+  
+  // Load chat message count from localStorage
+  useEffect(() => {
+    const savedCount = localStorage.getItem(`chatMessages_${storyId}`);
+    if (savedCount) {
+      setChatMessageCount(parseInt(savedCount, 10));
+    }
+  }, [storyId]);
+  
+  // Listen for chat message count updates
+  useEffect(() => {
+    const handleChatMessageUpdate = (event: CustomEvent) => {
+      if (event.detail.storyId === storyId) {
+        setChatMessageCount(event.detail.count);
+        console.log(`🔓 Image unlock status updated: ${event.detail.count} messages, ${getUnlockedImageCount(event.detail.count)} images unlocked`);
+      }
+    };
+    
+    window.addEventListener('chatMessageCountUpdated', handleChatMessageUpdate as EventListener);
+    return () => {
+      window.removeEventListener('chatMessageCountUpdated', handleChatMessageUpdate as EventListener);
+    };
+  }, [storyId]);
+  
+  // Function to get unlocked image count based on chat messages
+  const getUnlockedImageCount = (messageCount: number): number => {
+    // First image is always unlocked, then 1 more image per 10 messages
+    return Math.min(1 + Math.floor(messageCount / 10), 10); // Max 10 images
+  };
+  
+  // Function to check if an image is unlocked
+  const isImageUnlocked = (imageIndex: number): boolean => {
+    const unlockedCount = getUnlockedImageCount(chatMessageCount);
+    return imageIndex < unlockedCount;
+  };
+  
   // Profile states
   const [profiles, setProfiles] = useState<Profile[]>([
     { id: 'default', name: 'Alex', info: '' }
@@ -276,7 +314,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     id: index,
     url: url,
     isSelected: index === currentThumbnailIndex,
-    isUnlocked: true // All images are unlocked for user's own stories
+    isUnlocked: isImageUnlocked(index) // Check if image is unlocked based on chat messages
   }));
 
   // Check if current image is locked
@@ -320,6 +358,13 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   };
 
   const handleThumbnailClick = (index: number) => {
+    if (!isImageUnlocked(index)) {
+      // Show unlock requirement message
+      const messagesNeeded = (index * 10) - chatMessageCount;
+      alert(`이 이미지를 해금하려면 ${messagesNeeded}개의 메시지를 더 보내야 합니다. (현재: ${chatMessageCount}개)`);
+      return;
+    }
+    
     setCurrentImageIndex(index);
     setCurrentThumbnailIndex(index);
     scrollThumbnailIntoView(index);
