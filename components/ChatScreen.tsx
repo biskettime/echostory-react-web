@@ -14,11 +14,13 @@ import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../u
 import { translateCharacterName, translateStoryTitle, translateStartingSituation, translateFirstDialogue } from '../utils/storyTranslation';
 import { getCurrentLanguage } from '../utils/i18n';
 import { renderFormattedText, renderUserFormattedText } from '../utils/textFormatter';
+import { IntegratedAIService, StoryContext, UserContext } from '../services/integratedAIService';
 import svgPaths from '../imports/svg-c6g2wd331h';
-import { AIService } from '../services/ai/aiService';
-import { StoryContext, UserContext } from '../services/ai/types';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
 const imgThumbnail = "/images/chat-thumbnail.svg";
+
+// Create AI service instance
+const aiService = new IntegratedAIService();
 
 interface ChatScreenProps {
   storyId: string;
@@ -609,13 +611,22 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
           content: msg.content
         }));
 
-      // Get AI response
-      const response = await AIService.generateResponse(
-        storyContext,
-        userContext,
+      // Get AI response - using the generateResponse method with session ID
+      const sessionId = `${storyId}-${userNickname}`;
+      
+      // Initialize session if not already done
+      if (!aiService['conversationCache']?.has(sessionId)) {
+        aiService.initializeSession(sessionId, storyContext, userContext);
+      }
+      
+      const aiResponse = await aiService.generateResponse(
+        sessionId,
         userMessage,
-        conversationHistory
+        storyContext,
+        userContext
       );
+      
+      const response = aiResponse.message;
 
       return response;
     } catch (error) {
@@ -816,28 +827,41 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
         });
         
         // Generate new response with typing animation
-        setTimeout(() => {
+        setTimeout(async () => {
           const newResponseId = nextMessageIdRef.current;
           nextMessageIdRef.current += 1;
           
-          const responseContent = getCharacterResponse(userMessage.content, storyId);
-          console.log('New response content:', responseContent);
-          
-          // Add message with typing animation
-          const newResponse: Message = {
-            id: newResponseId,
-            sender: 'character',
-            content: responseContent,
-            timestamp: new Date(),
-            isTyping: true
-          };
-          
-          console.log('Adding new response:', newResponse);
-          setMessages(prev => [...prev, newResponse]);
-          
-          // Save to chat session
-          if (currentChatSession) {
-            addChatMessage(currentChatSession.id, 'character', responseContent);
+          try {
+            const responseContent = await getCharacterResponse(userMessage.content, storyId);
+            console.log('New response content:', responseContent);
+            
+            // Add message with typing animation
+            const newResponse: Message = {
+              id: newResponseId,
+              sender: 'character',
+              content: responseContent,
+              timestamp: new Date(),
+              isTyping: true
+            };
+            
+            console.log('Adding new response:', newResponse);
+            setMessages(prev => [...prev, newResponse]);
+            
+            // Save to chat session
+            if (currentChatSession) {
+              addChatMessage(currentChatSession.id, 'character', responseContent);
+            }
+          } catch (error) {
+            console.error('❌ Error generating new response:', error);
+            // Add fallback response
+            const fallbackResponse: Message = {
+              id: newResponseId,
+              sender: 'character',
+              content: t('chat.response1'),
+              timestamp: new Date(),
+              isTyping: true
+            };
+            setMessages(prev => [...prev, fallbackResponse]);
           }
         }, 1000);
       } else {
@@ -1415,7 +1439,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                               <button
                                 onClick={() => handleEditMessage(msg.id)}
                                 className="bg-[rgba(40,40,40,0.8)] hover:bg-[rgba(50,50,50,0.8)] backdrop-blur-sm rounded-full p-2 transition-colors border border-[rgba(255,255,255,0.1)]"
-                                title={t('chat.edit')}
+                                title={t('chat.editMessage')}
                               >
                                 <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

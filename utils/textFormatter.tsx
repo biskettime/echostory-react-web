@@ -218,11 +218,11 @@ export const renderFormattedText = (text: string): React.ReactNode => {
           </span>
         );
       
-      case 'dialogue': // "대화체" - 레몬색 + 아주 약한 볼드
+      case 'dialogue': // "대화체" - 레몬색 + 매우 약한 볼드
         return (
           <span key={index}>
             {needsSpace && ' '}
-            <span style={{ color: '#FFFF99', fontWeight: '500' }}>
+            <span style={{ color: '#FFFF99', fontWeight: '450' }}>
               {segment.content}
             </span>
           </span>

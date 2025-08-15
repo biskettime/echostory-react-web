@@ -6,7 +6,7 @@
 export const AI_CONFIG = {
   // NVIDIA API Configuration
   nvidia: {
-    apiKey: process.env.REACT_APP_NVIDIA_API_KEY || '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',
+    apiKey: import.meta.env.VITE_NVIDIA_API_KEY || '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',
     baseUrl: 'https://integrate.api.nvidia.com/v1',
     model: 'meta/llama-3.1-70b-instruct', // You can change this to other models like 'google/gemma-2-27b-it'
     maxTokens: 2048,

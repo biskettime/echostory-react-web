@@ -30,8 +30,18 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- ResponsiveVoice.js for high-quality TTS -->
-    <script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
+    <!-- ResponsiveVoice.js for high-quality TTS with fallback -->
+    <script>
+      // Try to load ResponsiveVoice with error handling
+      (function() {
+        var script = document.createElement('script');
+        script.src = 'https://code.responsivevoice.org/responsivevoice.js?key=FREE';
+        script.onerror = function() {
+          console.warn('⚠️ ResponsiveVoice failed to load, will use browser TTS fallback');
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
     <script type="module" src="/main.tsx"></script>
   </body>
 </html>

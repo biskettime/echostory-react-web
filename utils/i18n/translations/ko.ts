@@ -57,7 +57,7 @@ export const ko = {
     response6: '"정말 그런 일이 있었나요?" !놀란 표정으로 눈썹을 치켜올린다.! *정말 놀라운 일이네요.*',
     response7: '*완전히 이해해요.* "당신의 감정이 충분히 이해됩니다." !캐릭터가 안심시키는 듯한 표정을 짓는다.!',
     regenerate: '답변 재생성',
-    edit: '메시지 수정',
+    editMessage: '메시지 수정',
     delete: '메시지 삭제',
     editNotImplemented: '수정 기능은 곧 제공될 예정입니다!',
     confirmDelete: '이 메시지를 삭제하시겠습니까?'

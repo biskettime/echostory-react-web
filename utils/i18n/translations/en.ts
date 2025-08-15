@@ -57,7 +57,7 @@ export const en = {
     response6: '"Is that really how it happened?" !Their eyebrows raise in surprise.! *That sounds quite remarkable.*',
     response7: '*I completely understand.* "Your feelings make perfect sense." !The character gives you a reassuring look.!',
     regenerate: 'Regenerate response',
-    edit: 'Edit message',
+    editMessage: 'Edit message',
     delete: 'Delete message',
     editNotImplemented: 'Edit functionality will be available soon!',
     confirmDelete: 'Are you sure you want to delete this message?'
