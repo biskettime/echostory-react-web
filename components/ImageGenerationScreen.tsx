@@ -20,9 +20,20 @@ export function ImageGenerationScreen({ onBack, safetyMode, onSafetyToggle }: Im
               <path d="m15 18-6-6 6-6"/>
             </svg>
           </button>
-          <div className="text-white text-xl font-medium tracking-wide">
-            Echo<span className="text-[#ff9500]">Story</span>
-          </div>
+          <img 
+            src="/images/echostory.png" 
+            alt="EchoStory" 
+            className="h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallbackDiv = document.createElement('div');
+              fallbackDiv.className = 'text-white text-xl font-medium tracking-wide';
+              fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+              target.parentNode?.appendChild(fallbackDiv);
+            }}
+          />
         </div>
 
         {/* Right Side Controls */}

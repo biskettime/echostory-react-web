@@ -11,6 +11,82 @@ interface CreatorProfileModalProps {
   onFollowChange?: (creatorId: number, isFollowing: boolean) => void;
 }
 
+// Component to load character image for story thumbnails
+function StoryThumbnailImage({ characterName, fallbackImage, alt, className }: {
+  characterName: string;
+  fallbackImage: string;
+  alt: string;
+  className: string;
+}) {
+  const [imageSrc, setImageSrc] = useState<string>(fallbackImage);
+  
+  useEffect(() => {
+    const loadCharacterImage = async () => {
+      if (!characterName) {
+        setImageSrc(fallbackImage);
+        return;
+      }
+      
+      const firstName = characterName.split(' ')[0];
+      
+      // Map Korean names to English equivalents
+      const nameMapping: { [key: string]: string } = {
+        '지훈': 'Jihoon',
+        '지연': 'Jiyeon',
+        '민준': 'Minjun',
+        '하루카': 'Haruka',
+        '지원': 'Jiwon',
+        '소희': 'Sohee',
+        '서연': 'Seoyeon',
+        '하영': 'Hayoung',
+        '미나': 'Mina',
+        '수연': 'Suyeon',
+        '소연': 'Soyeon',
+        '유키': 'Yuki'
+      };
+      
+      const mappedName = nameMapping[firstName] || firstName;
+      const sanitizedName = mappedName
+        .replace(/[^a-zA-Z0-9]/g, '_')
+        .replace(/\s+/g, '_')
+        .toLowerCase()
+        .replace(/^./, str => str.toUpperCase());
+      
+      // Try to find character image (1-10)
+      for (let i = 1; i <= 10; i++) {
+        const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
+        try {
+          const response = await fetch(imagePath, { method: 'HEAD' });
+          if (response.ok) {
+            console.log(`✅ CreatorProfile - Found character image: ${imagePath}`);
+            setImageSrc(imagePath);
+            return;
+          }
+        } catch (error) {
+          // Continue to next image
+        }
+      }
+      
+      console.log(`❌ CreatorProfile - No character image found for: ${characterName}, using fallback`);
+      setImageSrc(fallbackImage);
+    };
+    
+    loadCharacterImage();
+  }, [characterName, fallbackImage]);
+  
+  return (
+    <img
+      src={imageSrc}
+      alt={alt}
+      className={className}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.src = fallbackImage;
+      }}
+    />
+  );
+}
+
 export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, onFollowChange }: CreatorProfileModalProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(creator.stats.followers);
@@ -152,7 +228,14 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
                   >
                     {/* Story Thumbnail */}
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#424242] flex-shrink-0">
-                      {story.media?.thumbnailImage ? (
+                      {story.content?.characterName ? (
+                        <StoryThumbnailImage
+                          characterName={story.content.characterName}
+                          fallbackImage={story.media?.thumbnailImage || '/images/sample.png'}
+                          alt={story.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : story.media?.thumbnailImage ? (
                         <img
                           src={story.media.thumbnailImage}
                           alt={story.title}

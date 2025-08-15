@@ -58,6 +58,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   // Character image loading
   const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
   const [characterImages, setCharacterImages] = useState<string[]>([]);
+  const [isCharacterImagesLoaded, setIsCharacterImagesLoaded] = useState(false);
 
   // Load like and favorite status from localStorage
   useEffect(() => {
@@ -99,21 +100,42 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   // Load all character images (1~10)
   useEffect(() => {
     const loadAllCharacterImages = async () => {
+      setIsCharacterImagesLoaded(false); // Start loading
+      
       if (!story?.content.characterName) {
         setCharacterImages([]);
         setCharacterImageSrc('');
+        setIsCharacterImagesLoaded(true); // Loading complete (no character)
         return;
       }
       
       const characterName = story.content.characterName;
       const firstName = characterName.split(' ')[0];
-      const sanitizedName = firstName
-        .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+      
+      // Map Korean names to English equivalents
+      const nameMapping: { [key: string]: string } = {
+        '지훈': 'Jihoon',
+        '지연': 'Jiyeon',
+        '민준': 'Minjun',
+        '하루카': 'Haruka',
+        '지원': 'Jiwon',
+        '소희': 'Sohee',
+        '서연': 'Seoyeon',
+        '하영': 'Hayoung',
+        '미나': 'Mina',
+        '수연': 'Suyeon',
+        '소연': 'Soyeon',
+        '유키': 'Yuki'
+      };
+      
+      const mappedName = nameMapping[firstName] || firstName;
+      const sanitizedName = mappedName
+        .replace(/[^a-zA-Z0-9]/g, '_')
         .replace(/\s+/g, '_')
         .toLowerCase()
         .replace(/^./, str => str.toUpperCase());
       
-      console.log('🔍 Loading all character images for:', characterName, '→', sanitizedName);
+      console.log(`🔍 StoryDetail - Loading images for character: "${characterName}" → "${mappedName}" → "${sanitizedName}"`);
       
       const foundImages: string[] = [];
       
@@ -123,7 +145,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
         try {
           const response = await fetch(imagePath, { method: 'HEAD' });
           if (response.ok) {
-            console.log(`✅ Found character image ${i}:`, imagePath);
+            console.log(`✅ StoryDetail - Found character image ${i}:`, imagePath);
             foundImages.push(imagePath);
           }
         } catch (error) {
@@ -131,7 +153,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
         }
       }
       
-      console.log(`📸 Total character images found: ${foundImages.length}`, foundImages);
+      console.log(`📸 StoryDetail - Total character images found: ${foundImages.length}`, foundImages);
       setCharacterImages(foundImages);
       
       // Set first image as main character image
@@ -139,8 +161,10 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
         setCharacterImageSrc(foundImages[0]);
       } else {
         setCharacterImageSrc('');
-        console.log('❌ No character images found for:', characterName);
+        console.log('❌ StoryDetail - No character images found for:', characterName);
       }
+      
+      setIsCharacterImagesLoaded(true); // Loading complete
     };
     
     loadAllCharacterImages();
@@ -161,31 +185,38 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   const thumbnailImage = story?.media.thumbnailImage;
   
   // Use only character images if they exist, otherwise use story images
+  // Wait for character image loading to complete before showing any images
   let finalAllImages: string[] = [];
   
-  if (characterImages.length > 0) {
-    // If character images exist, use ONLY character images (no story images, no sample images)
+  if (!isCharacterImagesLoaded) {
+    // Still loading character images, don't show any images yet
+    finalAllImages = [];
+    console.log(`⏳ StoryDetail - Still loading character images, showing no images yet`);
+  } else if (characterImages.length > 0) {
+    // Character images loaded and found, use ONLY character images
     finalAllImages = [...characterImages];
-    console.log(`📸 Using only character images (${characterImages.length} found):`, characterImages);
+    console.log(`📸 StoryDetail - Using only character images (${characterImages.length} found):`, characterImages);
   } else {
-    // If no character images, use story images and fallback to default if needed
+    // Character images loaded but none found, use story images and fallback to default if needed
     const storyAndThumbnailImages = [
       ...storyImages,
       ...(thumbnailImage && !storyImages.includes(thumbnailImage) ? [thumbnailImage] : [])
     ];
     finalAllImages = storyAndThumbnailImages.length > 0 ? storyAndThumbnailImages : ['/images/sample.png'];
-    console.log(`📸 No character images found, using story images:`, finalAllImages);
+    console.log(`📸 StoryDetail - No character images found, using story images:`, finalAllImages);
   }
   
   console.log('StoryDetailScreen Debug:', {
     storyId,
     characterName: story?.content.characterName,
+    isCharacterImagesLoaded,
     characterImagesCount: characterImages.length,
     characterImages: characterImages.length > 0 ? characterImages : 'None',
     finalImagesCount: finalAllImages.length,
     finalAllImages,
-    usingOnlyCharacterImages: characterImages.length > 0,
-    willShowSampleImage: finalAllImages.includes('/images/sample.png')
+    usingOnlyCharacterImages: isCharacterImagesLoaded && characterImages.length > 0,
+    willShowSampleImage: finalAllImages.includes('/images/sample.png'),
+    loadingState: !isCharacterImagesLoaded ? 'Loading character images...' : 'Loaded'
   });
 
   // Force fallback to sample.png if character-*.svg detected (but keep character images)
@@ -196,7 +227,8 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     return img && img.includes('character-') ? '/images/sample.png' : img;
   });
   
-  const galleryImages = safeAllImages.map((url, index) => ({
+  // Only create gallery images if character image loading is complete
+  const galleryImages = !isCharacterImagesLoaded ? [] : safeAllImages.map((url, index) => ({
     id: index,
     url: url,
     isSelected: index === currentThumbnailIndex,
@@ -440,34 +472,45 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             <div className="space-y-4">
               {/* Main Image */}
               <div className="relative w-full h-[400px] rounded-md overflow-hidden">
-                <div
-                  className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
-                    currentImageIsLocked ? 'filter blur-[6px]' : ''
-                  }`}
-                  style={{ 
-                    backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/sample.png'}')`,
-                    backgroundColor: '#2a2a2a' // Fallback background color
-                  }}
-                  onError={(e) => {
-                    console.log('Image load error, using fallback');
-                    const target = e.target as HTMLElement;
-                    target.style.backgroundImage = "url('/images/sample.png')";
-                  }}
-                >
-                  {/* Additional fallback: show sample.png as img if background fails */}
-                  {(!galleryImages[currentImageIndex]?.url || galleryImages[currentImageIndex]?.url === '/images/sample.png') && (
-                    <img 
-                      src="/images/sample.png" 
-                      alt="Story image" 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        console.log('Fallback image also failed to load');
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  )}
-                </div>
+                {!isCharacterImagesLoaded ? (
+                  // Loading state - show loading indicator
+                  <div className="absolute inset-0 bg-[#2a2a2a] flex items-center justify-center">
+                    <div className="text-white text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                      <p className="text-sm opacity-70">Loading images...</p>
+                    </div>
+                  </div>
+                ) : (
+                  // Images loaded - show gallery
+                  <div
+                    className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-300 ${
+                      currentImageIsLocked ? 'filter blur-[6px]' : ''
+                    }`}
+                    style={{ 
+                      backgroundImage: `url('${galleryImages[currentImageIndex]?.url || '/images/sample.png'}')`,
+                      backgroundColor: '#2a2a2a' // Fallback background color
+                    }}
+                    onError={(e) => {
+                      console.log('Image load error, using fallback');
+                      const target = e.target as HTMLElement;
+                      target.style.backgroundImage = "url('/images/sample.png')";
+                    }}
+                  >
+                    {/* Additional fallback: show sample.png as img if background fails */}
+                    {(!galleryImages[currentImageIndex]?.url || galleryImages[currentImageIndex]?.url === '/images/sample.png') && (
+                      <img 
+                        src="/images/sample.png" 
+                        alt="Story image" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.log('Fallback image also failed to load');
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
                 
                 {/* Lock Overlay - Only show when current image is locked */}
                 {currentImageIsLocked && (
@@ -563,7 +606,8 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                 </div>
               </div>
 
-              {/* Thumbnail Gallery with Smooth Scrolling */}
+              {/* Thumbnail Gallery with Smooth Scrolling - Only show when images are loaded */}
+              {isCharacterImagesLoaded && galleryImages.length > 0 && (
               <div className="w-full relative">
                 {/* Left Arrow for Thumbnails */}
                 <button 
@@ -646,6 +690,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                   ))}
                 </div>
               </div>
+              )}
             </div>
 
             {/* Story Information Section */}

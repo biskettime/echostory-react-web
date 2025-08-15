@@ -165,6 +165,98 @@ const creators: CreatorInfo[] = [
       website: 'https://wanderlustgirl.travel',
       twitter: 'https://twitter.com/wanderlust_girl'
     }
+  },
+  {
+    id: 'creator_009',
+    handle: '@fitness_guru',
+    displayName: 'FitnessGuru',
+    // profileImage removed - use creator.png
+    bio: 'Former professional athlete turned fitness trainer. Shares stories about overcoming challenges and achieving goals.',
+    joinDate: '2023-11-15T00:00:00Z',
+    stats: {
+      totalStories: 5,
+      totalLikes: 8200,
+      followers: 1567,
+      following: 123
+    },
+    badges: ['Fitness Expert', 'Motivational'],
+    socialLinks: {
+      instagram: 'https://instagram.com/fitness_guru_official',
+      website: 'https://fitnessguru.health'
+    }
+  },
+  {
+    id: 'creator_010',
+    handle: '@canvas_dreams',
+    displayName: 'CanvasDreams',
+    // profileImage removed - use creator.png
+    bio: 'Art student and aspiring painter. Creates stories about artistic passion, creativity, and following your dreams.',
+    joinDate: '2023-12-03T00:00:00Z',
+    stats: {
+      totalStories: 4,
+      totalLikes: 6800,
+      followers: 1234,
+      following: 89
+    },
+    badges: ['Artist', 'Rising Star'],
+    socialLinks: {
+      instagram: 'https://instagram.com/canvas_dreams_art'
+    }
+  },
+  {
+    id: 'creator_011',
+    handle: '@coffee_artist',
+    displayName: 'CoffeeArtist',
+    // profileImage removed - use creator.png
+    bio: 'Professional barista with a passion for coffee culture. Writes about daily encounters and dreams in coffee shops.',
+    joinDate: '2024-01-08T00:00:00Z',
+    stats: {
+      totalStories: 3,
+      totalLikes: 5400,
+      followers: 987,
+      following: 156
+    },
+    badges: ['Coffee Expert', 'New Creator'],
+    socialLinks: {
+      instagram: 'https://instagram.com/coffee_artist_daily'
+    }
+  },
+  {
+    id: 'creator_012',
+    handle: '@animal_healer',
+    displayName: 'AnimalHealer',
+    // profileImage removed - use creator.png
+    bio: 'Veterinarian who loves animals. Shares heartwarming stories about the bond between humans and pets.',
+    joinDate: '2024-01-12T00:00:00Z',
+    stats: {
+      totalStories: 2,
+      totalLikes: 4200,
+      followers: 1456,
+      following: 67
+    },
+    badges: ['Animal Lover', 'Professional'],
+    socialLinks: {
+      website: 'https://animalhealer.vet'
+    }
+  },
+  {
+    id: 'creator_013',
+    handle: '@pixel_master',
+    displayName: 'PixelMaster',
+    // profileImage removed - use creator.png
+    bio: 'Professional gamer and streamer. Creates stories about gaming culture, online communities, and digital life.',
+    joinDate: '2024-01-20T00:00:00Z',
+    stats: {
+      totalStories: 1,
+      totalLikes: 3200,
+      followers: 2890,
+      following: 234
+    },
+    badges: ['Gaming Expert', 'Streamer'],
+    socialLinks: {
+      twitter: 'https://twitter.com/pixel_master_gaming',
+      website: 'https://pixelmaster.stream'
+    }
   }
 ];
 

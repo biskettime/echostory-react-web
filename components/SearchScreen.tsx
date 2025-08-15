@@ -55,24 +55,37 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
 
   return (
     <div className="bg-[#1a1b1b] box-border content-stretch flex flex-col items-start justify-start p-0 relative size-full">
-      {/* Header with Echo Story Logo and Close Button */}
-      <div className="bg-[#1a1b1b] flex flex-row h-[42px] items-center justify-between w-full px-4 py-0 z-20 border-b border-[#2a2b2b]">
-        {/* Echo Story Logo */}
+      {/* Header - Unified with ProfileScreen */}
+      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-[41.99px] items-center justify-between left-0 w-full pl-[15px] pr-0 py-0 top-0 flex-shrink-0">
+        {/* Logo */}
         <div className="flex items-center">
-          <div className="flex items-center gap-1">
-            <span className="text-white text-[18px] font-medium">Echo</span>
-            <span className="text-[#FF9500] text-[18px] font-medium">Story</span>
-          </div>
+          <img 
+            src="/images/echostory.png" 
+            alt="EchoStory" 
+            className="h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallbackDiv = document.createElement('div');
+              fallbackDiv.className = 'text-white text-xl font-medium tracking-wide';
+              fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+              target.parentNode?.appendChild(fallbackDiv);
+            }}
+          />
         </div>
 
-        {/* Close Button - Simple and Clean */}
-        <button
-          onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 text-white hover:opacity-70 transition-opacity"
-          aria-label="Close search screen"
-        >
-          <X className="w-5 h-5 text-white stroke-2" />
-        </button>
+        {/* Right Side Controls */}
+        <div className="box-border content-stretch flex flex-row gap-[15px] items-center justify-start pl-0 pr-[15px] py-0 relative shrink-0">
+          {/* Close Button */}
+          <button
+            onClick={onBack}
+            className="p-1 hover:opacity-80 transition-opacity text-white"
+            aria-label="Close search screen"
+          >
+            <X className="w-5 h-5 text-white stroke-2" />
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}

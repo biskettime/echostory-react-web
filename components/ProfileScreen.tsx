@@ -33,9 +33,20 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
       <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-[41.99px] items-center justify-between left-0 w-full pl-[15px] pr-0 py-0 top-0 flex-shrink-0">
         {/* Logo */}
         <div className="flex items-center">
-          <div className="text-white text-xl font-medium tracking-wide">
-            Echo<span className="text-[#ff9500]">Story</span>
-          </div>
+          <img 
+            src="/images/echostory.png" 
+            alt="EchoStory" 
+            className="h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallbackDiv = document.createElement('div');
+              fallbackDiv.className = 'text-white text-xl font-medium tracking-wide';
+              fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+              target.parentNode?.appendChild(fallbackDiv);
+            }}
+          />
         </div>
 
         {/* Right Side Controls */}
@@ -144,45 +155,30 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
             </div>
           </div>
 
-          {/* Daily Check-in Section */}
-          <div className="bg-[#282828] relative rounded-[5px] shrink-0 w-full">
-            <div className="flex flex-row items-center relative size-full">
-              <div className="box-border content-stretch flex flex-row items-center justify-between px-5 py-4 relative w-full">
-                {/* Left Side - Check-in Info */}
-                <div className="box-border content-stretch flex flex-row items-center justify-start p-0 relative shrink-0">
-                  <div className="box-border content-stretch flex flex-col items-start justify-start pl-0 pr-[7px] py-0 relative shrink-0">
-                    <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14.063px] text-[rgba(255,255,255,0.9)] text-left text-nowrap">
-                      <p className="block leading-[23.57px] whitespace-pre">Daily Check-in</p>
-                    </div>
-                  </div>
-                  
-                  <div className="box-border content-stretch flex flex-col items-start justify-start px-[5px] py-0 relative shrink-0">
-                    <div className="bg-[rgba(255,255,255,0.15)] box-border content-stretch flex flex-col items-start justify-start pb-[5.235px] pt-[4.185px] px-2 relative rounded-md shrink-0">
-                      <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12.797px] text-[rgba(255,255,255,0.9)] text-left text-nowrap">
-                        <p className="block leading-[20.43px] whitespace-pre">200P</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="box-border content-stretch flex flex-col items-start justify-start px-[5px] py-0 relative shrink-0">
-                    <div className="bg-[rgba(255,255,255,0.15)] box-border content-stretch flex flex-col items-start justify-start pb-[5.235px] pt-[4.185px] px-2 relative rounded-md shrink-0">
-                      <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12.188px] text-[rgba(255,255,255,0.9)] text-left text-nowrap">
-                        <p className="block leading-[20.43px] whitespace-pre">Resets at 9AM</p>
-                      </div>
-                    </div>
-                  </div>
+          {/* Daily Check-in Section - Single Line */}
+          <div className="bg-[#282828] relative rounded-[5px] w-full">
+            <div className="flex flex-row items-center justify-between gap-2 p-3 sm:px-4 sm:py-3">
+              {/* Left Side - All Info */}
+              <div className="flex flex-row items-center gap-2 flex-1 min-w-0">
+                <span className="text-xs sm:text-sm font-normal text-[rgba(255,255,255,0.9)] flex-shrink-0">
+                  Daily Check-in
+                </span>
+                
+                <div className="bg-[rgba(255,255,255,0.15)] px-1.5 py-0.5 rounded text-xs flex-shrink-0">
+                  <span className="text-[rgba(255,255,255,0.9)]">200P</span>
                 </div>
                 
-                {/* Claim Button */}
-                <div className="bg-[#141414] box-border content-stretch flex flex-row h-[31.99px] items-center justify-center px-[15.625px] py-[0.625px] relative rounded-md shrink-0">
-                  <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]" />
-                  <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
-                    <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-center text-nowrap">
-                      <p className="block leading-[normal] whitespace-pre">Claim</p>
-                    </div>
-                  </div>
+                <div className="bg-[rgba(255,255,255,0.15)] px-1.5 py-0.5 rounded text-xs flex-shrink-0">
+                  <span className="text-[rgba(255,255,255,0.9)]">9AM Reset</span>
                 </div>
               </div>
+              
+              {/* Claim Button */}
+              <button className="bg-[#141414] border border-[#424242] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)] rounded px-3 py-1 flex-shrink-0 hover:bg-[#1a1a1a] transition-colors">
+                <span className="text-xs font-normal text-[rgba(255,255,255,0.85)]">
+                  Claim
+                </span>
+              </button>
             </div>
           </div>
 
@@ -294,12 +290,25 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
             </button>
 
             {/* Discord */}
-            <div className="relative shrink-0 w-full">
+            <button className="relative shrink-0 w-full hover:bg-[rgba(255,255,255,0.05)] transition-colors">
               <div aria-hidden="true" className="absolute border-[#3c3c3c] border-[0px_0px_0.625px] border-solid inset-0 pointer-events-none" />
               <div className="flex flex-row items-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-center justify-start pb-[14.625px] pt-3.5 px-5 relative w-full">
-                  <div className="h-5 relative shrink-0 w-[31px]">
-                    <div className="absolute bg-no-repeat bg-size-[100%_100%] bg-top-left left-[-1px] size-5 top-0" style={{ backgroundImage: `url('${imgDiscordIconPng}')` }} />
+                  <div className="box-border content-stretch flex flex-col items-start justify-start pl-0 pr-3 py-0 relative shrink-0 w-7">
+                    <div className="box-border content-stretch flex flex-row items-center justify-center p-0 relative shrink-0 w-4">
+                      <div className="relative shrink-0 size-4">
+                        <img 
+                          src={imgDiscordIconPng} 
+                          alt="Discord" 
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            // Fallback if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
                   
                   <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
@@ -315,7 +324,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
                   </div>
                 </div>
               </div>
-            </div>
+            </button>
 
             {/* Logout */}
             <div className="relative shrink-0 w-full">

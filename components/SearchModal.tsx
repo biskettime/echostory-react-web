@@ -27,9 +27,20 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         <div className="bg-[#1a1b1b] flex flex-row h-[42px] items-center justify-between px-4 py-0 flex-shrink-0 border-b border-[#2a2b2b]">
           {/* Logo */}
           <div className="flex items-center min-w-0 flex-1">
-            <div className="text-white text-xl font-medium tracking-wide truncate">
-              Echo<span className="text-[#ff9500]">Story</span>
-            </div>
+            <img 
+              src="/images/echostory.png" 
+              alt="EchoStory" 
+              className="h-12 w-auto object-contain"
+              onError={(e) => {
+                // Fallback to text if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.className = 'text-white text-xl font-medium tracking-wide truncate';
+                fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+                target.parentNode?.appendChild(fallbackDiv);
+              }}
+            />
           </div>
 
           {/* Close Button */}

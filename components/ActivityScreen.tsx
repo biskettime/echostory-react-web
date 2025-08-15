@@ -72,8 +72,26 @@ function ActivityCharacterImage({ characterName, className }: { characterName: s
       }
       
       const firstName = characterName.split(' ')[0];
-      const sanitizedName = firstName
-        .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+      
+      // Map Korean names to English equivalents
+      const nameMapping: { [key: string]: string } = {
+        '지훈': 'Jihoon',
+        '지연': 'Jiyeon',
+        '민준': 'Minjun',
+        '하루카': 'Haruka',
+        '지원': 'Jiwon',
+        '소희': 'Sohee',
+        '서연': 'Seoyeon',
+        '하영': 'Hayoung',
+        '미나': 'Mina',
+        '수연': 'Suyeon',
+        '소연': 'Soyeon',
+        '유키': 'Yuki'
+      };
+      
+      const mappedName = nameMapping[firstName] || firstName;
+      const sanitizedName = mappedName
+        .replace(/[^a-zA-Z0-9]/g, '_')
         .replace(/\s+/g, '_')
         .toLowerCase()
         .replace(/^./, str => str.toUpperCase());
@@ -163,7 +181,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     const loadCreators = () => {
       try {
         const allCreators = getAllCreators();
-        const mappedCreators: Creator[] = allCreators.slice(0, 3).map((creator, index) => ({
+        // Filter out the user's own creator account and show all other creators
+        const filteredCreators = allCreators.filter(creator => creator.id !== 'creator_user');
+        const mappedCreators: Creator[] = filteredCreators.map((creator, index) => ({
           id: index + 1, // Numeric ID for ActivityScreen
           name: creator.displayName,
           profileImage: creator.profileImage || "/images/thumbnail1.svg",
@@ -178,11 +198,11 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         }));
         
         setCreators(mappedCreators);
-        console.log('Loaded creators:', mappedCreators);
+        console.log(`✅ Loaded ${mappedCreators.length} creators:`, mappedCreators.map(c => ({ id: c.id, name: c.name })));
         
-        // Save ID mapping (actual ID -> numeric ID)
+        // Save ID mapping (actual ID -> numeric ID) for filtered creators
         const idMapping: { [key: string]: number } = {};
-        allCreators.slice(0, 3).forEach((creator, index) => {
+        filteredCreators.forEach((creator, index) => {
           idMapping[creator.id] = index + 1;
         });
         localStorage.setItem('creatorIdMapping', JSON.stringify(idMapping));
@@ -221,9 +241,13 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         
         setCreators(prevCreators => {
           const updatedCreators = prevCreators.map(creator => {
-            // Simple ID matching - use string comparison
-            const isFollowing = followedCreatorIds.includes(creator.id.toString());
-            console.log(`👤 ${creator.name} (ID: ${creator.id}) → Following: ${isFollowing}`);
+            // Check multiple ID formats: numeric ID, string ID, and creator_XXX format
+            const isFollowing = followedCreatorIds.some((followedId: string) => {
+              return followedId === creator.id.toString() || 
+                     followedId === `creator_${creator.id.toString().padStart(3, '0')}` ||
+                     followedId === `creator_${creator.id}`;
+            });
+            console.log(`👤 ${creator.name} (ID: ${creator.id}) → Following: ${isFollowing} (checked against: ${followedCreatorIds})`);
             return {
               ...creator,
               isFollowing,
@@ -367,11 +391,31 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
       // Get character images for this session
       const characterName = session.characterName;
       const firstName = characterName.split(' ')[0];
-      const sanitizedName = firstName
-        .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+      
+      // Map Korean names to English equivalents
+      const nameMapping: { [key: string]: string } = {
+        '지훈': 'Jihoon',
+        '지연': 'Jiyeon',
+        '민준': 'Minjun',
+        '하루카': 'Haruka',
+        '지원': 'Jiwon',
+        '소희': 'Sohee',
+        '서연': 'Seoyeon',
+        '하영': 'Hayoung',
+        '미나': 'Mina',
+        '수연': 'Suyeon',
+        '소연': 'Soyeon',
+        '유키': 'Yuki'
+      };
+      
+      const mappedName = nameMapping[firstName] || firstName;
+      const sanitizedName = mappedName
+        .replace(/[^a-zA-Z0-9]/g, '_')
         .replace(/\s+/g, '_')
         .toLowerCase()
         .replace(/^./, str => str.toUpperCase());
+      
+      console.log(`🔤 Character name mapping: "${firstName}" → "${mappedName}" → "${sanitizedName}"`);;
       
       // Find all character images (1-10)
       const characterImages: string[] = [];
@@ -475,26 +519,26 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         });
       }
       
-      // Add Jiyeon character album as fallback
-      const jiyeonImages: string[] = [];
+      // Add Jihoon character album as fallback
+      const jihoonImages: string[] = [];
       for (let i = 1; i <= 5; i++) {
-        const imagePath = `/data/ch_img/Jiyeon_${i}.png`;
+        const imagePath = `/data/ch_img/Jihoon_${i}.png`;
         try {
           const response = await fetch(imagePath, { method: 'HEAD' });
           if (response.ok) {
-            jiyeonImages.push(imagePath);
+            jihoonImages.push(imagePath);
           }
         } catch (error) {
           // Continue to next image
         }
       }
       
-      if (jiyeonImages.length > 0) {
+      if (jihoonImages.length > 0) {
         albums.push({
-          characterId: 1,
-          characterName: "Jiyeon",
-          characterImage: jiyeonImages[0],
-          unlockedPhotos: jiyeonImages.map((imageUrl, index) => ({
+          characterId: 2,
+          characterName: "Jihoon",
+          characterImage: jihoonImages[0],
+          unlockedPhotos: jihoonImages.map((imageUrl, index) => ({
             id: index + 1,
             imageUrl: imageUrl,
             unlockedDate: "2024-01-15",
@@ -598,7 +642,13 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
       
       setCreators(prevCreators => {
         const updatedCreators = prevCreators.map(creator => {
-          const isFollowing = followedCreatorIds.includes(creator.id.toString());
+          // Check multiple ID formats: numeric ID, string ID, and creator_XXX format
+          const isFollowing = followedCreatorIds.some((followedId: string) => {
+            return followedId === creator.id.toString() || 
+                   followedId === `creator_${creator.id.toString().padStart(3, '0')}` ||
+                   followedId === `creator_${creator.id}`;
+          });
+          console.log(`🔄 Tab refresh - ${creator.name} (ID: ${creator.id}) → Following: ${isFollowing}`);
           return {
             ...creator,
             isFollowing,
@@ -1050,9 +1100,29 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
 
   return (
     <div className="flex flex-col h-full bg-[#1a1b1b] text-white">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-[#424242]">
-        <h1 className="text-xl font-bold">활동</h1>
+      {/* Header - Unified with ProfileScreen */}
+      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-[41.99px] items-center justify-between left-0 w-full pl-[15px] pr-0 py-0 top-0 flex-shrink-0">
+        {/* Logo */}
+        <div className="flex items-center">
+          <img 
+            src="/images/echostory.png" 
+            alt="EchoStory" 
+            className="h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallbackDiv = document.createElement('div');
+              fallbackDiv.className = 'text-white text-xl font-medium tracking-wide';
+              fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+              target.parentNode?.appendChild(fallbackDiv);
+            }}
+          />
+        </div>
+
+        {/* Right Side Controls */}
+        <div className="box-border content-stretch flex flex-row gap-[15px] items-center justify-start pl-0 pr-[15px] py-0 relative shrink-0">
+        </div>
       </div>
 
       {/* Tab Navigation */}

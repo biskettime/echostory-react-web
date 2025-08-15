@@ -224,13 +224,24 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
 
   return (
     <div className="flex flex-col h-full bg-[#1e1f1f] text-white overflow-hidden">
-      {/* Fixed Header */}
-      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-[41.99px] items-center justify-between left-0 max-w-[500px] pl-[15px] pr-0 py-0 top-0 w-full">
+      {/* Fixed Header - Unified with ProfileScreen */}
+      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-[41.99px] items-center justify-between left-0 w-full pl-[15px] pr-0 py-0 top-0 flex-shrink-0">
         {/* Logo */}
-        <div className="box-border content-stretch flex flex-col h-[24.76px] items-center justify-center overflow-clip p-0 relative shrink-0 w-[103px]">
-          <div className="text-white text-xl font-medium tracking-wide">
-            Echo<span className="text-[#ff9500]">Story</span>
-          </div>
+        <div className="flex items-center">
+          <img 
+            src="/images/echostory.png" 
+            alt="EchoStory" 
+            className="h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallbackDiv = document.createElement('div');
+              fallbackDiv.className = 'text-white text-xl font-medium tracking-wide';
+              fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+              target.parentNode?.appendChild(fallbackDiv);
+            }}
+          />
         </div>
 
         {/* Right Side Controls */}
@@ -285,9 +296,20 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
             <div className="flex items-center justify-between p-4">
               <div className="flex-1">
                 <div className="flex items-center mb-2">
-                  <div className="text-white text-sm font-bold tracking-wide">
-                    Echo<span className="text-[#ff9500]">Story</span>
-                  </div>
+                  <img 
+                    src="/images/echostory.png" 
+                    alt="EchoStory" 
+                    className="h-8 w-auto object-contain"
+                    onError={(e) => {
+                      // Fallback to text if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallbackDiv = document.createElement('div');
+                      fallbackDiv.className = 'text-white text-sm font-bold tracking-wide';
+                      fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+                      target.parentNode?.appendChild(fallbackDiv);
+                    }}
+                  />
                   <div className="ml-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
                     Creator
                   </div>

@@ -14,29 +14,28 @@ export function CreateScreen({ onBack, onNavigateToStoryCreation, onNavigateToIn
 
   return (
     <div className="bg-[#1a1b1b] h-full flex flex-col relative w-full">
-      {/* Header */}
-      <div className="bg-[rgba(66,66,66,0.5)] h-10 w-full relative flex-shrink-0 border-b border-[#424242]">
-        {/* Back Button */}
-        <button 
-          onClick={onBack}
-          className="absolute box-border content-stretch flex flex-row items-center justify-start left-[15px] p-0 top-[12.71px] hover:opacity-80 transition-opacity"
-        >
-          <div className="relative shrink-0 size-[16.99px]">
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 17 17">
-              <g>
-                <path
-                  d={svgPaths.p1b154bc0}
-                  fill="white"
-                  fillOpacity="0.85"
-                />
-              </g>
-            </svg>
-          </div>
-        </button>
+      {/* Header - Unified with ProfileScreen */}
+      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-[41.99px] items-center justify-between left-0 w-full pl-[15px] pr-0 py-0 top-0 flex-shrink-0">
+        {/* Logo */}
+        <div className="flex items-center">
+          <img 
+            src="/images/echostory.png" 
+            alt="EchoStory" 
+            className="h-12 w-auto object-contain"
+            onError={(e) => {
+              // Fallback to text if image fails to load
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const fallbackDiv = document.createElement('div');
+              fallbackDiv.className = 'text-white text-xl font-medium tracking-wide';
+              fallbackDiv.innerHTML = 'Echo<span class="text-[#ff9500]">Story</span>';
+              target.parentNode?.appendChild(fallbackDiv);
+            }}
+          />
+        </div>
 
-        {/* Title */}
-        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <h1 className="text-white text-[15px] font-medium">Create</h1>
+        {/* Right Side Controls */}
+        <div className="box-border content-stretch flex flex-row gap-[15px] items-center justify-start pl-0 pr-[15px] py-0 relative shrink-0">
         </div>
       </div>
 

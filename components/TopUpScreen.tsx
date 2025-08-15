@@ -24,9 +24,9 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
   ];
 
   const recentTransactions = [
-    { id: 1, points: 1000, amount: 11000, date: '2024-01-15', status: '완료' },
-    { id: 2, points: 500, amount: 5500, date: '2024-01-10', status: '완료' },
-    { id: 3, points: 100, amount: 1100, date: '2024-01-05', status: '완료' },
+    { id: 1, points: 1000, amount: 11000, date: '2024-01-15', status: 'Completed' },
+    { id: 2, points: 500, amount: 5500, date: '2024-01-10', status: 'Completed' },
+    { id: 3, points: 100, amount: 1100, date: '2024-01-05', status: 'Completed' },
   ];
 
   const handlePurchase = (points: number, amount: number) => {
@@ -44,37 +44,39 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
             <ArrowLeft size={20} />
           </button>
           <div className="text-white text-lg font-medium">
-            포인트 충전
+            Top Up Points
           </div>
         </div>
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-        {/* Current Points */}
-        <Card className="bg-[#282828] border-[#424242] p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <span className="text-white/60 text-sm">내 포인트</span>
-              <span className="text-[#ff9500] text-3xl font-bold">{currentPoints.toLocaleString()}P</span>
-              <span className="text-white/40 text-xs">포인트는 만료되지 않습니다</span>
+        {/* Current Points - Responsive Design */}
+        <Card className="bg-[#282828] border-[#424242] p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="text-white/60 text-sm">My Points</span>
+              <span className="text-[#ff9500] text-2xl sm:text-3xl font-bold">{currentPoints.toLocaleString()}P</span>
+              <span className="text-white/40 text-xs">Points never expire</span>
             </div>
             
             {/* Daily Check-in Info */}
-            <div className="flex flex-col items-end space-y-1">
-              <div className="bg-[rgba(255,255,255,0.15)] px-2 py-1 rounded text-xs text-[rgba(255,255,255,0.9)]">
-                200P
-              </div>
-              <div className="bg-[rgba(255,255,255,0.15)] px-2 py-1 rounded text-xs text-[rgba(255,255,255,0.9)]">
-                오전 9시 초기화
+            <div className="flex flex-col sm:items-end space-y-1 w-full sm:w-auto">
+              <div className="flex flex-row sm:flex-col gap-2 sm:gap-1 sm:items-end">
+                <div className="bg-[rgba(255,255,255,0.15)] px-2 py-1 rounded text-xs text-[rgba(255,255,255,0.9)] flex-shrink-0">
+                  200P
+                </div>
+                <div className="bg-[rgba(255,255,255,0.15)] px-2 py-1 rounded text-xs text-[rgba(255,255,255,0.9)] flex-shrink-0">
+                  Resets at 9AM
+                </div>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center justify-between mt-4">
-            <span className="text-white/60 text-sm">출석체크</span>
-            <button className="bg-[#141414] border border-[#424242] px-4 py-1 rounded text-white text-sm hover:bg-[#1f1f1f] transition-colors">
-              받기
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mt-4">
+            <span className="text-white/60 text-sm">Daily Check-in</span>
+            <button className="bg-[#141414] border border-[#424242] px-4 py-2 rounded text-white text-sm hover:bg-[#1f1f1f] transition-colors w-full sm:w-auto">
+              Claim
             </button>
           </div>
         </Card>
@@ -85,13 +87,13 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
             onClick={() => setShowTopUpModal(true)}
             className="bg-[#dc5903] hover:bg-[#e6850e] text-white px-8 py-3 rounded-lg font-medium transition-colors shadow-[0px_2px_0px_0px_rgba(180,60,0,0.15)]"
           >
-            포인트 충전하기
+            Top Up Points
           </button>
         </div>
 
         {/* Point Packages */}
         <div className="space-y-4">
-          <h3 className="text-white text-lg font-medium">포인트 패키지</h3>
+          <h3 className="text-white text-lg font-medium">Point Packages</h3>
           <div className="grid grid-cols-2 gap-3">
             {pointPackages.map((pkg) => (
               <div
@@ -100,7 +102,7 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
               >
                 {pkg.popular && (
                   <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#dc5903] text-white text-xs">
-                    인기
+                    Popular
                   </Badge>
                 )}
                 <div className="text-center space-y-2">
@@ -117,7 +119,7 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
                   </div>
                   {pkg.bonus && (
                     <div className="text-[#ff9500] text-xs">
-                      보너스 {pkg.bonus}P
+                      Bonus {pkg.bonus}P
                     </div>
                   )}
                 </div>
@@ -130,7 +132,7 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
             <History size={18} className="text-white/60" />
-            <h3 className="text-white text-lg font-medium">최근 거래 내역</h3>
+            <h3 className="text-white text-lg font-medium">Recent Transactions</h3>
           </div>
           
           {recentTransactions.length > 0 ? (
@@ -164,7 +166,7 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-white/40 text-sm">거래 내역이 없습니다</p>
+              <p className="text-white/40 text-sm">No transaction history</p>
             </div>
           )}
         </div>
@@ -172,21 +174,21 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
         {/* Help Text */}
         <div className="bg-[#282828]/50 border border-[#424242] rounded-lg p-4">
           <div className="text-white/60 text-xs space-y-2">
-            <p>• 포인트는 캐릭터 상호작용과 스토리 생성에 사용됩니다</p>
-            <p>• 모든 결제는 안전하고 암호화되어 있습니다</p>
-            <p>• 포인트는 만료되지 않으며 모든 기능에서 사용할 수 있습니다</p>
-            <p>• 도움이 필요하시면 고객지원팀에 문의하세요</p>
+            <p>• Points are used for character interactions and story creation</p>
+            <p>• All payments are secure and encrypted</p>
+            <p>• Points never expire and can be used for all features</p>
+            <p>• Contact our support team if you need help</p>
           </div>
         </div>
 
         {/* Company Info */}
         <div className="bg-[#282828]/50 border border-[#424242] rounded-lg p-4">
           <div className="text-white/60 text-xs space-y-1">
-            <p className="font-medium text-white/80">회사 정보</p>
+            <p className="font-medium text-white/80">Company Information</p>
             <p>The Flow | CEO: David Choi</p>
-            <p>사업자등록번호: 123-45-67890</p>
-            <p>통신판매업 신고번호: 2025-SF-TECH-0673</p>
-            <p>이메일: contact@theflow.ai</p>
+            <p>Business Registration: 123-45-67890</p>
+            <p>Telecommunications Sales Report: 2025-SF-TECH-0673</p>
+            <p>Email: contact@theflow.ai</p>
           </div>
         </div>
       </div>
