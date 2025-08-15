@@ -7,7 +7,7 @@ interface BottomNavigationProps {
 
 export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationProps) {
   const tabs = [
-    { id: 'home' as const, icon: Star, label: 'Characters' },
+    { id: 'home' as const, icon: Star, label: 'Stories' },
     { id: 'create' as const, icon: Plus, label: 'Create' },
     { id: 'activity' as const, icon: MessageCircle, label: 'Activity' },
     { id: 'profile' as const, icon: User, label: 'My Page' }
