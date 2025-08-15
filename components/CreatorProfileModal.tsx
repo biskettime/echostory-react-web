@@ -147,7 +147,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
       <div className="bg-[#1a1b1b] rounded-lg max-w-md w-full max-h-[80vh] overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#424242]">
-          <h2 className="text-white text-lg font-medium">Creator Profile</h2>
+          <h2 className="text-white text-lg font-medium">{t('creatorProfile.title')}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
@@ -199,7 +199,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
               <div className="text-white text-lg font-medium">
                 {creator.stats.totalStories}
               </div>
-              <div className="text-[#808080] text-xs">Stories</div>
+              <div className="text-[#808080] text-xs">{t('storyDetail.stories')}</div>
             </div>
             <div className="text-center">
               <div className="text-white text-lg font-medium">
@@ -218,7 +218,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
           {/* Join Date */}
           <div className="mb-6">
             <p className="text-[#808080] text-sm">
-              Joined {new Date(creator.joinDate).toLocaleDateString('en-US', { 
+              {t('creatorProfile.joined')} {new Date(creator.joinDate).toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long' 
               })}
@@ -229,7 +229,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
           <div className="mb-4">
             <h4 className="text-white text-md font-medium mb-3 flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
-              Stories ({creatorStories.length})
+              {t('storyDetail.stories')} ({creatorStories.length})
             </h4>
             
             {creatorStories.length > 0 ? (
@@ -283,7 +283,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
                 {creatorStories.length > 5 && (
                   <div className="text-center">
                     <p className="text-[#808080] text-sm">
-                      +{creatorStories.length - 5} more stories
+                      +{creatorStories.length - 5} {t('creatorProfile.moreStories')}
                     </p>
                   </div>
                 )}
@@ -291,7 +291,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
             ) : (
               <div className="text-center py-8">
                 <BookOpen className="w-12 h-12 text-gray-500 mx-auto mb-3" />
-                <p className="text-[#808080] text-sm">No stories yet</p>
+                <p className="text-[#808080] text-sm">{t('creatorProfile.noStories')}</p>
               </div>
             )}
           </div>

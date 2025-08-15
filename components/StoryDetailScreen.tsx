@@ -6,7 +6,8 @@ import { StoryEditModal } from './StoryEditModal';
 import { CreatorProfileModal } from './CreatorProfileModal';
 import { SafetyToggle } from './SafetyToggle';
 import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
-import { translateCharacterName, translateStoryTitle, translateTag, translateStoryDescription } from '../utils/storyTranslation';
+import { translateCharacterName, translateStoryTitle, translateTag, translateStoryDescription, translateStorySettingsContent, translateCharacterDescriptionContent } from '../utils/storyTranslation';
+import { getCurrentLanguage } from '../utils/i18n';
 import svgPaths from "../imports/svg-bsii91cs4v";
 import lockSvgPaths from "../imports/svg-p3farl1j9x";
 
@@ -830,7 +831,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             <div className="bg-[#2a2a2a] rounded-xl p-5 space-y-4">
               <div>
                 <h2 className="text-white text-[15px] font-medium leading-[25.14px]">
-                  My Chat Profile
+                  {t('storyDetail.myChatProfile')}
                 </h2>
               </div>
               
@@ -893,11 +894,11 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                     onClick={handleStoryEdit}
                     className="bg-[#3a3a3a] border border-[#4a4a4a] rounded-md px-4 h-8 hover:bg-[#404040] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]"
                   >
-                    <span className="text-white text-[13.234px] font-medium">Edit</span>
+                    <span className="text-white text-[13.234px] font-medium">{t('storyDetail.edit')}</span>
                   </button>
                   
                   <button className="bg-[#3a3a3a] border border-[#4a4a4a] rounded-md px-4 h-8 hover:bg-[#404040] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]">
-                    <span className="text-white text-[13.234px] font-medium">Delete</span>
+                    <span className="text-white text-[13.234px] font-medium">{t('storyDetail.delete')}</span>
                   </button>
                 </div>
               </div>
@@ -912,7 +913,10 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
               </div>
 
               <div className="space-y-5">
-                {storyEditData.storySetting.split('\n\n').map((paragraph, index) => (
+                {(getCurrentLanguage() === 'en' 
+                  ? storyEditData.storySetting 
+                  : translateStorySettingsContent(story?.title || '', storyEditData.storySetting)
+                ).split('\n\n').map((paragraph, index) => (
                   <div key={index}>
                     <p className="text-[rgba(255,255,255,0.7)] text-[13.016px] font-light leading-[22px] whitespace-pre-wrap">
                       {paragraph}
@@ -933,12 +937,15 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
               <div className="space-y-1">
                 <div>
                   <p className="text-[rgba(255,255,255,0.8)] text-[12.906px] font-light leading-[22px]">
-                    • {storyEditData.characterName}
+                    • {translateCharacterName(storyEditData.characterName)}
                   </p>
                 </div>
                 
                 <div className="space-y-1">
-                  {storyEditData.characterDescription.split('\n').map((line, index) => (
+                  {(getCurrentLanguage() === 'en' 
+                    ? storyEditData.characterDescription 
+                    : translateCharacterDescriptionContent(story?.title || '', storyEditData.characterDescription)
+                  ).split('\n').map((line, index) => (
                     <p key={index} className="text-[rgba(255,255,255,0.7)] text-[13.125px] font-light leading-[22px]">
                       - {line}
                     </p>

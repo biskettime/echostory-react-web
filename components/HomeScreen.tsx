@@ -305,11 +305,11 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
         {/* Featured Stories Banner */}
         <div className="mx-4 mt-4 mb-4">
           <div 
-            className="relative cursor-pointer group overflow-hidden rounded-xl h-[160px]"
+            className="relative cursor-pointer group overflow-hidden rounded-xl h-[180px]"
             onClick={() => onStorySelect(1)}
             style={{
               backgroundImage: 'url(/data/amazing.png)',
-              backgroundSize: 'cover',
+              backgroundSize: '103% 100%',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat'
             }}

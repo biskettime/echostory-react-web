@@ -262,3 +262,61 @@ export const translateStoryDescription = (storyTitle: string, originalDescriptio
   
   return originalDescription; // 매핑이 없으면 원본 반환
 };
+
+// 스토리 제목을 스토리 설정 키로 매핑
+const titleToStorySettingsKey: { [key: string]: string } = {
+  'Drunk English Teacher Jiyeon': 'storySettingsContent.drunkTeacherJiyeon',
+  'Japanese Exchange Student Yuki': 'storySettingsContent.japaneseStudentYuki',
+  'Childhood Friend Suyeon': 'storySettingsContent.childhoodFriendSuyeon',
+  'Haruka - Japanese Idol Trainee': 'storySettingsContent.japaneseIdolHaruka',
+  'Cafe Owner Jiwon': 'storySettingsContent.cafeOwnerJiwon',
+  'Bookstore Employee Sohee': 'storySettingsContent.bookstoreEmployeeSohee',
+  'Dance Instructor Seoyeon': 'storySettingsContent.danceInstructorSeoyeon',
+  'Medical Student Hayoung': 'storySettingsContent.medicalStudentHayoung',
+  'Cold CEO Minjun': 'storySettingsContent.coldCeoMinjun',
+  'Bad Boy Guitarist Jihoon': 'storySettingsContent.badBoyGuitaristJihoon',
+  'Shy Librarian Mina': 'storySettingsContent.shyLibrarianMina',
+  'Personal Trainer Taehyun': 'storySettingsContent.personalTrainerTaehyun',
+  'Art Student Hyunwoo': 'storySettingsContent.artStudentHyunwoo',
+  'Barista Seungmin': 'storySettingsContent.baristaSeungmin',
+  'Veterinarian Jungwoo': 'storySettingsContent.veterinarianJungwoo',
+  'Gaming Streamer Donghyun': 'storySettingsContent.gamingStreamerDonghyun'
+};
+
+// 스토리 제목을 캐릭터 묘사 키로 매핑
+const titleToCharacterDescriptionKey: { [key: string]: string } = {
+  'Drunk English Teacher Jiyeon': 'characterDescriptionContent.drunkTeacherJiyeon',
+  'Japanese Exchange Student Yuki': 'characterDescriptionContent.japaneseStudentYuki',
+  'Childhood Friend Suyeon': 'characterDescriptionContent.childhoodFriendSuyeon',
+  'Haruka - Japanese Idol Trainee': 'characterDescriptionContent.japaneseIdolHaruka',
+  'Cafe Owner Jiwon': 'characterDescriptionContent.cafeOwnerJiwon',
+  'Bookstore Employee Sohee': 'characterDescriptionContent.bookstoreEmployeeSohee',
+  'Dance Instructor Seoyeon': 'characterDescriptionContent.danceInstructorSeoyeon',
+  'Medical Student Hayoung': 'characterDescriptionContent.medicalStudentHayoung',
+  'Cold CEO Minjun': 'characterDescriptionContent.coldCeoMinjun',
+  'Bad Boy Guitarist Jihoon': 'characterDescriptionContent.badBoyGuitaristJihoon',
+  'Shy Librarian Mina': 'characterDescriptionContent.shyLibrarianMina',
+  'Personal Trainer Taehyun': 'characterDescriptionContent.personalTrainerTaehyun',
+  'Art Student Hyunwoo': 'characterDescriptionContent.artStudentHyunwoo',
+  'Barista Seungmin': 'characterDescriptionContent.baristaSeungmin',
+  'Veterinarian Jungwoo': 'characterDescriptionContent.veterinarianJungwoo',
+  'Gaming Streamer Donghyun': 'characterDescriptionContent.gamingStreamerDonghyun'
+};
+
+// 스토리 설정 내용 번역
+export const translateStorySettingsContent = (storyTitle: string, originalContent: string): string => {
+  const translationKey = titleToStorySettingsKey[storyTitle];
+  if (translationKey) {
+    return t(translationKey);
+  }
+  return originalContent; // 매핑이 없으면 원본 반환
+};
+
+// 캐릭터 묘사 내용 번역
+export const translateCharacterDescriptionContent = (storyTitle: string, originalContent: string): string => {
+  const translationKey = titleToCharacterDescriptionKey[storyTitle];
+  if (translationKey) {
+    return t(translationKey);
+  }
+  return originalContent; // 매핑이 없으면 원본 반환
+};
