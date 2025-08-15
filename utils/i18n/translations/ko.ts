@@ -21,6 +21,7 @@ export const ko = {
 
   // Chat Screen
   chat: {
+    info: '정보',
     novelMode: '소설 모드',
     chatModeActive: '대화 모드 활성',
     typeMessage: '메시지를 입력하세요',

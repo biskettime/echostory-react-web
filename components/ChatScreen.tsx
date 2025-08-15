@@ -1008,12 +1008,12 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
       {/* Info Button - Higher z-index and pointer events */}
       <button 
         onClick={handleInfoClick}
-        className="absolute backdrop-blur-[2.5px] backdrop-filter bg-[rgba(0,0,0,0.3)] box-border content-stretch flex flex-row gap-[3.99px] h-[31px] items-center justify-center left-[15px] px-[12.625px] py-[6.625px] rounded-[20px] top-[34px] z-30 hover:bg-[rgba(0,0,0,0.5)] transition-colors cursor-pointer pointer-events-auto scale-[0.7]"
+        className="absolute backdrop-blur-[2.5px] backdrop-filter bg-[rgba(0,0,0,0.3)] box-border content-stretch flex flex-row gap-[3.99px] items-center justify-center left-[15px] px-4 py-2 rounded-[20px] top-[34px] z-30 hover:bg-[rgba(0,0,0,0.5)] transition-colors cursor-pointer pointer-events-auto scale-[0.7]"
         style={{ pointerEvents: 'auto' }}
       >
         <div aria-hidden="true" className="absolute border border-[rgba(255,255,255,0.2)] border-solid inset-0 pointer-events-none rounded-[20px] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]" />
         
-        <div className="box-border content-stretch flex flex-col items-center justify-start pb-[1.13px] pt-px px-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-center justify-start relative shrink-0">
           <div className="box-border content-stretch flex flex-row items-center justify-start p-0 relative shrink-0">
             <div className="relative shrink-0 size-[11px]">
               <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 11 11">
@@ -1030,8 +1030,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
         </div>
         
         <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
-          <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[10.313px] text-[rgba(255,255,255,0.9)] text-center text-nowrap">
-            <p className="block leading-[normal] whitespace-pre">Info</p>
+          <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-[rgba(255,255,255,0.9)] text-center text-nowrap">
+            <p className="block leading-[normal] whitespace-pre">{t('chat.info')}</p>
           </div>
         </div>
       </button>

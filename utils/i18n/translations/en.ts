@@ -21,6 +21,7 @@ export const en = {
 
   // Chat Screen
   chat: {
+    info: 'Info',
     novelMode: 'Novel Mode',
     chatModeActive: 'Chat Mode Active',
     typeMessage: 'Type a message',

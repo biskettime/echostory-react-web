@@ -1148,7 +1148,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             <div className="flex items-center px-[15px] py-3 gap-2.5">
               {/* Edit Button */}
               <button
-                onClick={handleProfileEdit}
+                onClick={() => setShowStoryEditModal(true)}
                 className="bg-[rgba(255,255,255,0.1)] border border-[#444444] rounded-lg w-10 h-10 flex items-center justify-center hover:bg-[rgba(255,255,255,0.15)] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]"
               >
                 <svg className="w-[13.99px] h-[13.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
