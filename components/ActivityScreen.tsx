@@ -459,11 +459,11 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   // Creator data is now managed with useState
 
   const tabs = [
-    { id: 'chat' as const, icon: MessageCircle, label: 'Chats' },
-    { id: 'album' as const, icon: Image, label: 'Album' },
-    { id: 'favorites' as const, icon: Bookmark, label: 'Favorites' },
-    { id: 'likes' as const, icon: Heart, label: 'Likes' },
-    { id: 'creator' as const, icon: Users, label: 'Following' }
+    { id: 'chat' as const, icon: MessageCircle, label: '대화중' },
+    { id: 'album' as const, icon: Image, label: '앨범' },
+    { id: 'favorites' as const, icon: Bookmark, label: '즐겨찾기' },
+    { id: 'likes' as const, icon: Heart, label: '좋아요' },
+    { id: 'creator' as const, icon: Users, label: '팔로우' }
   ];
 
   const handleChatRoomClick = (chatRoom: ChatRoom) => {
@@ -614,7 +614,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                           </div>
                         </div>
                         <p className="text-gray-400 text-sm truncate">
-                          {lastMessage?.content || 'Start a conversation'}
+                          {lastMessage?.content || '대화를 시작해보세요'}
                         </p>
                       </div>
                     </div>
@@ -624,8 +624,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
               <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                 <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                <p className="text-gray-400 text-lg mb-2">No ongoing conversations</p>
-                <p className="text-gray-500 text-sm">Start a conversation with a character!</p>
+                <p className="text-gray-400 text-lg mb-2">진행 중인 대화가 없습니다</p>
+                <p className="text-gray-500 text-sm">캐릭터와 대화를 시작해보세요!</p>
               </div>
             )}
           </div>
@@ -654,7 +654,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                 />
                 <div>
                   <h2 className="text-white font-medium">{selectedAlbum.characterName}</h2>
-                  <p className="text-gray-400 text-sm">{selectedAlbum.unlockedPhotos.length} photos</p>
+                  <p className="text-gray-400 text-sm">{selectedAlbum.unlockedPhotos.length}장의 사진</p>
                 </div>
               </div>
 
@@ -668,7 +668,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     >
                       <img
                         src={photo.imageUrl}
-                        alt={photo.description || 'Unlocked photo'}
+                        alt={photo.description || '해금된 사진'}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -712,7 +712,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                       {/* Album info */}
                       <div className="flex-1">
                         <h3 className="text-white font-medium mb-1">{album.characterName}</h3>
-                        <p className="text-gray-400 text-sm">{album.unlockedPhotos.length} unlocked photos</p>
+                        <p className="text-gray-400 text-sm">{album.unlockedPhotos.length}장의 해금된 사진</p>
                       </div>
 
                       {/* Preview images */}
@@ -869,10 +869,10 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                           <div className="flex items-center">
                             <h3 className="text-white font-medium mr-2">{creator.name}</h3>
                             {creator.isVerified && (
-                              <CheckCircle className="w-4 h-4 text-blue-400" title="Verified Creator" />
+                              <CheckCircle className="w-4 h-4 text-blue-400" title="인증된 크리에이터" />
                             )}
                           </div>
-                          <p className="text-gray-400 text-sm">{creator.followerCount.toLocaleString()} followers</p>
+                          <p className="text-gray-400 text-sm">팔로워 {creator.followerCount.toLocaleString()}명</p>
                         </div>
                       </div>
 
@@ -888,12 +888,12 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                         {creator.isFollowing ? (
                           <>
                             <UserCheck className="w-4 h-4 mr-1" />
-                            Following
+                            팔로잉
                           </>
                         ) : (
                           <>
                             <UserPlus className="w-4 h-4 mr-1" />
-                            Follow
+                            팔로우
                           </>
                         )}
                       </button>
@@ -919,12 +919,12 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     {/* Work statistics */}
                     <div className="flex items-center justify-between text-sm text-gray-400">
                       <div className="flex space-x-4">
-                        <span>{creator.characterCount} characters</span>
-                        <span>{creator.storyCount} stories</span>
+                        <span>캐릭터 {creator.characterCount}개</span>
+                        <span>스토리 {creator.storyCount}개</span>
                       </div>
                       {creator.isFollowing && creator.followedDate && (
                         <span className="text-xs">
-                          Followed {new Date(creator.followedDate).toLocaleDateString('en-US')}
+                          {new Date(creator.followedDate).toLocaleDateString('ko-KR')} 팔로우
                         </span>
                       )}
                     </div>
@@ -953,7 +953,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     <div className="flex flex-col h-full bg-[#1a1b1b] text-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-[#424242]">
-        <h1 className="text-xl font-bold">Activity</h1>
+        <h1 className="text-xl font-bold">활동</h1>
       </div>
 
       {/* Tab Navigation */}

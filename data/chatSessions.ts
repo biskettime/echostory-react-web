@@ -1,4 +1,4 @@
-// Chat session management system
+// 채팅 세션 관리 시스템
 
 export interface ChatMessage {
   id: string;
@@ -28,7 +28,7 @@ class ChatSessionManager {
     this.loadFromLocalStorage();
   }
   
-  // Load data from localStorage
+  // localStorage에서 데이터 로드
   private loadFromLocalStorage() {
     try {
       const storedSessions = localStorage.getItem('echostory_chat_sessions');
@@ -37,25 +37,25 @@ class ChatSessionManager {
         sessionsArray.forEach((session: ChatSession) => {
           this.sessions.set(session.id, session);
         });
-        console.log(`Loaded ${sessionsArray.length} chat sessions from localStorage`);
+        console.log(`localStorage에서 ${sessionsArray.length}개의 채팅 세션 로드됨`);
       }
     } catch (error) {
-      console.error('Error loading chat sessions:', error);
+      console.error('채팅 세션 로드 중 오류:', error);
     }
   }
   
-  // Save data to localStorage
+  // localStorage에 데이터 저장
   private saveToLocalStorage() {
     try {
       const sessionsArray = Array.from(this.sessions.values());
       localStorage.setItem('echostory_chat_sessions', JSON.stringify(sessionsArray));
-      console.log('Chat sessions saved to localStorage');
+      console.log('채팅 세션이 localStorage에 저장됨');
     } catch (error) {
-      console.error('Error saving chat sessions:', error);
+      console.error('채팅 세션 저장 중 오류:', error);
     }
   }
   
-  // Start new chat session
+  // 새 채팅 세션 시작
   startChatSession(storyId: string, characterName: string, characterImage: string, userId: string = 'user'): ChatSession {
     const sessionId = `${storyId}_${userId}_${Date.now()}`;
     const now = new Date().toISOString();
@@ -76,13 +76,13 @@ class ChatSessionManager {
     this.sessions.set(sessionId, session);
     this.saveToLocalStorage();
     
-    console.log('New chat session started:', sessionId);
+    console.log('새 채팅 세션 시작:', sessionId);
     return session;
   }
   
-  // Get existing session or create new session
+  // 기존 세션 가져오기 또는 새 세션 생성
   getOrCreateSession(storyId: string, characterName: string, characterImage: string, userId: string = 'user'): ChatSession {
-    // Find active session for the story
+    // 해당 스토리의 활성 세션 찾기
     const existingSession = Array.from(this.sessions.values()).find(
       session => session.storyId === storyId && session.userId === userId && session.isActive
     );
@@ -91,15 +91,15 @@ class ChatSessionManager {
       return existingSession;
     }
     
-    // Create new session if no existing session
+    // 기존 세션이 없으면 새로 생성
     return this.startChatSession(storyId, characterName, characterImage, userId);
   }
   
-  // Add message
+  // 메시지 추가
   addMessage(sessionId: string, senderId: 'user' | 'character', content: string, type: 'text' | 'image' | 'system' = 'text'): ChatMessage {
     const session = this.sessions.get(sessionId);
     if (!session) {
-      throw new Error(`Session not found: ${sessionId}`);
+      throw new Error(`세션을 찾을 수 없습니다: ${sessionId}`);
     }
     
     const messageId = `${sessionId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -116,7 +116,7 @@ class ChatSessionManager {
     session.messages.push(message);
     session.lastMessageAt = now;
     
-    // Increase unread message count for character messages
+    // 캐릭터 메시지인 경우 읽지 않은 메시지 수 증가
     if (senderId === 'character') {
       session.unreadCount++;
     }
@@ -127,7 +127,7 @@ class ChatSessionManager {
     return message;
   }
   
-  // Reset unread message count
+  // 읽지 않은 메시지 수 초기화
   markAsRead(sessionId: string) {
     const session = this.sessions.get(sessionId);
     if (session) {
@@ -137,7 +137,7 @@ class ChatSessionManager {
     }
   }
   
-  // End session
+  // 세션 종료
   endSession(sessionId: string) {
     const session = this.sessions.get(sessionId);
     if (session) {
@@ -147,19 +147,19 @@ class ChatSessionManager {
     }
   }
   
-  // Get all active sessions for user
+  // 사용자의 모든 활성 세션 가져오기
   getActiveSessions(userId: string = 'user'): ChatSession[] {
     return Array.from(this.sessions.values())
       .filter(session => session.userId === userId && session.isActive)
       .sort((a, b) => new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime());
   }
   
-  // Get specific session
+  // 특정 세션 가져오기
   getSession(sessionId: string): ChatSession | null {
     return this.sessions.get(sessionId) || null;
   }
   
-  // Get last message of session
+  // 세션의 마지막 메시지 가져오기
   getLastMessage(sessionId: string): ChatMessage | null {
     const session = this.sessions.get(sessionId);
     if (!session || session.messages.length === 0) {
@@ -168,7 +168,7 @@ class ChatSessionManager {
     return session.messages[session.messages.length - 1];
   }
   
-  // Time formatting (relative time)
+  // 시간 포맷팅 (상대 시간)
   getRelativeTime(timestamp: string): string {
     const now = new Date();
     const messageTime = new Date(timestamp);
@@ -177,22 +177,22 @@ class ChatSessionManager {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (diffMinutes < 1) return 'Just now';
-    if (diffMinutes < 60) return `${diffMinutes}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffMinutes < 1) return '방금 전';
+    if (diffMinutes < 60) return `${diffMinutes}분 전`;
+    if (diffHours < 24) return `${diffHours}시간 전`;
+    if (diffDays < 7) return `${diffDays}일 전`;
     
     return messageTime.toLocaleDateString('ko-KR');
   }
   
-  // Initialize all data (for debugging)
+  // 모든 데이터 초기화 (디버깅용)
   clearAllSessions() {
     this.sessions.clear();
     localStorage.removeItem('echostory_chat_sessions');
-    console.log('All chat sessions have been initialized.');
+    console.log('모든 채팅 세션이 초기화되었습니다.');
   }
   
-  // Statistics
+  // 통계 정보
   getStats() {
     const allSessions = Array.from(this.sessions.values());
     const activeSessions = allSessions.filter(s => s.isActive);
@@ -207,10 +207,10 @@ class ChatSessionManager {
   }
 }
 
-// Singleton instance
+// 싱글톤 인스턴스
 export const chatSessionManager = new ChatSessionManager();
 
-// Convenience functions
+// 편의 함수들
 export const startChat = (storyId: string, characterName: string, characterImage: string, userId?: string) =>
   chatSessionManager.startChatSession(storyId, characterName, characterImage, userId);
 

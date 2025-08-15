@@ -122,16 +122,16 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   if (!story) {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-[#1a1b1b] text-white p-8">
-        <h2 className="text-xl font-bold mb-4">Story Not Found</h2>
+        <h2 className="text-xl font-bold mb-4">스토리를 찾을 수 없습니다</h2>
         <p className="text-gray-400 mb-6 text-center">
-          The requested story (ID: {storyId}) could not be found.<br/>
-          The story may have been deleted or does not exist.
+          요청하신 스토리 (ID: {storyId})를 찾을 수 없습니다.<br/>
+          스토리가 삭제되었거나 존재하지 않을 수 있습니다.
         </p>
         <button
           onClick={onBack}
           className="bg-[#dc5903] text-white px-6 py-2 rounded-md hover:bg-[#e6850e] transition-colors"
         >
-          Go Back
+          돌아가기
         </button>
       </div>
     );
@@ -178,7 +178,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   // Initialize messages with narration from story data
   const [messages, setMessages] = useState<Message[]>(() => {
     const initialNarration = story?.startSituation?.startingSituation || 
-      `Your encounter with ${characterName} begins.`;
+      `${characterName}과의 만남이 시작됩니다.`;
     
     return [
       {
@@ -250,13 +250,13 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     // For now, return a generic response
     // TODO: Implement character-specific responses based on story data
     const genericResponses = [
-      "I see what you mean.",
-      "That's interesting.",
-      "Could you tell me more about that?",
-      "That must have been quite an experience.",
-      "What do you think about that?",
-      "Is that really so?",
-      "I understand."
+      "그렇게 생각하시는군요.",
+      "흥미로운 말씀이네요.",
+      "더 자세히 말씀해 주시겠어요?",
+      "그런 일이 있었군요.",
+      "어떻게 생각하세요?",
+      "정말 그런가요?",
+      "이해합니다."
     ];
     return genericResponses[Math.floor(Math.random() * genericResponses.length)];
   }, []);
@@ -611,7 +611,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           <span className={`text-[12px] font-medium whitespace-nowrap transition-colors duration-200 ${
             isStoryMode ? 'text-white' : 'text-[rgba(255,255,255,0.7)]'
           }`}>
-            Story Mode
+            소설 모드
           </span>
           
           {/* Ant Design Style Switch */}

@@ -764,13 +764,13 @@ export function initializeSampleStories() {
     console.log('Sample story IDs:', sampleStories.map(s => s.id));
     
     // Clear localStorage to ensure fresh data
-    const shouldClearCache = !localStorage.getItem('sampleStoriesCacheCleared_v3');
+    const shouldClearCache = !localStorage.getItem('sampleStoriesCacheCleared_korean_v1');
     if (shouldClearCache) {
-      console.log('🔄 Clearing localStorage cache for fresh story data...');
+      console.log('🔄 한국어 버전 데이터를 위한 localStorage 캐시 클리어...');
       localStorage.removeItem('echostory_stories');
       localStorage.removeItem('echostory_chat_sessions');
-      localStorage.setItem('sampleStoriesCacheCleared_v3', 'true');
-      console.log('✅ localStorage cache cleared');
+      localStorage.setItem('sampleStoriesCacheCleared_korean_v1', 'true');
+      console.log('✅ localStorage 캐시 클리어 완료');
     }
     
     // Add each sample story to the database (maintaining existing IDs)
