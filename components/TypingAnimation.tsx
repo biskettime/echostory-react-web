@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { renderFormattedText } from '../utils/textFormatter';
+import { renderFormattedText, parseMessageText, TextSegment } from '../utils/textFormatter';
 
 interface TypingAnimationProps {
   text: string;
@@ -9,49 +9,115 @@ interface TypingAnimationProps {
 }
 
 export function TypingAnimation({ text, onComplete, speed = 50, showCursor = true }: TypingAnimationProps) {
-  const [displayText, setDisplayText] = useState('');
-  const [showTypingDots, setShowTypingDots] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [segments, setSegments] = useState<TextSegment[]>([]);
+  const [displaySegments, setDisplaySegments] = useState<TextSegment[]>([]);
+  const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+
+  // Parse text into segments on mount
+  useEffect(() => {
+    console.log('🎬 TypingAnimation: Parsing text:', text);
+    const parsedSegments = parseMessageText(text);
+    console.log('🎬 TypingAnimation: Parsed segments:', parsedSegments);
+    setSegments(parsedSegments);
+  }, [text]);
 
   useEffect(() => {
-    if (currentIndex === 0) {
-      // Show typing dots for 1.5 seconds before starting to type
-      const dotsTimer = setTimeout(() => {
-        setShowTypingDots(false);
-        setCurrentIndex(1);
-      }, 1500);
+    if (segments.length === 0) return;
 
-      return () => clearTimeout(dotsTimer);
+    if (isComplete) return;
+
+    // Check if we've finished all segments
+    if (currentSegmentIndex >= segments.length) {
+      setIsComplete(true);
+      onComplete?.();
+      return;
     }
 
-    if (currentIndex > 0 && currentIndex <= text.length) {
+    const currentSegment = segments[currentSegmentIndex];
+    const segmentLength = currentSegment.content.length;
+
+    if (currentCharIndex <= segmentLength) {
       const timer = setTimeout(() => {
-        setDisplayText(text.slice(0, currentIndex));
-        setCurrentIndex(currentIndex + 1);
+        // Update display segments
+        const newDisplaySegments = [...segments.slice(0, currentSegmentIndex)];
+        
+        // Add current segment with partial content
+        if (currentCharIndex > 0) {
+          newDisplaySegments.push({
+            ...currentSegment,
+            content: currentSegment.content.slice(0, currentCharIndex)
+          });
+        }
+
+        setDisplaySegments(newDisplaySegments);
+
+        if (currentCharIndex < segmentLength) {
+          setCurrentCharIndex(currentCharIndex + 1);
+        } else {
+          // Move to next segment
+          setCurrentSegmentIndex(currentSegmentIndex + 1);
+          setCurrentCharIndex(0);
+        }
       }, speed);
 
       return () => clearTimeout(timer);
-    } else if (currentIndex > text.length) {
-      onComplete?.();
     }
-  }, [currentIndex, text, speed, onComplete]);
-
-  if (showTypingDots) {
-    return (
-      <div className="flex items-center space-x-1">
-        <div className="flex space-x-1">
-          <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-        </div>
-      </div>
-    );
-  }
+  }, [segments, currentSegmentIndex, currentCharIndex, isComplete, speed, onComplete]);
 
   return (
     <span>
-      {renderFormattedText(displayText)}
-      {showCursor && currentIndex <= text.length && (
+      {displaySegments.map((segment, index) => {
+        const needsSpace = index > 0 && segment.content.trim() !== '';
+        
+        switch (segment.type) {
+          case 'narration': // !3인칭묘사체! - 회색 기울임체
+            return (
+              <span key={index}>
+                {needsSpace && ' '}
+                <span 
+                  className="italic"
+                  style={{ color: 'rgba(156, 163, 175, 0.8)' }}
+                >
+                  {segment.content}
+                </span>
+              </span>
+            );
+          
+          case 'emotion': // *감정행동묘사* - 하늘색 투명 기울임체
+            return (
+              <span key={index}>
+                {needsSpace && ' '}
+                <span 
+                  className="italic"
+                  style={{ color: 'rgba(135, 206, 235, 0.7)' }}
+                >
+                  {segment.content}
+                </span>
+              </span>
+            );
+          
+          case 'dialogue': // "대화체" - 레몬색 + 매우 약한 볼드
+            return (
+              <span key={index}>
+                {needsSpace && ' '}
+                <span style={{ color: '#FFFF99', fontWeight: '450' }}>
+                  {segment.content}
+                </span>
+              </span>
+            );
+          
+          case 'normal': // 일반 텍스트 - 레몬색 (일반 대화)
+          default:
+            return (
+              <span key={index} style={{ color: '#FFFF99' }}>
+                {segment.content}
+              </span>
+            );
+        }
+      })}
+      {showCursor && !isComplete && (
         <span className="animate-pulse">|</span>
       )}
     </span>

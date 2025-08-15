@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface TextSegment {
+export interface TextSegment {
   type: 'narration' | 'emotion' | 'dialogue' | 'normal';
   content: string;
 }
@@ -185,8 +185,9 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
 // 세그먼트를 React 엘리먼트로 렌더링 (캐릭터 메시지용)
 export const renderFormattedText = (text: string): React.ReactNode => {
   const segments = parseMessageText(text);
-  console.log('🎨 Formatting text:', text);
-  console.log('🎨 Parsed segments:', segments);
+  console.log('🎨 [CHARACTER] Formatting text:', text);
+  console.log('🎨 [CHARACTER] Parsed segments:', segments);
+  console.log('🎨 [CHARACTER] Segments count:', segments.length);
   
   return segments.map((segment, index) => {
     const needsSpace = index > 0 && segment.content.trim() !== '';

@@ -21,6 +21,7 @@ const imgThumbnail = "/images/chat-thumbnail.svg";
 
 // Create AI service instance
 const aiService = new IntegratedAIService();
+console.log('🔧 AI Service initialized:', aiService);
 
 interface ChatScreenProps {
   storyId: string;
@@ -36,6 +37,7 @@ interface Message {
   timestamp: Date;
   isNarration?: boolean;
   isTyping?: boolean;
+  isWaitingForResponse?: boolean;
 }
 
 interface StoryParagraph {
@@ -346,8 +348,17 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
         setMessages(loadedMessages);
         console.log('ChatScreen - Existing messages loaded:', loadedMessages.length, 'messages');
         
+        // Mark that first message is already added to prevent animation
+        setFirstMessageAdded(true);
+        setIsTypingComplete(true);
+        
         // Mark messages as read
         markChatAsRead(session.id);
+      } else {
+        // No existing messages, reset first message state to show animation
+        setFirstMessageAdded(false);
+        setIsTypingComplete(false);
+        console.log('ChatScreen - No existing messages, will show first message animation');
       }
     } else {
       console.error('ChatScreen - No story data found. storyId:', storyId, 'story:', story);
@@ -529,16 +540,20 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
     }
   }, [messages, autoPlayEnabled, handleTTS]);
 
-  // Show first character message
+  // Show first character message only for new chats
   useEffect(() => {
-    if (!isStoryMode) {
+    if (!isStoryMode && !firstMessageAdded) {
+      console.log('⏰ Setting timer for first message animation');
       const timer = setTimeout(() => {
         setShowFirstMessage(true);
       }, 2000);
 
       return () => clearTimeout(timer);
+    } else if (firstMessageAdded) {
+      console.log('✅ First message already added, skipping animation');
+      setShowFirstMessage(false);
     }
-  }, [isStoryMode]);
+  }, [isStoryMode, firstMessageAdded]);
 
   // Debug effect to monitor mode changes
   useEffect(() => {
@@ -574,10 +589,13 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   }, [firstMessageAdded, getInitialCharacterMessage]);
 
   const getCharacterResponse = useCallback(async (userMessage: string, storyId: string): Promise<string> => {
+    console.log('🤖 getCharacterResponse called with:', { userMessage, storyId });
     try {
       // Get story data for AI context
       const story = getStory(storyId);
+      console.log('📚 Story data:', story);
       if (!story) {
+        console.log('❌ Story not found, returning fallback');
         return t('chat.response1'); // Fallback response
       }
 
@@ -614,11 +632,23 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
       // Get AI response - using the generateResponse method with session ID
       const sessionId = `${storyId}-${userNickname}`;
       
-      // Initialize session if not already done
-      if (!aiService['conversationCache']?.has(sessionId)) {
-        aiService.initializeSession(sessionId, storyContext, userContext);
+      // Initialize session only if not already done
+      console.log('🔍 Checking session initialization for:', sessionId);
+      try {
+        // Check if session already exists
+        const hasExistingSession = aiService.hasSession(sessionId);
+        if (!hasExistingSession) {
+          console.log('🆕 Initializing new session...');
+          aiService.initializeSession(sessionId, storyContext, userContext);
+          console.log('✅ Session initialized successfully');
+        } else {
+          console.log('♻️ Using existing session');
+        }
+      } catch (initError) {
+        console.error('❌ Session initialization error:', initError);
       }
       
+      console.log('🚀 Calling AI service with:', { sessionId, userMessage, storyContext, userContext });
       const aiResponse = await aiService.generateResponse(
         sessionId,
         userMessage,
@@ -626,6 +656,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
         userContext
       );
       
+      console.log('✅ AI Response received:', aiResponse);
       const response = aiResponse.message;
 
       return response;
@@ -686,17 +717,20 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
       const typingMessage: Message = {
         id: typingId,
         sender: 'character',
-        content: '...',
+        content: '', // Empty content, will show dots animation
         timestamp: new Date(),
-        isTyping: true
+        isTyping: true,
+        isWaitingForResponse: true // Flag to show waiting animation
       };
       setMessages(prev => [...prev, typingMessage]);
 
       // Get AI response
       try {
+        console.log('🚀 Calling getCharacterResponse with:', { messageContent, storyId });
         const responseContent = await getCharacterResponse(messageContent, storyId);
+        console.log('✅ Received AI response:', responseContent);
         
-        // Remove typing indicator and add actual response
+        // Replace waiting indicator with actual response
         setMessages(prev => {
           const filtered = prev.filter(msg => msg.id !== typingId);
           const characterResponseId = nextMessageIdRef.current;
@@ -706,7 +740,9 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
             id: characterResponseId,
             sender: 'character',
             content: responseContent,
-            timestamp: new Date()
+            timestamp: new Date(),
+            isTyping: true,  // Start with typing animation
+            isWaitingForResponse: false
           };
           
           return [...filtered, characterResponse];
@@ -718,7 +754,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
         }
       } catch (error) {
         console.error('Error getting AI response:', error);
-        // Remove typing indicator on error and show fallback message
+        // Replace waiting indicator with fallback message on error
         setMessages(prev => {
           const filtered = prev.filter(msg => msg.id !== typingId);
           const errorResponseId = nextMessageIdRef.current;
@@ -728,7 +764,9 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
             id: errorResponseId,
             sender: 'character',
             content: t('chat.response1'), // Fallback response
-            timestamp: new Date()
+            timestamp: new Date(),
+            isTyping: true,  // Start with typing animation
+            isWaitingForResponse: false
           };
           
           return [...filtered, errorResponse];
@@ -841,7 +879,8 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
               sender: 'character',
               content: responseContent,
               timestamp: new Date(),
-              isTyping: true
+              isTyping: true,
+              isWaitingForResponse: false
             };
             
             console.log('Adding new response:', newResponse);
@@ -859,7 +898,8 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
               sender: 'character',
               content: t('chat.response1'),
               timestamp: new Date(),
-              isTyping: true
+              isTyping: true,
+              isWaitingForResponse: false
             };
             setMessages(prev => [...prev, fallbackResponse]);
           }
@@ -1398,7 +1438,16 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                           {/* Message Bubble */}
                           <div className="bg-[rgba(59,59,59,0.4)] backdrop-blur-sm rounded-bl-[12px] rounded-br-[12px] rounded-tl-[3px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
                             <div className="px-3 py-2">
-                              {msg.isTyping ? (
+                              {msg.isWaitingForResponse ? (
+                                // Show waiting animation while getting AI response
+                                <div className="flex items-center space-x-1">
+                                  <div className="flex space-x-1">
+                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                  </div>
+                                </div>
+                              ) : msg.isTyping ? (
                                 <TypingAnimation 
                                   text={msg.content} 
                                   onComplete={() => {

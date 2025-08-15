@@ -21,7 +21,17 @@ export default defineConfig({
       'localhost',
       '127.0.0.1',
       '192.168.0.40',
-      '45ec9561f4a9.ngrok.app'
-    ]
+      '7d0a8d207889.ngrok.app'
+    ],
+    proxy: {
+      '/api/nvidia': {
+        target: 'https://integrate.api.nvidia.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/nvidia/, ''),
+        headers: {
+          'Origin': 'https://integrate.api.nvidia.com'
+        }
+      }
+    }
   }
 })
