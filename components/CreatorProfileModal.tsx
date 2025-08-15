@@ -207,12 +207,12 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
               {isFollowing ? (
                 <>
                   <UserCheck className="w-4 h-4" />
-                  팔로잉
+                  Following
                 </>
               ) : (
                 <>
                   <UserPlus className="w-4 h-4" />
-                  팔로우
+                  Follow
                 </>
               )}
             </button>

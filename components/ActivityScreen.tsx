@@ -5,7 +5,6 @@ import { getActiveChatSessions, getRelativeTime, ChatSession } from '../data/cha
 import { getStory } from '../data/stories';
 import { getAllCreators } from '../data/stories/creatorData';
 import { CreatorProfileModal } from './CreatorProfileModal';
-import { CharacterImage } from './CharacterImage';
 
 type ActivityTab = 'chat' | 'album' | 'favorites' | 'likes' | 'creator';
 
@@ -59,6 +58,59 @@ interface Creator {
 
 interface ActivityScreenProps {
   onNavigateToChat?: (storyId: string) => void;
+}
+
+// Simple character image component for Activity screen
+function ActivityCharacterImage({ characterName, className }: { characterName: string; className: string }) {
+  const [imageSrc, setImageSrc] = useState<string>('/images/sample.png');
+  
+  useEffect(() => {
+    const loadCharacterImage = async () => {
+      if (!characterName) {
+        setImageSrc('/images/sample.png');
+        return;
+      }
+      
+      const firstName = characterName.split(' ')[0];
+      const sanitizedName = firstName
+        .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+        .replace(/\s+/g, '_')
+        .toLowerCase()
+        .replace(/^./, str => str.toUpperCase());
+      
+      // Try to find character image (1-10)
+      for (let i = 1; i <= 10; i++) {
+        const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
+        try {
+          const response = await fetch(imagePath, { method: 'HEAD' });
+          if (response.ok) {
+            console.log(`✅ Activity - Found character image: ${imagePath}`);
+            setImageSrc(imagePath);
+            return;
+          }
+        } catch (error) {
+          // Continue to next image
+        }
+      }
+      
+      console.log(`❌ Activity - No character image found for: ${characterName}`);
+      setImageSrc('/images/sample.png');
+    };
+    
+    loadCharacterImage();
+  }, [characterName]);
+  
+  return (
+    <img
+      src={imageSrc}
+      alt={characterName}
+      className={className}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.src = '/images/sample.png';
+      }}
+    />
+  );
 }
 
 export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
@@ -164,45 +216,25 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     const loadFollowedCreators = () => {
       try {
         const followedCreatorIds = JSON.parse(localStorage.getItem('followedCreators') || '[]');
-        const idMapping = JSON.parse(localStorage.getItem('creatorIdMapping') || '{}');
-        console.log('Followed creator IDs from localStorage:', followedCreatorIds);
-        console.log('ID mapping:', idMapping);
-        console.log('Current creators:', creators.map(c => ({ id: c.id, name: c.name })));
-        
-        // Reset if existing data is in wrong format
-        if (followedCreatorIds.length > 0 && typeof followedCreatorIds[0] === 'string' && 
-            followedCreatorIds[0].startsWith('creator_') && followedCreatorIds[0] !== 'creator_user') {
-          console.log('Found incorrect format follow data, resetting.');
-          localStorage.setItem('followedCreators', JSON.stringify([]));
-          setCreators(prevCreators => 
-            prevCreators.map(creator => ({
-              ...creator,
-              isFollowing: false,
-              followedDate: undefined
-            }))
-          );
-          return;
-        }
+        console.log('📂 Loading followed creators from localStorage:', followedCreatorIds);
+        console.log('👥 Current creators:', creators.map(c => ({ id: c.id, name: c.name })));
         
         setCreators(prevCreators => {
           const updatedCreators = prevCreators.map(creator => {
-            // Convert actual creator ID to numeric ID for verification
-            const isFollowing = followedCreatorIds.some((actualId: string) => {
-              const mappedId = idMapping[actualId];
-              return mappedId === creator.id;
-            });
-            console.log(`Creator ${creator.name} (ID: ${creator.id}) follow status: ${isFollowing}`);
+            // Simple ID matching - use string comparison
+            const isFollowing = followedCreatorIds.includes(creator.id.toString());
+            console.log(`👤 ${creator.name} (ID: ${creator.id}) → Following: ${isFollowing}`);
             return {
               ...creator,
               isFollowing,
               followedDate: isFollowing ? new Date().toISOString().split('T')[0] : undefined
             };
           });
-          console.log('Updated creators:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+          console.log('✅ Creators updated with follow status:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
           return updatedCreators;
         });
       } catch (error) {
-        console.error('Error loading follow status:', error);
+        console.error('❌ Error loading follow status:', error);
         localStorage.setItem('followedCreators', JSON.stringify([])); // Clear on error
       }
     };
@@ -216,11 +248,14 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   useEffect(() => {
     const handleFollowStateChanged = (event: CustomEvent) => {
       const { creatorId, isFollowing } = event.detail;
-      console.log('Follow status change event detected:', creatorId, isFollowing);
+      console.log('🎯 Follow status change event detected:', creatorId, isFollowing);
       
+      // Update creators state
       setCreators(prevCreators => {
         const updatedCreators = prevCreators.map(creator => {
-          if (creator.id === creatorId) {
+          // Try both numeric and string ID matching
+          if (creator.id === creatorId || creator.id.toString() === creatorId.toString()) {
+            console.log(`🔄 Updating creator ${creator.name}: ${creator.isFollowing} → ${isFollowing}`);
             return {
               ...creator,
               isFollowing,
@@ -230,9 +265,26 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           }
           return creator;
         });
-        console.log('Creator status update due to event:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+        console.log('✅ Updated creators after event:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
         return updatedCreators;
       });
+      
+      // Also update localStorage to ensure consistency
+      const followedCreatorIds = JSON.parse(localStorage.getItem('followedCreators') || '[]');
+      if (isFollowing) {
+        if (!followedCreatorIds.includes(creatorId.toString())) {
+          followedCreatorIds.push(creatorId.toString());
+          localStorage.setItem('followedCreators', JSON.stringify(followedCreatorIds));
+          console.log('💾 Added to localStorage:', creatorId);
+        }
+      } else {
+        const index = followedCreatorIds.indexOf(creatorId.toString());
+        if (index > -1) {
+          followedCreatorIds.splice(index, 1);
+          localStorage.setItem('followedCreators', JSON.stringify(followedCreatorIds));
+          console.log('💾 Removed from localStorage:', creatorId);
+        }
+      }
     };
 
     window.addEventListener('followStateChanged', handleFollowStateChanged as EventListener);
@@ -308,22 +360,52 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   ];
 
     // Generate album data from actual chat sessions
-  const generateAlbumsFromSessions = () => {
+  const generateAlbumsFromSessions = async () => {
     const albums: CharacterAlbum[] = [];
 
-    realChatSessions.forEach(session => {
-      // Get story information for this session
-      const story = getStory(session.storyId);
+    for (const session of realChatSessions) {
+      // Get character images for this session
+      const characterName = session.characterName;
+      const firstName = characterName.split(' ')[0];
+      const sanitizedName = firstName
+        .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+        .replace(/\s+/g, '_')
+        .toLowerCase()
+        .replace(/^./, str => str.toUpperCase());
       
-      // Get story images
-      const storyImages = story?.media?.storyImages || [];
-      const thumbnailImage = story?.media?.thumbnailImage;
+      // Find all character images (1-10)
+      const characterImages: string[] = [];
+      for (let i = 1; i <= 10; i++) {
+        const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
+        try {
+          const response = await fetch(imagePath, { method: 'HEAD' });
+          if (response.ok) {
+            characterImages.push(imagePath);
+          }
+        } catch (error) {
+          // Continue to next image
+        }
+      }
       
-      // Collect all available images
-      const allAvailableImages = [
-        ...(thumbnailImage ? [thumbnailImage] : []),
-        ...storyImages
-      ].filter(Boolean);
+      console.log(`📸 Album - Found ${characterImages.length} character images for ${characterName}:`, characterImages);
+      
+      // If no character images, use story images as fallback
+      let albumImages = characterImages;
+      if (albumImages.length === 0) {
+        const story = getStory(session.storyId);
+        const storyImages = story?.media?.storyImages || [];
+        const thumbnailImage = story?.media?.thumbnailImage;
+        
+        albumImages = [
+          ...(thumbnailImage ? [thumbnailImage] : []),
+          ...storyImages
+        ].filter(Boolean);
+        
+        // Add sample.png if no images at all
+        if (albumImages.length === 0) {
+          albumImages.push('/images/sample.png');
+        }
+      }
       
       // Find photo messages in each session and add them
       const photoMessages = session.messages.filter(message => 
@@ -339,21 +421,16 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         message.type === 'image' ? message.content : null
       ).filter((img): img is string => Boolean(img));
       
-      // Complete image list (remove duplicates)
-      const totalImages = [...new Set([...allAvailableImages, ...messageImages])];
+      // Complete image list (remove duplicates, prioritize character images)
+      const totalImages = [...new Set([...albumImages, ...messageImages])];
       
-      // Add sample.png if no images
-      if (totalImages.length === 0) {
-        totalImages.push('/images/sample.png');
-      }
-      
-      // Create album if there are 2+ photos or sufficient conversation
-      if (totalImages.length >= 2 || session.messages.length >= 5) {
+      // Create album if there are images or sufficient conversation
+      if (totalImages.length > 0 || session.messages.length >= 5) {
         const unlockedPhotos = totalImages.map((imageUrl, index) => ({
           id: index + 1,
           imageUrl: imageUrl,
           unlockedDate: new Date(session.lastMessageAt).toISOString().split('T')[0],
-          description: index === 0 ? "Main Image" : `Unlocked Photo ${index + 1}`
+          description: index === 0 ? "Character Image" : `Unlocked Photo ${index + 1}`
         }));
         
         albums.push({
@@ -363,54 +440,71 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           unlockedPhotos
         });
       }
-    });
+    }
     
     // Add sample albums if no albums exist
     if (albums.length === 0) {
-      // Add haruka story album
-      const harukaStory = getStory('story_004');
-      if (harukaStory) {
+      // Add Haruka character album with actual character images
+      const harukaImages: string[] = [];
+      for (let i = 1; i <= 5; i++) {
+        const imagePath = `/data/ch_img/Haruka_${i}.png`;
+        try {
+          const response = await fetch(imagePath, { method: 'HEAD' });
+          if (response.ok) {
+            harukaImages.push(imagePath);
+          }
+        } catch (error) {
+          // Continue to next image
+        }
+      }
+      
+      if (harukaImages.length > 0) {
         albums.push({
           characterId: 4,
           characterName: "Haruka",
-          characterImage: harukaStory.media.thumbnailImage,
-          unlockedPhotos: harukaStory.media.storyImages.map((imageUrl, index) => ({
+          characterImage: harukaImages[0],
+          unlockedPhotos: harukaImages.map((imageUrl, index) => ({
             id: index + 1,
             imageUrl: imageUrl,
             unlockedDate: "2024-01-18",
             description: index === 0 ? "Main Portrait" : 
-                        index === 1 ? "In Practice Room" :
-                        index === 2 ? "On Stage" : "Daily Life"
+                        index === 1 ? "Practice Room" :
+                        index === 2 ? "On Stage" : 
+                        index === 3 ? "Daily Life" : `Photo ${index + 1}`
           }))
         });
       }
       
-      // Default sample album
-      albums.push({
-        characterId: 1,
-        characterName: "Aria",
-        characterImage: "/images/thumbnail1.svg",
-        unlockedPhotos: [
-          {
-            id: 1,
-            imageUrl: "/images/story-thumbnail-1.svg",
-            unlockedDate: "2024-01-15",
-            description: "First Meeting"
-          },
-          {
-            id: 2,
-            imageUrl: "/images/story-thumbnail-2.svg",
-            unlockedDate: "2024-01-16",
-            description: "Walking Together"
-          },
-          {
-            id: 3,
-            imageUrl: "/images/story-thumbnail-3.svg",
-            unlockedDate: "2024-01-17",
-            description: "Special Day"
+      // Add Jiyeon character album as fallback
+      const jiyeonImages: string[] = [];
+      for (let i = 1; i <= 5; i++) {
+        const imagePath = `/data/ch_img/Jiyeon_${i}.png`;
+        try {
+          const response = await fetch(imagePath, { method: 'HEAD' });
+          if (response.ok) {
+            jiyeonImages.push(imagePath);
           }
-        ]
-      });
+        } catch (error) {
+          // Continue to next image
+        }
+      }
+      
+      if (jiyeonImages.length > 0) {
+        albums.push({
+          characterId: 1,
+          characterName: "Jiyeon",
+          characterImage: jiyeonImages[0],
+          unlockedPhotos: jiyeonImages.map((imageUrl, index) => ({
+            id: index + 1,
+            imageUrl: imageUrl,
+            unlockedDate: "2024-01-15",
+            description: index === 0 ? "First Meeting" : 
+                        index === 1 ? "Walking Together" :
+                        index === 2 ? "Special Day" : 
+                        index === 3 ? "Casual Moment" : `Photo ${index + 1}`
+          }))
+        });
+      }
     }
     
     return albums;
@@ -421,9 +515,13 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
 
   // Update album data whenever chat sessions change
   useEffect(() => {
-    const albums = generateAlbumsFromSessions();
-    setCharacterAlbums(albums);
-    console.log('Generated albums:', albums);
+    const loadAlbums = async () => {
+      const albums = await generateAlbumsFromSessions();
+      setCharacterAlbums(albums);
+      console.log('Generated albums:', albums);
+    };
+    
+    loadAlbums();
   }, [realChatSessions]);
 
   // Sample favorite character data
@@ -460,11 +558,11 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   // Creator data is now managed with useState
 
   const tabs = [
-    { id: 'chat' as const, icon: MessageCircle, label: '대화중' },
-    { id: 'album' as const, icon: Image, label: '앨범' },
-    { id: 'favorites' as const, icon: Bookmark, label: '즐겨찾기' },
-    { id: 'likes' as const, icon: Heart, label: '좋아요' },
-    { id: 'creator' as const, icon: Users, label: '팔로우' }
+    { id: 'chat' as const, icon: MessageCircle, label: 'Chats' },
+    { id: 'album' as const, icon: Image, label: 'Album' },
+    { id: 'favorites' as const, icon: Bookmark, label: 'Favorites' },
+    { id: 'likes' as const, icon: Heart, label: 'Likes' },
+    { id: 'creator' as const, icon: Users, label: 'Following' }
   ];
 
   const handleChatRoomClick = (chatRoom: ChatRoom) => {
@@ -491,6 +589,26 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     if (tab !== 'album') {
       setSelectedAlbum(null);
     }
+    
+    // Refresh follow status when switching to Following tab
+    if (tab === 'creator') {
+      console.log('🔄 Switching to Following tab, refreshing follow status...');
+      const followedCreatorIds = JSON.parse(localStorage.getItem('followedCreators') || '[]');
+      console.log('📂 Current followed IDs:', followedCreatorIds);
+      
+      setCreators(prevCreators => {
+        const updatedCreators = prevCreators.map(creator => {
+          const isFollowing = followedCreatorIds.includes(creator.id.toString());
+          return {
+            ...creator,
+            isFollowing,
+            followedDate: isFollowing ? new Date().toISOString().split('T')[0] : undefined
+          };
+        });
+        console.log('✅ Refreshed creators for Following tab:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+        return updatedCreators;
+      });
+    }
   };
 
   const handleFavoriteCharacterClick = (character: FavoriteCharacter) => {
@@ -507,33 +625,19 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
   const handleFollowToggle = (creatorId: number, event: React.MouseEvent) => {
     event.stopPropagation(); // Prevent parent click event
     
-    console.log('Follow toggle clicked:', creatorId);
+    console.log('🔄 Follow toggle clicked for creator ID:', creatorId);
     
     // Find the creator in the creators array
     const creatorIndex = creators.findIndex(c => c.id === creatorId);
-    console.log('Creator index:', creatorIndex);
+    console.log('📍 Creator index found:', creatorIndex);
+    
     if (creatorIndex !== -1) {
-      // Current creator info
       const currentCreator = creators[creatorIndex];
       const newIsFollowing = !currentCreator.isFollowing;
       
-      console.log('Current follow status:', currentCreator.isFollowing, '-> New status:', newIsFollowing);
+      console.log(`📊 ${currentCreator.name}: ${currentCreator.isFollowing} → ${newIsFollowing}`);
       
-      // Save follow status to localStorage
-      const followedCreators = JSON.parse(localStorage.getItem('followedCreators') || '[]');
-      if (newIsFollowing) {
-        if (!followedCreators.includes(creatorId.toString())) {
-          followedCreators.push(creatorId.toString());
-        }
-      } else {
-        const index = followedCreators.indexOf(creatorId.toString());
-        if (index > -1) {
-          followedCreators.splice(index, 1);
-        }
-      }
-      localStorage.setItem('followedCreators', JSON.stringify(followedCreators));
-      
-      // Update state
+      // Update state immediately for better UX
       setCreators(prevCreators => {
         const updatedCreators = prevCreators.map((creator, index) => {
           if (index === creatorIndex) {
@@ -547,12 +651,30 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           return creator;
         });
         
-        console.log('Updated creators:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+        console.log('✅ State updated:', updatedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
         return updatedCreators;
       });
       
-      console.log(`${newIsFollowing ? 'Follow' : 'Unfollow'}:`, currentCreator.name);
-      console.log('Saved follow list:', followedCreators);
+      // Save to localStorage
+      try {
+        const followedCreators = JSON.parse(localStorage.getItem('followedCreators') || '[]');
+        if (newIsFollowing) {
+          if (!followedCreators.includes(creatorId.toString())) {
+            followedCreators.push(creatorId.toString());
+          }
+        } else {
+          const index = followedCreators.indexOf(creatorId.toString());
+          if (index > -1) {
+            followedCreators.splice(index, 1);
+          }
+        }
+        localStorage.setItem('followedCreators', JSON.stringify(followedCreators));
+        console.log('💾 localStorage updated:', followedCreators);
+      } catch (error) {
+        console.error('❌ Error saving to localStorage:', error);
+      }
+    } else {
+      console.error('❌ Creator not found with ID:', creatorId);
     }
   };
 
@@ -584,14 +706,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     >
                       {/* Character image */}
                       <div className="relative flex-shrink-0 mr-3">
-                        <img
-                          src={session.characterImage}
-                          alt={session.characterName}
+                        <ActivityCharacterImage
+                          characterName={session.characterName}
                           className="w-12 h-12 rounded-full bg-gray-600 object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = '/images/sample.png';
-                          }}
                         />
                         {/* 온라인 상태 표시 */}
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#1a1b1b]"></div>
@@ -644,14 +761,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                 >
                   ←
                 </button>
-                <img
-                  src={selectedAlbum.characterImage}
-                  alt={selectedAlbum.characterName}
+                <ActivityCharacterImage
+                  characterName={selectedAlbum.characterName}
                   className="w-8 h-8 rounded-full mr-3"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/thumbnail1.svg';
-                  }}
                 />
                 <div>
                   <h2 className="text-white font-medium">{selectedAlbum.characterName}</h2>
@@ -700,14 +812,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                       className="flex items-center p-4 bg-[#2a2b2b] rounded-lg hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                     >
                       {/* Character image */}
-                      <img
-                        src={album.characterImage}
-                        alt={album.characterName}
+                      <ActivityCharacterImage
+                        characterName={album.characterName}
                         className="w-12 h-12 rounded-full mr-4"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = '/images/thumbnail1.svg';
-                        }}
                       />
 
                       {/* Album info */}
@@ -759,14 +866,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     key={story.id}
                     className="flex items-center p-4 bg-[#2a2b2b] rounded-lg hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                   >
-                    <img
-                      src={story.media?.thumbnailImage || '/images/sample.png'}
-                      alt={story.title}
+                    <ActivityCharacterImage
+                      characterName={story.content?.characterName || ''}
                       className="w-16 h-16 rounded-lg mr-4 object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/images/sample.png';
-                      }}
                     />
                     <div className="flex-1 min-w-0">
                       <h3 className="text-white font-medium truncate mb-1">{story.title}</h3>
@@ -803,14 +905,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     key={story.id}
                     className="flex items-center p-4 bg-[#2a2b2b] rounded-lg hover:bg-[#3a3b3b] cursor-pointer transition-colors"
                   >
-                    <img
-                      src={story.media?.thumbnailImage || '/images/sample.png'}
-                      alt={story.title}
+                    <ActivityCharacterImage
+                      characterName={story.content?.characterName || ''}
                       className="w-16 h-16 rounded-lg mr-4 object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/images/sample.png';
-                      }}
                     />
                     <div className="flex-1 min-w-0">
                       <h3 className="text-white font-medium truncate mb-1">{story.title}</h3>
@@ -842,8 +939,9 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
           <div className="flex-1 overflow-y-auto">
             {(() => {
               const followedCreators = creators.filter(creator => creator.isFollowing);
-              console.log('Followed creators filtering result:', followedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
-              console.log('All creators status:', creators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+              console.log('📊 Following Tab - All creators:', creators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+              console.log('✅ Following Tab - Filtered followed creators:', followedCreators.map(c => ({ id: c.id, name: c.name, isFollowing: c.isFollowing })));
+              console.log('📂 Following Tab - localStorage:', JSON.parse(localStorage.getItem('followedCreators') || '[]'));
               
               if (followedCreators.length > 0) {
                 return (
@@ -889,12 +987,12 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                         {creator.isFollowing ? (
                           <>
                             <UserCheck className="w-4 h-4 mr-1" />
-                            팔로잉
+                            Following
                           </>
                         ) : (
                           <>
                             <UserPlus className="w-4 h-4 mr-1" />
-                            팔로우
+                            Follow
                           </>
                         )}
                       </button>
@@ -988,10 +1086,15 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             creator={selectedCreatorInfo}
             onFollowChange={(creatorId, isFollowing) => {
               // Update ActivityScreen state when follow status changes
-              console.log('Follow status changed from creator profile:', creatorId, isFollowing);
-              // Dispatch event
+              console.log('🎯 Follow status changed from creator profile:', creatorId, isFollowing);
+              
+              // Find the numeric ID that matches this creator
+              const numericCreatorId = creators.find(c => c.id.toString() === creatorId.toString())?.id || creatorId;
+              console.log('🔍 Mapped creator ID:', creatorId, '→', numericCreatorId);
+              
+              // Dispatch event with the correct numeric ID
               window.dispatchEvent(new CustomEvent('followStateChanged', { 
-                detail: { creatorId: parseInt(creatorId.toString()), isFollowing } 
+                detail: { creatorId: numericCreatorId, isFollowing } 
               }));
             }}
           />

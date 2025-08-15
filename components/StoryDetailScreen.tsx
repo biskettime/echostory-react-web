@@ -57,6 +57,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   
   // Character image loading
   const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
+  const [characterImages, setCharacterImages] = useState<string[]>([]);
 
   // Load like and favorite status from localStorage
   useEffect(() => {
@@ -95,10 +96,14 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     }
   }, [story]);
 
-  // Load character image
+  // Load all character images (1~10)
   useEffect(() => {
-    const loadCharacterImage = async () => {
-      if (!story?.content.characterName) return;
+    const loadAllCharacterImages = async () => {
+      if (!story?.content.characterName) {
+        setCharacterImages([]);
+        setCharacterImageSrc('');
+        return;
+      }
       
       const characterName = story.content.characterName;
       const firstName = characterName.split(' ')[0];
@@ -108,25 +113,37 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
         .toLowerCase()
         .replace(/^./, str => str.toUpperCase());
       
-      // Try to find character image
+      console.log('🔍 Loading all character images for:', characterName, '→', sanitizedName);
+      
+      const foundImages: string[] = [];
+      
+      // Try to find all character images (1~10)
       for (let i = 1; i <= 10; i++) {
         const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
         try {
           const response = await fetch(imagePath, { method: 'HEAD' });
           if (response.ok) {
-            console.log('✅ Found character image for StoryDetail:', imagePath);
-            setCharacterImageSrc(imagePath);
-            return;
+            console.log(`✅ Found character image ${i}:`, imagePath);
+            foundImages.push(imagePath);
           }
         } catch (error) {
           // Continue to next image
         }
       }
       
-      console.log('❌ No character image found for StoryDetail:', characterName);
+      console.log(`📸 Total character images found: ${foundImages.length}`, foundImages);
+      setCharacterImages(foundImages);
+      
+      // Set first image as main character image
+      if (foundImages.length > 0) {
+        setCharacterImageSrc(foundImages[0]);
+      } else {
+        setCharacterImageSrc('');
+        console.log('❌ No character images found for:', characterName);
+      }
     };
     
-    loadCharacterImage();
+    loadAllCharacterImages();
   }, [story]);
 
   const selectedProfile = profiles.find(p => p.id === selectedProfileId);
@@ -143,22 +160,36 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   const storyImages = story?.media.storyImages || [];
   const thumbnailImage = story?.media.thumbnailImage;
   
-  // Use character image as first image if available, then story images
-  const allImages = characterImageSrc 
-    ? [characterImageSrc, ...storyImages.filter(img => img !== characterImageSrc)]
-    : (storyImages.length > 0 ? storyImages : (thumbnailImage ? [thumbnailImage] : ['/images/sample.png']));
+  // Use only character images if they exist, otherwise use story images
+  let finalAllImages: string[] = [];
+  
+  if (characterImages.length > 0) {
+    // If character images exist, use ONLY character images (no story images, no sample images)
+    finalAllImages = [...characterImages];
+    console.log(`📸 Using only character images (${characterImages.length} found):`, characterImages);
+  } else {
+    // If no character images, use story images and fallback to default if needed
+    const storyAndThumbnailImages = [
+      ...storyImages,
+      ...(thumbnailImage && !storyImages.includes(thumbnailImage) ? [thumbnailImage] : [])
+    ];
+    finalAllImages = storyAndThumbnailImages.length > 0 ? storyAndThumbnailImages : ['/images/sample.png'];
+    console.log(`📸 No character images found, using story images:`, finalAllImages);
+  }
   
   console.log('StoryDetailScreen Debug:', {
     storyId,
-    storyImages,
-    thumbnailImage,
-    characterImageSrc,
-    allImages,
-    storyMedia: story?.media
+    characterName: story?.content.characterName,
+    characterImagesCount: characterImages.length,
+    characterImages: characterImages.length > 0 ? characterImages : 'None',
+    finalImagesCount: finalAllImages.length,
+    finalAllImages,
+    usingOnlyCharacterImages: characterImages.length > 0,
+    willShowSampleImage: finalAllImages.includes('/images/sample.png')
   });
 
   // Force fallback to sample.png if character-*.svg detected (but keep character images)
-  const safeAllImages = allImages.map(img => {
+  const safeAllImages = finalAllImages.map(img => {
     if (img && img.startsWith('/data/ch_img/')) {
       return img; // Keep character images as-is
     }
