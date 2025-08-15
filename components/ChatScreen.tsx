@@ -15,6 +15,8 @@ import { translateCharacterName, translateStoryTitle, translateStartingSituation
 import { getCurrentLanguage } from '../utils/i18n';
 import { renderFormattedText, renderUserFormattedText } from '../utils/textFormatter';
 import svgPaths from '../imports/svg-c6g2wd331h';
+import { AIService } from '../services/ai/aiService';
+import { StoryContext, UserContext } from '../services/ai/types';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
 const imgThumbnail = "/images/chat-thumbnail.svg";
 
@@ -569,22 +571,70 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
     }]);
   }, [firstMessageAdded, getInitialCharacterMessage]);
 
-  const getCharacterResponse = useCallback((userMessage: string, storyId: string): string => {
-    // For now, return a generic response
-    // TODO: Implement character-specific responses based on story data
-    const genericResponses = [
-      t('chat.response1'),
-      t('chat.response2'),
-      t('chat.response3'),
-      t('chat.response4'),
-      t('chat.response5'),
-      t('chat.response6'),
-      t('chat.response7')
-    ];
-    return genericResponses[Math.floor(Math.random() * genericResponses.length)];
-  }, [t]);
+  const getCharacterResponse = useCallback(async (userMessage: string, storyId: string): Promise<string> => {
+    try {
+      // Get story data for AI context
+      const story = getStory(storyId);
+      if (!story) {
+        return t('chat.response1'); // Fallback response
+      }
 
-  const handleSendMessage = useCallback(() => {
+      // Prepare story context for AI
+      const storyContext: StoryContext = {
+        storyId: story.id,
+        title: story.title,
+        characterName: story.content?.characterName || story.title,
+        characterDescription: story.content?.characterDescription || '',
+        storySettings: story.content?.storySettings || '',
+        secretSettings: story.content?.secretSettings || '',
+        startingSituation: story.startSituation?.startingSituation || '',
+        firstDialogue: story.startSituation?.firstDialogue || '',
+        safetyMode: false, // Can be configured based on user settings
+        language: getCurrentLanguage() as any,
+        webSelectedLanguage: getCurrentLanguage() as any
+      };
+
+      // Prepare user context
+      const userContext: UserContext = {
+        nickname: userNickname,
+        userInfo: userInfo || ''
+      };
+
+      // Get conversation history from messages state
+      const conversationHistory = messages
+        .filter(msg => !msg.isNarration)
+        .slice(-10) // Keep last 10 messages for context
+        .map(msg => ({
+          role: msg.sender === 'user' ? 'user' as const : 'assistant' as const,
+          content: msg.content
+        }));
+
+      // Get AI response
+      const response = await AIService.generateResponse(
+        storyContext,
+        userContext,
+        userMessage,
+        conversationHistory
+      );
+
+      return response;
+    } catch (error) {
+      console.error('AI response error:', error);
+      // Fallback to generic responses if AI fails
+      const genericResponses = [
+        t('chat.response1'),
+        t('chat.response2'),
+        t('chat.response3'),
+        t('chat.response4'),
+        t('chat.response5'),
+        t('chat.response6'),
+        t('chat.response7')
+      ];
+      return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+    }
+  }, [t, userNickname, userInfo, messages]);
+
+  const handleSendMessage = useCallback(async () => {
     if (message.trim()) {
       const userMessageId = nextMessageIdRef.current;
       nextMessageIdRef.current += 1;
@@ -619,30 +669,62 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
         detail: { storyId, count: newCount } 
       }));
 
-      // Simulate character response
-      const responseTimeout = setTimeout(() => {
-        const characterResponseId = nextMessageIdRef.current;
-        nextMessageIdRef.current += 1;
+      // Show typing indicator
+      const typingId = nextMessageIdRef.current;
+      nextMessageIdRef.current += 1;
+      const typingMessage: Message = {
+        id: typingId,
+        sender: 'character',
+        content: '...',
+        timestamp: new Date(),
+        isTyping: true
+      };
+      setMessages(prev => [...prev, typingMessage]);
+
+      // Get AI response
+      try {
+        const responseContent = await getCharacterResponse(messageContent, storyId);
         
-        const responseContent = getCharacterResponse(messageContent, storyId);
-        const characterResponse: Message = {
-          id: characterResponseId,
-          sender: 'character',
-          content: responseContent,
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, characterResponse]);
+        // Remove typing indicator and add actual response
+        setMessages(prev => {
+          const filtered = prev.filter(msg => msg.id !== typingId);
+          const characterResponseId = nextMessageIdRef.current;
+          nextMessageIdRef.current += 1;
+          
+          const characterResponse: Message = {
+            id: characterResponseId,
+            sender: 'character',
+            content: responseContent,
+            timestamp: new Date()
+          };
+          
+          return [...filtered, characterResponse];
+        });
         
         // Save character response to chat session
         if (currentChatSession) {
           addChatMessage(currentChatSession.id, 'character', responseContent);
         }
-      }, 1500 + Math.random() * 1000);
-
-      return () => clearTimeout(responseTimeout);
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        // Remove typing indicator on error and show fallback message
+        setMessages(prev => {
+          const filtered = prev.filter(msg => msg.id !== typingId);
+          const errorResponseId = nextMessageIdRef.current;
+          nextMessageIdRef.current += 1;
+          
+          const errorResponse: Message = {
+            id: errorResponseId,
+            sender: 'character',
+            content: t('chat.response1'), // Fallback response
+            timestamp: new Date()
+          };
+          
+          return [...filtered, errorResponse];
+        });
+      }
     }
-  }, [message, getCharacterResponse, storyId]);
+  }, [message, getCharacterResponse, storyId, currentChatSession, t]);
 
   const handleSendStoryInput = useCallback(() => {
     if (storyInput.trim()) {
