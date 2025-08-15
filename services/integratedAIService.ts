@@ -1,30 +1,68 @@
 /**
- * 🚀 Integrated AI Service for EchoStory Chat App
+ * 🚀 Universal AI Service for EchoStory Chat App
  * 
- * This is a complete, self-contained AI service that can be directly used in Cursor.
- * Simply copy this file and use it in your ChatScreen component.
+ * This is a complete, self-contained AI service that works with ANY AI model/API.
+ * Simply configure the environment variables and use it in your ChatScreen component.
  * 
  * Features:
- * - NVIDIA AI API integration (Meta Llama 3.1 70B)
+ * - Universal AI API integration (OpenAI, Claude, Llama, Local models, etc.)
+ * - Flexible configuration via environment variables
  * - Character personality consistency
  * - Multi-language support (10 languages)
  * - User input recognition (*actions* vs plain dialogue)
  * - 3rd person narration acceptance
  * - 5-level romantic progression system
- * - Dialogue format: !narration! *action* "dialogue"
+ * - Dialogue format: *narration* (action) "dialogue"
+ * - Support for multiple response formats
  */
 
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
 
+/**
+ * 환경변수 설정 가이드:
+ * 
+ * .env 파일에 다음 변수들을 설정하세요:
+ * 
+ * # OpenAI API
+ * REACT_APP_AI_BASE_URL=https://api.openai.com/v1
+ * REACT_APP_AI_API_KEY=your-openai-api-key
+ * REACT_APP_AI_MODEL=gpt-4o-mini
+ * 
+ * # Claude API (Anthropic)
+ * REACT_APP_AI_BASE_URL=https://api.anthropic.com/v1
+ * REACT_APP_AI_API_KEY=your-anthropic-api-key
+ * REACT_APP_AI_MODEL=claude-3-sonnet-20240229
+ * 
+ * # Local AI (LM Studio, Ollama 등)
+ * REACT_APP_AI_BASE_URL=http://127.0.0.1:1234/v1
+ * REACT_APP_AI_API_KEY=local-api-key
+ * REACT_APP_AI_MODEL=llama-3.1-8b
+ * 
+ * # 기타 파라미터 (선택사항)
+ * REACT_APP_AI_MAX_TOKENS=1024
+ * REACT_APP_AI_TEMPERATURE=0.8
+ * REACT_APP_AI_TOP_P=0.9
+ * REACT_APP_AI_FREQUENCY_PENALTY=0.0
+ * REACT_APP_AI_PRESENCE_PENALTY=0.0
+ */
+
+// 범용 AI API 설정 - 어떤 모델이든 사용 가능
 const AI_CONFIG = {
-  apiKey: 'local-api-key', // Not needed for local API
-  baseUrl: '/api/local-ai/v1', // Use proxy for external access
-  model: 'openai/gpt-oss-20b', // Using the 20B model as requested
-  maxTokens: 1024,
-  temperature: 0.8,
-  topP: 0.9
+  // API 설정 - 환경변수나 설정에서 동적으로 변경 가능
+  apiKey: process.env.REACT_APP_AI_API_KEY || 'local-api-key',
+  baseUrl: process.env.REACT_APP_AI_BASE_URL || '/api/local-ai/v1',
+  model: process.env.REACT_APP_AI_MODEL || 'openai/gpt-oss-20b',
+  
+  // 생성 파라미터 - 모델에 따라 조정 가능
+  maxTokens: parseInt(process.env.REACT_APP_AI_MAX_TOKENS || '1024'),
+  temperature: parseFloat(process.env.REACT_APP_AI_TEMPERATURE || '0.8'),
+  topP: parseFloat(process.env.REACT_APP_AI_TOP_P || '0.9'),
+  
+  // 추가 파라미터 (일부 모델에서 사용)
+  frequencyPenalty: parseFloat(process.env.REACT_APP_AI_FREQUENCY_PENALTY || '0.0'),
+  presencePenalty: parseFloat(process.env.REACT_APP_AI_PRESENCE_PENALTY || '0.0'),
 };
 
 // ============================================================================
@@ -427,17 +465,41 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
         headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
       }
       
+      // 범용 API 요청 바디 구성 - 다양한 AI 모델 지원
+      const requestBody: any = {
+        model: AI_CONFIG.model,
+        messages: messagesWithLanguage,
+        temperature: AI_CONFIG.temperature,
+        max_tokens: AI_CONFIG.maxTokens,
+        stream: false
+      };
+
+      // 모델별 추가 파라미터 (존재하는 경우에만 추가)
+      if (AI_CONFIG.topP !== undefined && AI_CONFIG.topP > 0) {
+        requestBody.top_p = AI_CONFIG.topP;
+      }
+      if (AI_CONFIG.frequencyPenalty !== undefined && AI_CONFIG.frequencyPenalty !== 0) {
+        requestBody.frequency_penalty = AI_CONFIG.frequencyPenalty;
+      }
+      if (AI_CONFIG.presencePenalty !== undefined && AI_CONFIG.presencePenalty !== 0) {
+        requestBody.presence_penalty = AI_CONFIG.presencePenalty;
+      }
+
+      console.log('📤 Sending request to AI API:', {
+        url: apiUrl,
+        model: AI_CONFIG.model,
+        messageCount: messagesWithLanguage.length,
+        parameters: {
+          temperature: AI_CONFIG.temperature,
+          max_tokens: AI_CONFIG.maxTokens,
+          top_p: AI_CONFIG.topP
+        }
+      });
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          model: AI_CONFIG.model,
-          messages: messagesWithLanguage,
-          temperature: AI_CONFIG.temperature,
-          top_p: AI_CONFIG.topP,
-          max_tokens: AI_CONFIG.maxTokens,
-          stream: false
-        })
+        body: JSON.stringify(requestBody)
       });
 
       console.log('📡 API Response status:', response.status);
@@ -450,7 +512,31 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
 
       const data = await response.json();
       console.log('✅ API Response data:', data);
-      const rawResponse = data.choices[0].message.content;
+      
+      // 다양한 AI API 응답 형식 지원
+      let rawResponse: string;
+      
+      if (data.choices && data.choices[0] && data.choices[0].message) {
+        // OpenAI 호환 형식 (GPT, Claude, Llama 등)
+        rawResponse = data.choices[0].message.content;
+      } else if (data.response) {
+        // 일부 로컬 모델 형식
+        rawResponse = data.response;
+      } else if (data.text) {
+        // 간단한 텍스트 응답 형식
+        rawResponse = data.text;
+      } else if (data.content) {
+        // 또 다른 일반적인 형식
+        rawResponse = data.content;
+      } else if (typeof data === 'string') {
+        // 직접 문자열 응답
+        rawResponse = data;
+      } else {
+        console.error('❌ Unknown API response format:', data);
+        throw new Error('Unknown API response format');
+      }
+      
+      console.log('📝 Extracted raw response:', rawResponse);
       
       // Validate and clean the response
       const targetLanguage = storyContext.language === 'ko' ? 'ko' : 'en';
