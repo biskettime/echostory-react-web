@@ -15,7 +15,7 @@ export function TypingAnimation({ text, onComplete, speed = 50, showCursor = tru
   const [displayedSegments, setDisplayedSegments] = useState<string[]>([]);
   const [isComplete, setIsComplete] = useState(false);
 
-  // Initialize text processing - split by \n\n
+  // Initialize text processing - split by sentence endings
   useEffect(() => {
     console.log('🎬 TypingAnimation: Processing text:', text);
     
@@ -24,9 +24,9 @@ export function TypingAnimation({ text, onComplete, speed = 50, showCursor = tru
     // Handle escaped quotes
     processedText = processedText.replace(/\\"/g, '"');
     
-    // Split by double line breaks (\n\n) to create segments
-    const textSegments = processedText.split('\n\n').filter(segment => segment.trim());
-    console.log('🎬 TypingAnimation: Split into segments:', textSegments);
+    // Split into sentences based on ending patterns
+    const textSegments = splitIntoSentences(processedText);
+    console.log('🎬 TypingAnimation: Split into sentence segments:', textSegments);
     
     setSegments(textSegments);
     setCurrentSegmentIndex(0);
@@ -34,6 +34,81 @@ export function TypingAnimation({ text, onComplete, speed = 50, showCursor = tru
     setDisplayedSegments([]);
     setIsComplete(false);
   }, [text]);
+
+  // Function to split text into sentences based on ending patterns
+  const splitIntoSentences = (text: string): string[] => {
+    const sentences: string[] = [];
+    let currentSentence = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      currentSentence += char;
+      
+      // Check if we're starting a quote
+      if (char === '"' && !inQuotes) {
+        inQuotes = true;
+        continue;
+      }
+      
+      // Check for sentence endings
+      if (char === ')' || (char === '.' && !inQuotes)) {
+        // Special case: if sentence starts with *, it should end with .*
+        if (currentSentence.trim().startsWith('*') && i + 1 < text.length && text[i + 1] === '*') {
+          // This is a *.* pattern, add the closing * and end sentence
+          currentSentence += text[i + 1]; // Add the closing *
+          i++; // Skip the * in next iteration
+          sentences.push(currentSentence.trim());
+          currentSentence = '';
+          inQuotes = false;
+          
+          // Skip any following whitespace or line breaks
+          while (i + 1 < text.length && /\s/.test(text[i + 1])) {
+            i++;
+            if (text[i] === '\n') {
+              sentences.push('\n'); // Preserve line breaks as separate segments
+            }
+          }
+        } else if (!currentSentence.trim().startsWith('*')) {
+          // Regular sentence ending with . (not starting with *)
+          sentences.push(currentSentence.trim());
+          currentSentence = '';
+          inQuotes = false;
+          
+          // Skip any following whitespace or line breaks
+          while (i + 1 < text.length && /\s/.test(text[i + 1])) {
+            i++;
+            if (text[i] === '\n') {
+              sentences.push('\n'); // Preserve line breaks as separate segments
+            }
+          }
+        }
+        // If starts with * but doesn't have .* pattern, continue typing
+      } else if (char === '.' && inQuotes && i + 1 < text.length && text[i + 1] === '"') {
+        // Special case: quote ending with ."
+        currentSentence += text[i + 1]; // Add the closing quote
+        i++; // Skip the quote in next iteration
+        sentences.push(currentSentence.trim());
+        currentSentence = '';
+        inQuotes = false;
+        
+        // Skip any following whitespace or line breaks
+        while (i + 1 < text.length && /\s/.test(text[i + 1])) {
+          i++;
+          if (text[i] === '\n') {
+            sentences.push('\n'); // Preserve line breaks as separate segments
+          }
+        }
+      }
+    }
+    
+    // Add any remaining text
+    if (currentSentence.trim()) {
+      sentences.push(currentSentence.trim());
+    }
+    
+    return sentences.filter(s => s.length > 0);
+  };
 
   // Typing animation effect - segment by segment
   useEffect(() => {
@@ -138,13 +213,7 @@ export function TypingAnimation({ text, onComplete, speed = 50, showCursor = tru
     <span>
       {displayedSegments.map((segment, segmentIndex) => (
         <React.Fragment key={segmentIndex}>
-          {renderSegmentWithStyling(segment)}
-          {segmentIndex < displayedSegments.length - 1 && (
-            <>
-              <br />
-              <br />
-            </>
-          )}
+          {segment === '\n' ? <br /> : renderSegmentWithStyling(segment)}
         </React.Fragment>
       ))}
       {showCursor && !isComplete && (
