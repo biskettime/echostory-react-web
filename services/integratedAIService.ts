@@ -228,6 +228,11 @@ You ARE ${characterName}. You are NOT an AI, assistant, bot, program, or any art
 - NEVER use <|channel|>, <|constrain|>, or any similar control markers
 - Respond ONLY with the character's natural dialogue and actions
 - Do NOT include "response:", "{", "}", or any JSON formatting
+- NEVER include programming code like \\n, \\t, \\r, console.log, function, return, var, let, const
+- NEVER include escape sequences or backslashes in your response
+- NEVER include template literals like \${} or programming syntax
+- Your response must be PURE character dialogue and actions ONLY
+- NO technical artifacts, NO code snippets, NO programming language elements
 
 ## Romantic Progression (Based on Emotional Connection)
 Current connection level affects how you respond to romantic advances:
@@ -409,15 +414,34 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
       }
     });
     
-    // 2. Remove repetitive sentences
+    // 2. Check for programming code artifacts early
+    const codePatterns = [
+      /\\n/g, /\\t/g, /\\r/g, // Escape sequences
+      /console\./g, /function\s*\(/g, /return\s+/g, // Programming keywords
+      /var\s+|let\s+|const\s+/g, // Variable declarations
+      /=\s*>/g, // Arrow functions
+      /\$\{[^}]*\}/g, // Template literals
+    ];
+    
+    let hasCodeArtifacts = false;
+    codePatterns.forEach(pattern => {
+      if (pattern.test(cleanedResponse)) {
+        hasCodeArtifacts = true;
+        console.log('⚠️ Found code artifacts:', pattern);
+      }
+    });
+    
+    // 3. Remove repetitive sentences
     cleanedResponse = this.removeRepetitiveSentences(cleanedResponse);
     
-    // 3. Fix broken formatting markers
+    // 4. Fix broken formatting markers (this will also remove code artifacts)
     cleanedResponse = this.fixFormattingMarkers(cleanedResponse);
     
-    // 4. If too much was removed or response is too short, use fallback
-    if (cleanedResponse.trim().length < 10 || hasProblematicChars) {
-      console.log('🚨 Response too damaged or contains foreign languages, using fallback');
+    // 5. Check if response is too damaged or still contains code
+    const stillHasCode = /\\[ntr]|console\.|function|return|var\s|let\s|const\s/i.test(cleanedResponse);
+    
+    if (cleanedResponse.trim().length < 10 || hasProblematicChars || hasCodeArtifacts || stillHasCode) {
+      console.log('🚨 Response too damaged, contains foreign languages, or has code artifacts, using fallback');
       if (targetLanguage === 'ko') {
         return this.generateSafeKoreanResponse(characterName);
       } else {
@@ -510,6 +534,23 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
     fixed = fixed.replace(/\{[^}]*:/g, ''); // Remove incomplete JSON starts
     fixed = fixed.replace(/^\s*[.]\s*/, ''); // Remove leading dots
     
+    // Remove literal \n, \t, \r and other escape sequences
+    fixed = fixed.replace(/\\n/g, ' '); // Remove literal \n
+    fixed = fixed.replace(/\\t/g, ' '); // Remove literal \t
+    fixed = fixed.replace(/\\r/g, ' '); // Remove literal \r
+    fixed = fixed.replace(/\\"/g, '"'); // Fix escaped quotes
+    fixed = fixed.replace(/\\'/g, "'"); // Fix escaped apostrophes
+    fixed = fixed.replace(/\\\\/g, ''); // Remove double backslashes
+    fixed = fixed.replace(/\\[a-zA-Z]/g, ''); // Remove other escape sequences
+    
+    // Remove programming-related artifacts
+    fixed = fixed.replace(/console\.log/g, '');
+    fixed = fixed.replace(/function\s*\(/g, '');
+    fixed = fixed.replace(/return\s+/g, '');
+    fixed = fixed.replace(/var\s+|let\s+|const\s+/g, '');
+    fixed = fixed.replace(/=\s*>/g, '');
+    fixed = fixed.replace(/\$\{[^}]*\}/g, ''); // Remove template literals
+    
     // Remove duplicate lines and repetitive content
     const lines = fixed.split('\n').filter(line => line.trim().length > 0);
     const uniqueLines: string[] = [];
@@ -544,6 +585,10 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
     // Remove any remaining JSON-like structures
     fixed = fixed.replace(/\{[^}]*\}/g, '');
     fixed = fixed.replace(/\[[^\]]*\]/g, '');
+    
+    // Remove any remaining backslashes or weird characters
+    fixed = fixed.replace(/[\\]/g, '');
+    fixed = fixed.replace(/[`~]/g, '');
     
     console.log('🔧 Fixed formatting result:', fixed);
     return fixed;

@@ -662,17 +662,8 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
       return response;
     } catch (error) {
       console.error('AI response error:', error);
-      // Fallback to generic responses if AI fails
-      const genericResponses = [
-        t('chat.response1'),
-        t('chat.response2'),
-        t('chat.response3'),
-        t('chat.response4'),
-        t('chat.response5'),
-        t('chat.response6'),
-        t('chat.response7')
-      ];
-      return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+      // Return a simple error message instead of generic responses
+      throw error; // Let the calling function handle the error
     }
   }, [t, userNickname, userInfo, messages]);
 
@@ -754,23 +745,8 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
         }
       } catch (error) {
         console.error('Error getting AI response:', error);
-        // Replace waiting indicator with fallback message on error
-        setMessages(prev => {
-          const filtered = prev.filter(msg => msg.id !== typingId);
-          const errorResponseId = nextMessageIdRef.current;
-          nextMessageIdRef.current += 1;
-          
-          const errorResponse: Message = {
-            id: errorResponseId,
-            sender: 'character',
-            content: t('chat.response1'), // Fallback response
-            timestamp: new Date(),
-            isTyping: true,  // Start with typing animation
-            isWaitingForResponse: false
-          };
-          
-          return [...filtered, errorResponse];
-        });
+        // Simply remove the waiting indicator on error - no fallback message
+        setMessages(prev => prev.filter(msg => msg.id !== typingId));
       }
     }
   }, [message, getCharacterResponse, storyId, currentChatSession, t]);
@@ -892,16 +868,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
             }
           } catch (error) {
             console.error('❌ Error generating new response:', error);
-            // Add fallback response
-            const fallbackResponse: Message = {
-              id: newResponseId,
-              sender: 'character',
-              content: t('chat.response1'),
-              timestamp: new Date(),
-              isTyping: true,
-              isWaitingForResponse: false
-            };
-            setMessages(prev => [...prev, fallbackResponse]);
+            // Don't add any fallback response - just log the error
           }
         }, 1000);
       } else {
