@@ -110,6 +110,12 @@ export default function App() {
     // Keep selectedStoryId to maintain story context
   };
 
+  // New: Chat screen goes directly to home
+  const handleHomeFromChat = () => {
+    setCurrentScreen('home');
+    setActiveTab('home');
+  };
+
   const handleNavigateToStoryCreation = () => {
     setCurrentScreen('story-creation');
   };
@@ -228,6 +234,7 @@ export default function App() {
             <ChatScreen 
               storyId={selectedStoryId}
               onBack={handleBackFromChat}
+              onHome={handleHomeFromChat}
               nickname={userNickname}
             />
           ) : (

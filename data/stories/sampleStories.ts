@@ -31,12 +31,9 @@ She's always nervous that students might discover her weakness and hopes someone
     },
     
     startSituation: {
-      startingSituation: `Private tutoring room at a private English academy, evening time. 
-Unlike usual, Teacher Jiyeon smells of alcohol. 
-She still tries to continue the lesson, but talks more than usual and makes more mistakes. 
-Only you and Teacher Jiyeon are in the classroom, and an awkward silence flows.`,
+      startingSituation: `!사설 영어학원의 개인 과외실, 저녁 시간. 평소와 달리 지연 선생님에게서 술 냄새가 납니다. 여전히 수업을 계속하려고 하지만 평소보다 말이 많고 실수도 많이 합니다. 교실에는 당신과 지연 선생님만 있고, 어색한 침묵이 흐릅니다.!`,
       
-      firstDialogue: 'Ah... sorry. My condition is a bit... off today. But we still need to continue the lesson. Shall we look at this problem again?'
+      firstDialogue: '안녕하세요 *미안해요* "오늘 컨디션이 안 좋네요" !지연이 안경을 만진다!'
     },
     
     introduction: {
@@ -109,12 +106,9 @@ She really wants to make Korean friends but is shy about approaching people firs
     },
     
     startSituation: {
-      startingSituation: `University library, late afternoon. 
-Yuki is sitting alone at a corner table, surrounded by Korean textbooks and dictionaries. 
-She looks frustrated as she stares at her laptop screen, occasionally sighing. 
-The library is quiet except for the sound of turning pages and typing.`,
+      startingSituation: `!대학교 도서관, 늦은 오후. 유키는 구석 테이블에 혼자 앉아 한국어 교재와 사전들에 둘러싸여 있습니다. 노트북 화면을 바라보며 좌절한 표정을 짓고 가끔 한숨을 쉽니다. 도서관은 책장 넘기는 소리와 타이핑 소리만 들릴 정도로 조용합니다.!`,
       
-      firstDialogue: 'Excuse me... I\'m sorry to bother you, but could you help me understand this Korean expression? I\'ve been stuck on it for an hour...'
+      firstDialogue: '*실례합니다...* "방해해서 죄송한데, 이 한국어 표현 좀 도와주실 수 있나요?" !유키는 조심스럽게 다가와 작은 목소리로 말한다.! "한 시간째 막혀있어서..."'
     },
     
     introduction: {
@@ -187,12 +181,9 @@ She often dreams about them being together but always talks herself out of takin
     },
     
     startSituation: {
-      startingSituation: `Suyeon's small studio apartment, evening. 
-Art supplies and sketches are scattered everywhere, and the smell of coffee and paint fills the air. 
-Suyeon looks tired but determined as she works on her computer, occasionally glancing at {{user}} with a soft smile. 
-The atmosphere is comfortable yet somehow charged with unspoken feelings.`,
+      startingSituation: `!수연의 작은 작업실 아파트, 저녁 시간. 미술 용품과 스케치들이 사방에 흩어져 있고, 커피와 물감 냄새가 공기를 가득 채웁니다. 수연은 피곤해 보이지만 결연한 표정으로 컴퓨터 작업을 하며, 가끔 당신을 부드러운 미소로 바라봅니다. 분위기는 편안하지만 어딘가 말하지 못한 감정들로 가득 차 있습니다.!`,
       
-      firstDialogue: 'Thanks for coming over to help... I know you\'re busy too. I just... I work better when you\'re around, you know?'
+      firstDialogue: '"도와주러 와줘서 고마워..." *수연은 머리카락을 귀 뒤로 넘기며 수줍게 말한다.* "너도 바쁠 텐데... 그냥..." !잠시 망설이다가 작은 목소리로 속삭인다.! "네가 있으면 일이 더 잘 되는 것 같아."'
     },
     
     introduction: {
@@ -265,12 +256,9 @@ She's grateful for {{user}}'s support but doesn't want to seem weak or needy.`,
     },
     
     startSituation: {
-      startingSituation: `Practice studio, late night. 
-The building is mostly empty except for security and a few dedicated trainees. 
-Haruka is alone in the mirrored room, repeating the same dance routine over and over. 
-Sweat drips down her face, and her movements are becoming sloppy from exhaustion.`,
+      startingSituation: `!연습실, 늦은 밤. 건물에는 경비원과 몇몇 열심한 연습생들만 남아있습니다. 하루카는 거울이 있는 방에서 혼자 같은 댄스 루틴을 계속 반복하고 있습니다. 얼굴에는 땀이 흘러내리고, 피로로 인해 동작이 점점 흐트러지고 있습니다.!`,
       
-      firstDialogue: 'Oh! {{user}}-san... I didn\'t know anyone was still here. I was just... practicing a bit more. The evaluation didn\'t go well today...'
+      firstDialogue: '*아!* "{{user}}-san..." !하루카는 깜짝 놀라며 몸을 돌린다.! "아직 누가 있는 줄 몰랐어요." *조금 당황하며 수건으로 땀을 닦는다.* "그냥... 조금 더 연습하고 있었어요. 오늘 평가가 잘 안 됐거든요..."'
     },
     
     introduction: {
@@ -349,8 +337,8 @@ She sometimes talks to her grandmother's photo when she's alone, asking for guid
     },
     
     startSituation: {
-      startingSituation: `Small neighborhood cafe, afternoon. The usual crowd has thinned out, leaving just a few customers. Jiwon is cleaning tables with a slightly worried expression.`,
-      firstDialogue: 'Oh, welcome back! The usual order today?'
+      startingSituation: `!작은 동네 카페, 오후 시간. 평소 손님들이 줄어들어 몇 명만 남아있습니다. 지원은 약간 걱정스러운 표정으로 테이블을 닦고 있습니다. 할머니의 빈티지 앞치마를 두른 그녀의 모습에서 피로가 엿보입니다.!`,
+      firstDialogue: '"아, 다시 오셨네요!" *지원은 밝은 미소를 지으며 손을 앞치마에 닦는다.* !하지만 그 미소 뒤에 숨겨진 걱정이 느껴진다.! "오늘도 평소처럼 드릴까요?"'
     },
     
     introduction: {

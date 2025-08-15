@@ -13,6 +13,7 @@ import { Redo, Edit3, Send, Star, Home, Volume2, Play } from 'lucide-react';
 import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 import { translateCharacterName, translateStoryTitle, translateStartingSituation, translateFirstDialogue } from '../utils/storyTranslation';
 import { getCurrentLanguage } from '../utils/i18n';
+import { renderFormattedText, renderUserFormattedText } from '../utils/textFormatter';
 import svgPaths from '../imports/svg-c6g2wd331h';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
 const imgThumbnail = "/images/chat-thumbnail.svg";
@@ -20,6 +21,7 @@ const imgThumbnail = "/images/chat-thumbnail.svg";
 interface ChatScreenProps {
   storyId: string;
   onBack: () => void;
+  onHome?: () => void;
   nickname: string;
 }
 
@@ -43,7 +45,7 @@ interface Suggestion {
   content: string;
 }
 
-export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
+export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProps) {
   console.log('🚀 ChatScreen mounted with storyId:', storyId);
   const [message, setMessage] = useState('');
   const [isStoryMode, setIsStoryMode] = useState(false);
@@ -894,8 +896,12 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   // Modified handleBackToHome function for direct home navigation
   const handleBackToHome = useCallback(() => {
     console.log('Navigating to home from chat');
-    onBack(); // This should now go directly to home
-  }, [onBack]);
+    if (onHome) {
+      onHome(); // Go directly to home
+    } else {
+      onBack(); // Fallback to previous behavior
+    }
+  }, [onHome, onBack]);
 
   if (!story) {
     return (
@@ -1181,9 +1187,9 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                       /* User Message */
                       <div className="max-w-[400px] flex flex-col items-end">
                         <div className="bg-[rgba(11,147,246,0.3)] backdrop-blur-sm px-3 py-2 rounded-bl-[12px] rounded-br-[3px] rounded-tl-[12px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
-                          <p className="text-[rgba(255,255,255,0.85)] text-[14.18px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
-                            {msg.content}
-                          </p>
+                          <div className="text-[14.18px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
+                            {renderUserFormattedText(msg.content)}
+                          </div>
                         </div>
                         
                         {/* Delete Button - Show only for the last user message */}
@@ -1300,9 +1306,9 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                                   }}
                                 />
                               ) : (
-                                <p className="text-[rgba(255,255,255,0.85)] text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
-                                  {msg.content}
-                                </p>
+                                <div className="text-[rgba(255,255,255,0.85)] text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
+                                  {renderFormattedText(msg.content)}
+                                </div>
                               )}
                             </div>
                           </div>

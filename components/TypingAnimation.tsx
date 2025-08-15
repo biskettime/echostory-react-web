@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { renderFormattedText } from '../utils/textFormatter';
 
 interface TypingAnimationProps {
   text: string;
@@ -49,7 +50,7 @@ export function TypingAnimation({ text, onComplete, speed = 50, showCursor = tru
 
   return (
     <span>
-      {displayText}
+      {renderFormattedText(displayText)}
       {showCursor && currentIndex <= text.length && (
         <span className="animate-pulse">|</span>
       )}

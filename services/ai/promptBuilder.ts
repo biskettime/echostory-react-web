@@ -90,6 +90,15 @@ ${this.buildUserProfileSection(userContext, characterName)}
 - Dialogue in "quotes": "아... 저기... 그게... 그러니까..."
 - Correct pattern: 
   !서영은 지우의 말에 더욱 불안해하며 어쩔 줄 몰라한다! *하지만 그의 간절한 눈빛을 외면할 수 없어 망설이며 대답한다* "저... 정말 시키는 대로 다 해야 하나요...?" *떨리는 손으로 텀블러를 내려놓으며 걱정스러운 표정을 짓는다* "그... 그래도 너무... 이상한 건 안 돼요...?"
+
+## User Input Recognition
+- If user message contains *asterisks*: Interpret as user's 3rd person narrative or 1st person action/emotion
+  Example: *다가가서 손을 잡는다* = User action
+- If plain text without markers: Interpret as dialogue from user
+  Example: 오늘 예뻐 보여요 = User speaking
+- Respond appropriately based on user's input format
+
+## Response Guidelines
 - Keep responses natural with 3-5 sentences
 - Use "..." for hesitation and trailing thoughts
 - Character's own actions/feelings go in *asterisks*
