@@ -84,6 +84,19 @@ export function TypingAnimation({ text, onComplete, speed = 50, showCursor = tru
           }
         }
         // If starts with * but doesn't have .* pattern, continue typing
+      } else if (char === '*' && currentSentence.trim().startsWith('*') && currentSentence.length > 1) {
+        // Special case: sentence starts with * and ends with * (without .)
+        sentences.push(currentSentence.trim());
+        currentSentence = '';
+        inQuotes = false;
+        
+        // Skip any following whitespace or line breaks
+        while (i + 1 < text.length && /\s/.test(text[i + 1])) {
+          i++;
+          if (text[i] === '\n') {
+            sentences.push('\n'); // Preserve line breaks as separate segments
+          }
+        }
       } else if (char === '.' && inQuotes && i + 1 < text.length && text[i + 1] === '"') {
         // Special case: quote ending with ."
         currentSentence += text[i + 1]; // Add the closing quote
