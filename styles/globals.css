@@ -379,3 +379,27 @@
     min-height: -webkit-fill-available;
   }
 }
+
+/* Continuous bouncing dots animation for chat waiting */
+@keyframes continuous-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-continuous-bounce {
+  animation: continuous-bounce 1.4s infinite ease-in-out;
+}
+
+.animate-continuous-bounce-delay-1 {
+  animation: continuous-bounce 1.4s infinite ease-in-out;
+  animation-delay: 0.16s;
+}
+
+.animate-continuous-bounce-delay-2 {
+  animation: continuous-bounce 1.4s infinite ease-in-out;
+  animation-delay: 0.32s;
+}

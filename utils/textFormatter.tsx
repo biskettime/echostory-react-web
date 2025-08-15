@@ -10,11 +10,18 @@ export const parseMessageText = (text: string): TextSegment[] => {
   const segments: TextSegment[] = [];
   let currentIndex = 0;
   
+  // Handle literal \n characters and convert them to actual line breaks
+  // \n\n means different sentences, so convert to actual line breaks
+  text = text.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n');
+  
+  // Handle escaped quotes - convert \" to actual quotes "
+  text = text.replace(/\\"/g, '"');
+  
   // 정규식 패턴들 - 매번 새로 생성하여 상태 문제 방지
   const patterns = [
-    { type: 'narration' as const, pattern: '!([^!]+)!' },  // !3인칭묘사체!
-    { type: 'emotion' as const, pattern: '\\*([^*]+)\\*' },  // *감정행동묘사*
-    { type: 'dialogue' as const, pattern: '"([^"]+)"' }    // "대화체"
+    { type: 'narration' as const, pattern: '\\*[^*]+\\*' },  // *3인칭묘사체*
+    { type: 'emotion' as const, pattern: '\\([^)]+\\)' },  // (감정행동묘사)
+    { type: 'dialogue' as const, pattern: '"[^"]+"' }    // "대화체"
   ];
   
   // 모든 매치를 찾아서 위치와 함께 저장
@@ -31,7 +38,7 @@ export const parseMessageText = (text: string): TextSegment[] => {
     while ((match = regex.exec(text)) !== null) {
       matches.push({
         type,
-        content: match[1], // 괄호 안의 내용만
+        content: match[0], // 기호 포함 전체 매치
         start: match.index,
         end: match.index + match[0].length
       });
@@ -90,8 +97,15 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
   const segments: TextSegment[] = [];
   let currentIndex = 0;
   
-  // 사용자 메시지용 패턴 - *내용*만 파싱
-  const regex = new RegExp('\\*([^*]+)\\*', 'g');
+  // Handle literal \n characters and convert them to actual line breaks
+  // \n\n means different sentences, so convert to actual line breaks
+  text = text.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n');
+  
+  // Handle escaped quotes - convert \" to actual quotes "
+  text = text.replace(/\\"/g, '"');
+  
+  // 사용자 메시지용 패턴 - (내용)만 파싱
+  const regex = new RegExp('\\([^)]+\\)', 'g');
   const matches: Array<{
     content: string;
     start: number;
@@ -101,7 +115,7 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
   let match;
   while ((match = regex.exec(text)) !== null) {
     matches.push({
-      content: match[1], // 괄호 안의 내용만
+      content: match[0], // 기호 포함 전체 매치
       start: match.index,
       end: match.index + match[0].length
     });
@@ -154,11 +168,22 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
   console.log('👤 User message formatting:', text);
   console.log('👤 User message segments:', segments);
   
+  // Handle line breaks in content
+  const renderContent = (content: string) => {
+    const lines = content.split('\n');
+    return lines.map((line, lineIndex) => (
+      <React.Fragment key={lineIndex}>
+        {line}
+        {lineIndex < lines.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+  
   return segments.map((segment, index) => {
     const needsSpace = index > 0 && segment.content.trim() !== '';
     
     switch (segment.type) {
-      case 'emotion': // *내용* - 하늘색 투명 기울임체
+      case 'emotion': // (내용) - 하늘색 투명 기울임체
         return (
           <span key={index}>
             {needsSpace && ' '}
@@ -166,7 +191,7 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
               className="italic"
               style={{ color: 'rgba(135, 206, 235, 0.7)', marginRight: '8px' }}
             >
-              {segment.content}
+              {renderContent(segment.content)}
             </span>
           </span>
         );
@@ -175,7 +200,7 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
       default:
         return (
           <span key={index} style={{ color: '#FFA500', fontWeight: '600' }}>
-            {segment.content}
+            {renderContent(segment.content)}
           </span>
         );
     }
@@ -189,11 +214,22 @@ export const renderFormattedText = (text: string): React.ReactNode => {
   console.log('🎨 [CHARACTER] Parsed segments:', segments);
   console.log('🎨 [CHARACTER] Segments count:', segments.length);
   
+  // Handle line breaks in content
+  const renderContent = (content: string) => {
+    const lines = content.split('\n');
+    return lines.map((line, lineIndex) => (
+      <React.Fragment key={lineIndex}>
+        {line}
+        {lineIndex < lines.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+  
   return segments.map((segment, index) => {
     const needsSpace = index > 0 && segment.content.trim() !== '';
     
     switch (segment.type) {
-      case 'narration': // !3인칭묘사체! - 회색 기울임체
+      case 'narration': // **3인칭묘사체** - 회색 기울임체
         return (
           <span key={index}>
             {needsSpace && ' '}
@@ -201,12 +237,12 @@ export const renderFormattedText = (text: string): React.ReactNode => {
               className="italic"
               style={{ color: 'rgba(156, 163, 175, 0.8)' }}
             >
-              {segment.content}
+              {renderContent(segment.content)}
             </span>
           </span>
         );
       
-      case 'emotion': // *감정행동묘사* - 하늘색 투명 기울임체
+      case 'emotion': // (감정행동묘사) - 하늘색 투명 기울임체
         return (
           <span key={index}>
             {needsSpace && ' '}
@@ -214,7 +250,7 @@ export const renderFormattedText = (text: string): React.ReactNode => {
               className="italic"
               style={{ color: 'rgba(135, 206, 235, 0.7)' }}
             >
-              {segment.content}
+              {renderContent(segment.content)}
             </span>
           </span>
         );
@@ -224,16 +260,16 @@ export const renderFormattedText = (text: string): React.ReactNode => {
           <span key={index}>
             {needsSpace && ' '}
             <span style={{ color: '#FFFF99', fontWeight: '450' }}>
-              {segment.content}
+              {renderContent(segment.content)}
             </span>
           </span>
         );
       
-      case 'normal': // 일반 텍스트 - 레몬색 (일반 대화)
+      case 'normal': // 일반 텍스트 - 흰색 기울임체
       default:
         return (
-          <span key={index} style={{ color: '#FFFF99' }}>
-            {segment.content}
+          <span key={index} className="italic" style={{ color: 'white' }}>
+            {renderContent(segment.content)}
           </span>
         );
     }

@@ -324,9 +324,6 @@ export const translateCharacterDescriptionContent = (storyTitle: string, origina
 // Starting Situation 번역
 export const translateStartingSituation = (storyTitle: string, originalContent: string): string => {
   const currentLang = getCurrentLanguage();
-  if (currentLang === 'en') {
-    return originalContent;
-  }
   
   // 스토리 제목에서 캐릭터 키 추출
   const getCharacterKey = (title: string): string => {
@@ -363,9 +360,6 @@ export const translateStartingSituation = (storyTitle: string, originalContent: 
 // First Dialogue 번역
 export const translateFirstDialogue = (storyTitle: string, originalContent: string): string => {
   const currentLang = getCurrentLanguage();
-  if (currentLang === 'en') {
-    return originalContent;
-  }
   
   // 스토리 제목에서 캐릭터 키 추출
   const getCharacterKey = (title: string): string => {

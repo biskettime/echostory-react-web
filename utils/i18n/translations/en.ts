@@ -284,6 +284,7 @@ export const en = {
 
   // Starting Situation Translations
   startingSituation: {
+    defaultIntro: "Your encounter with {{characterName}} begins.",
     drunkTeacherJiyeon: "Private tutoring room at a private English academy, evening time. Unlike usual, Teacher Jiyeon smells of alcohol. She still tries to continue the lesson, but talks more than usual and makes more mistakes. Only you and Teacher Jiyeon are in the classroom, and an awkward silence flows.",
     mysteriousYuki: "University library, late afternoon. Yuki is sitting alone at a corner table, surrounded by Korean textbooks and dictionaries. She looks frustrated as she stares at her laptop screen, occasionally sighing. The library is quiet except for the sound of turning pages and typing.",
     artistSuyeon: "Suyeon's small studio apartment, evening. Art supplies and sketches are scattered everywhere, and the smell of coffee and paint fills the air. Suyeon looks tired but determined as she works on her computer, occasionally glancing at {{user}} with a soft smile. The atmosphere is comfortable yet somehow charged with unspoken feelings.",

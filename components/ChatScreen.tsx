@@ -88,8 +88,10 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
       // Update initial narration message when language changes
       if (story) {
         const originalNarration = story.startSituation?.startingSituation || 
-          `${characterName}과의 만남이 시작됩니다.`;
-        const translatedNarration = translateStartingSituation(story.title, originalNarration);
+          t('startingSituation.defaultIntro').replace('{{characterName}}', characterName);
+        const translatedNarration = story.startSituation?.startingSituation 
+          ? translateStartingSituation(story.title, originalNarration)
+          : originalNarration;
         
         setMessages(prevMessages => {
           if (prevMessages.length > 0 && prevMessages[0].isNarration) {
@@ -487,9 +489,9 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   // Initialize messages with narration from story data
   const [messages, setMessages] = useState<Message[]>(() => {
     const originalNarration = story?.startSituation?.startingSituation || 
-      `${characterName}과의 만남이 시작됩니다.`;
+      t('startingSituation.defaultIntro').replace('{{characterName}}', characterName);
     
-    const translatedNarration = story?.title 
+    const translatedNarration = story?.startSituation?.startingSituation 
       ? translateStartingSituation(story.title, originalNarration)
       : originalNarration;
     
@@ -1322,7 +1324,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                       </div>
                     ) : (
                       /* Character Message - Matching Figma Design */
-                      <div className="flex items-start gap-[7px] max-w-[75%]">
+                      <div className="flex items-start gap-[7px] max-w-[90%]">
                         {/* Character Avatar */}
                         <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
                                                   <img 
@@ -1409,9 +1411,9 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                                 // Show waiting animation while getting AI response
                                 <div className="flex items-center space-x-1">
                                   <div className="flex space-x-1">
-                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-continuous-bounce"></div>
+                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-continuous-bounce-delay-1"></div>
+                                    <div className="w-2 h-2 bg-[rgba(255,255,255,0.6)] rounded-full animate-continuous-bounce-delay-2"></div>
                                   </div>
                                 </div>
                               ) : msg.isTyping ? (
@@ -1481,7 +1483,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                 {/* Show typing animation for first message */}
                 {showFirstMessage && !firstMessageAdded && (
                   <div className="flex justify-start pt-1.5">
-                    <div className="flex items-start gap-[7px] max-w-[85%]">
+                    <div className="flex items-start gap-[7px] max-w-[90%]">
                       <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
                         <img 
                           src={
