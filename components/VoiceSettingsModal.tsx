@@ -49,7 +49,7 @@ export function VoiceSettingsModal({ onClose, currentVoice = "Hyewon", onVoiceSe
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
-      <div className="w-full max-w-[428px] bg-[#1f1f1f] rounded-t-lg flex flex-col max-h-[85vh]">
+      <div className="w-full max-w-[375px] bg-[#1f1f1f] rounded-t-lg flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="bg-[#1f1f1f] relative rounded-tl-[8px] rounded-tr-[8px] shrink-0 w-full">
           <div className="relative size-full">

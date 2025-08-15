@@ -314,12 +314,12 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
               backgroundRepeat: 'no-repeat'
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/50">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/15 to-black/25">
               <div className="absolute bottom-4 left-4 right-4">
-                <h3 className="text-white text-lg font-bold mb-1 drop-shadow-lg">
+                <h3 className="text-white text-lg font-bold mb-1 drop-shadow-2xl" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8)'}}>
                   {t('home.featuredStories')}
                 </h3>
-                <p className="text-white/90 text-sm drop-shadow-md">
+                <p className="text-white/90 text-sm drop-shadow-xl" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
                   {t('home.featuredDescription')}
                 </p>
               </div>

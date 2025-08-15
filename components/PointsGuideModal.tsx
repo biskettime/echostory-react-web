@@ -8,7 +8,7 @@ interface PointsGuideModalProps {
 export function PointsGuideModal({ onClose, onBack }: PointsGuideModalProps) {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
-      <div className="w-full max-w-[428px] bg-[#1f1f1f] flex flex-col h-full">
+      <div className="w-full max-w-[375px] bg-[#1f1f1f] flex flex-col h-full">
         {/* Header */}
         <div className="bg-[#1f1f1f] relative w-full">
           <div

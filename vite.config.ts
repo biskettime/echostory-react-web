@@ -31,6 +31,14 @@ export default defineConfig({
         headers: {
           'Origin': 'https://integrate.api.nvidia.com'
         }
+      },
+      '/api/local-ai': {
+        target: 'http://192.168.0.40:1234',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/local-ai/, ''),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
     }
   }

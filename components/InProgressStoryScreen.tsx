@@ -182,9 +182,9 @@ export function InProgressStoryScreen({ onBack, onSave, draftId, safetyMode, onS
   };
 
   return (
-    <div className="bg-[#1a1b1b] box-border content-stretch flex flex-col items-start justify-start max-w-[500px] p-0 relative shrink-0 w-full h-screen">
+    <div className="bg-[#1a1b1b] box-border content-stretch flex flex-col items-start justify-start max-w-[375px] p-0 relative shrink-0 w-full h-screen">
       {/* Fixed Header */}
-      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-10 items-center justify-between max-w-[500px] pb-[0.625px] pl-0 pr-[15px] pt-0 w-full z-50 flex-shrink-0">
+      <div className="bg-[#1a1b1b] box-border content-stretch flex flex-row h-10 items-center justify-between max-w-[375px] pb-[0.625px] pl-0 pr-[15px] pt-0 w-full z-50 flex-shrink-0">
         <div aria-hidden="true" className="absolute border-[#424242] border-[0px_0px_0.625px] border-solid inset-0 pointer-events-none" />
         
         {/* Back Button */}
@@ -403,8 +403,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       {/* Title Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-0">
         {/* Title Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-[3.99px] items-start justify-start pb-1 pt-0 px-0 relative shrink-0">
               <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
                 <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
@@ -425,7 +425,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
 
         {/* Title Input */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 pb-[0.38px] pt-[0.37px] px-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="relative size-full">
@@ -461,8 +461,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       {/* Story Settings Section */}
       <div className="absolute box-border content-stretch flex flex-col gap-[0.01px] items-start justify-start left-0 p-0 right-0 top-[120px]">
         {/* Story Settings Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
                 <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
@@ -484,12 +484,12 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
 
         {/* Story Settings Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[113px] max-h-[323px] max-w-[470px] min-h-[113px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[113px] max-h-[323px] max-w-[350px] min-h-[113px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[113px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea
@@ -517,8 +517,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       {/* Secret Settings Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[326px]">
         {/* Secret Settings Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -536,12 +536,12 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
 
         {/* Secret Settings Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[71px] max-h-[134px] max-w-[470px] min-h-[71px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[71px] max-h-[134px] max-w-[350px] min-h-[71px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[71px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea
@@ -584,8 +584,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       {/* Character Name Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[551px]">
         {/* Character Name Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-[3.99px] items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
                 <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
@@ -606,7 +606,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
 
         {/* Character Name Input */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 pb-[0.38px] pt-[0.37px] px-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="relative size-full">
@@ -642,8 +642,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       {/* Character Description Section */}
       <div className="absolute box-border content-stretch flex flex-col gap-[0.01px] items-start justify-start left-0 p-0 right-0 top-[660px]">
         {/* Character Description Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
                 <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
@@ -665,12 +665,12 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
 
         {/* Character Description Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[216px] max-h-[430px] max-w-[470px] min-h-[216px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[216px] max-h-[430px] max-w-[350px] min-h-[216px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[216px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea
@@ -698,8 +698,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       {/* Story Images Section - AT THE BOTTOM */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[950px]">
         {/* Story Images Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -820,8 +820,8 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
       {/* Starting Situation Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-0">
         {/* Starting Situation Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
                 <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
@@ -843,12 +843,12 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
 
         {/* Starting Situation Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[150px] max-h-[300px] max-w-[470px] min-h-[150px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[150px] max-h-[300px] max-w-[350px] min-h-[150px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[150px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea
@@ -876,8 +876,8 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
       {/* First Dialogue Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[250px]">
         {/* First Dialogue Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -895,12 +895,12 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
 
         {/* First Dialogue Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[100px] max-h-[200px] max-w-[470px] min-h-[100px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[100px] max-h-[200px] max-w-[350px] min-h-[100px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[100px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea
@@ -951,8 +951,8 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       {/* Introduction Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-0">
         {/* Introduction Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
                 <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
@@ -974,12 +974,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
 
         {/* Introduction Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[120px] max-h-[250px] max-w-[470px] min-h-[120px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[120px] max-h-[250px] max-w-[350px] min-h-[120px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[120px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea
@@ -1007,8 +1007,8 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       {/* Tags Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[230px]">
         {/* Tags Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -1041,7 +1041,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
 
         {/* Tag Input */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="relative size-full">
@@ -1091,8 +1091,8 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       {/* Visibility Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[450px]">
         {/* Visibility Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -1144,8 +1144,8 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       {/* Safety Filter Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[580px]">
         {/* Safety Filter Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -1197,8 +1197,8 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       {/* Creator Comment Section */}
       <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[720px]">
         {/* Creator Comment Label */}
-        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[470px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
-          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[470px] pl-0 pr-[13.68px] py-0 relative shrink-0">
+        <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
+          <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
@@ -1216,12 +1216,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
 
         {/* Creator Comment Textarea */}
         <div className="box-border content-stretch flex flex-row items-center justify-center min-h-8 p-0 relative shrink-0 w-full">
-          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[470px] min-h-px min-w-px p-0 relative shrink-0">
+          <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start max-w-[350px] min-h-px min-w-px p-0 relative shrink-0">
             <div className="bg-[#141414] relative rounded-md shrink-0 w-full group">
               <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md group-focus-within:border-[rgba(255,149,0,0.8)] group-hover:border-[rgba(255,149,0,0.6)] transition-colors" />
               <div className="flex flex-row justify-center relative size-full">
                 <div className="box-border content-stretch flex flex-row items-start justify-center p-[0.625px] relative w-full">
-                  <div className="basis-0 grow h-[80px] max-h-[150px] max-w-[470px] min-h-[80px] min-w-px relative shrink-0">
+                  <div className="basis-0 grow h-[80px] max-h-[150px] max-w-[350px] min-h-[80px] min-w-px relative shrink-0">
                     <div className="max-h-inherit max-w-inherit min-h-inherit overflow-x-auto overflow-y-clip relative size-full">
                       <div className="box-border content-stretch flex flex-col h-[80px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full">
                         <textarea

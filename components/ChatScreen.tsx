@@ -595,8 +595,8 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
       const story = getStory(storyId);
       console.log('📚 Story data:', story);
       if (!story) {
-        console.log('❌ Story not found, returning fallback');
-        return t('chat.response1'); // Fallback response
+        console.log('❌ Story not found');
+        throw new Error('Story not found');
       }
 
       // Prepare story context for AI
@@ -1298,7 +1298,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                       </div>
                     ) : msg.sender === 'user' ? (
                       /* User Message */
-                      <div className="max-w-[400px] flex flex-col items-end">
+                      <div className="max-w-[300px] flex flex-col items-end">
                         <div className="bg-[rgba(11,147,246,0.3)] backdrop-blur-sm px-3 py-2 rounded-bl-[12px] rounded-br-[3px] rounded-tl-[12px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
                           <div className="text-[14.18px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
                             {renderUserFormattedText(msg.content)}
@@ -1322,7 +1322,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                       </div>
                     ) : (
                       /* Character Message - Matching Figma Design */
-                      <div className="flex items-start gap-[7px] max-w-[85%]">
+                      <div className="flex items-start gap-[7px] max-w-[75%]">
                         {/* Character Avatar */}
                         <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
                                                   <img 

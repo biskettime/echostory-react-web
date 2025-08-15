@@ -20,7 +20,7 @@
 
 const AI_CONFIG = {
   apiKey: 'local-api-key', // Not needed for local API
-  baseUrl: 'http://127.0.0.1:1234/v1',
+  baseUrl: '/api/local-ai/v1', // Use proxy for external access
   model: 'openai/gpt-oss-20b', // Using the 20B model as requested
   maxTokens: 1024,
   temperature: 0.8,
@@ -230,7 +230,7 @@ You ARE ${characterName}. You are NOT an AI, assistant, bot, program, or any art
 - Do NOT include "response:", "{", "}", or any JSON formatting
 - NEVER include programming code like \\n, \\t, \\r, console.log, function, return, var, let, const
 - NEVER include escape sequences or backslashes in your response
-- NEVER include template literals like \${} or programming syntax
+- NEVER include template literals like \$\{} or programming syntax
 - Your response must be PURE character dialogue and actions ONLY
 - NO technical artifacts, NO code snippets, NO programming language elements
 
@@ -272,7 +272,9 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
       };
       
       // Only add Authorization if not using local API
-      if (!AI_CONFIG.baseUrl.includes('127.0.0.1') && !AI_CONFIG.baseUrl.includes('localhost')) {
+      if (!AI_CONFIG.baseUrl.includes('127.0.0.1') && 
+          !AI_CONFIG.baseUrl.includes('localhost') && 
+          !AI_CONFIG.baseUrl.includes('/api/local-ai')) {
         headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
       }
       
@@ -598,51 +600,24 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
    * Generate safe Korean response
    */
   private generateSafeKoreanResponse(characterName: string): string {
-    const safeResponses = [
-      `!${characterName}이 고개를 끄덕이며 대답한다.! "그렇군요." *이해하는 표정을 짓는다.*`,
-      `"정말 흥미로운 이야기네요." !${characterName}이 미소를 지으며 말한다.! *관심 있어 한다.*`,
-      `*잠시 생각하는 모습을 보인다.* "그런 일이 있었군요." !${characterName}이 공감하는 표정을 짓는다.!`,
-      `!${characterName}이 놀란 표정을 짓는다.! "정말요?" *더 자세히 듣고 싶어한다.*`,
-      `"그것에 대해 어떻게 생각하시나요?" !${characterName}이 궁금한 표정으로 묻는다.! *진심으로 관심을 보인다.*`
-    ];
-    return safeResponses[Math.floor(Math.random() * safeResponses.length)];
+    console.log('🚨 Safe Korean response generation disabled - throwing error instead');
+    throw new Error('AI response validation failed and safe responses disabled');
   }
 
   /**
    * Generate safe English response
    */
   private generateSafeEnglishResponse(characterName: string): string {
-    const safeResponses = [
-      `!${characterName} nods thoughtfully.! "I see." *shows understanding.*`,
-      `"That's really interesting." !${characterName} smiles warmly.! *seems genuinely interested.*`,
-      `*pauses to think for a moment.* "I understand." !${characterName} gives a sympathetic look.!`,
-      `!${characterName} looks surprised.! "Really?" *wants to hear more.*`,
-      `"What do you think about that?" !${characterName} asks curiously.! *shows genuine interest.*`
-    ];
-    return safeResponses[Math.floor(Math.random() * safeResponses.length)];
+    console.log('🚨 Safe English response generation disabled - throwing error instead');
+    throw new Error('AI response validation failed and safe responses disabled');
   }
 
   /**
    * Generate mock response for testing when API fails
    */
   private generateMockResponse(userMessage: string, characterName: string): string {
-    console.log('🎭 Generating mock response for:', characterName);
-    
-    const responses = [
-      `!${characterName}이 당신의 말을 듣고 고개를 끄덕인다.! *그렇게 생각하시는군요.* "흥미로운 이야기네요."`,
-      `"정말요?" !${characterName}의 눈이 반짝인다.! *더 자세히 듣고 싶어한다.*`,
-      `*잠시 생각에 잠긴다.* "그런 일이 있었군요." !${characterName}이 공감하는 표정을 짓는다.!`,
-      `!${characterName}이 미소를 지으며 대답한다.! "그것에 대해 어떻게 생각하세요?" *진심으로 궁금해한다.*`,
-      `*고개를 갸우뚱한다.* "정말 그런가요?" !${characterName}이 놀란 표정을 짓는다.!`,
-      `"안녕하세요!" !${characterName}이 밝게 웃으며 인사한다.! *기분이 좋아 보인다.*`,
-      `*당황한 표정을 짓는다.* "어... 그게..." !${characterName}이 머리를 긁적인다.!`,
-      `!${characterName}이 진지한 표정으로 말한다.! "그건 정말 중요한 문제네요." *깊게 생각하는 모습이다.*`
-    ];
-    
-    const selectedResponse = responses[Math.floor(Math.random() * responses.length)];
-    console.log('🎭 Selected mock response:', selectedResponse);
-    
-    return selectedResponse;
+    console.log('🎭 Mock response generation disabled - throwing error instead');
+    throw new Error('AI service unavailable and mock responses disabled');
   }
 
   /**

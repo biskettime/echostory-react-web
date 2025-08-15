@@ -51,7 +51,7 @@ export function ChatSettingsModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
-      <div className="w-full max-w-[428px] bg-[#1f1f1f] rounded-t-2xl flex flex-col max-h-[85vh]">
+      <div className="w-full max-w-[375px] bg-[#1f1f1f] rounded-t-2xl flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="bg-[#1f1f1f] relative w-full">
           <div
