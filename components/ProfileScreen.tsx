@@ -2,7 +2,9 @@ import { Search } from 'lucide-react';
 import { Switch } from './ui/switch';
 import { Button } from './ui/button';
 import { InviteCodeModal } from './InviteCodeModal';
-import { useState } from 'react';
+import { LanguageSelector } from './LanguageSelector';
+import { useState, useEffect } from 'react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 import svgPaths from "../imports/svg-xfjey1j8u7";
 // import imgDiscordIconPng from "figma:asset/b686731a73383e744f82f20d1a694b0cfbc6c2e4.png";
 // import imgSearchIconPng from "figma:asset/ef863f04724e3ed7ded20a0b62b98cd5a1b82d91.png";
@@ -26,6 +28,17 @@ interface ProfileScreenProps {
 
 export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNavigateToTopUp, safetyMode, onSafetyToggle, onSearchOpen }: ProfileScreenProps) {
   const [showInviteCodeModal, setShowInviteCodeModal] = useState(false);
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   return (
     <div className="flex flex-col h-full bg-[#1e1f1f] text-white overflow-hidden">
@@ -51,17 +64,6 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
 
         {/* Right Side Controls */}
         <div className="box-border content-stretch flex flex-row gap-[15px] items-center justify-start pl-0 pr-[15px] py-0 relative shrink-0">
-          {/* Search Icon */}
-          <button 
-            onClick={onSearchOpen}
-            className="p-1 hover:opacity-80 transition-opacity text-white"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
-              <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          
           {/* Safety Toggle */}
           <div className="box-border content-stretch flex flex-row gap-[8.99px] items-center justify-start p-0 relative shrink-0">
             <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.125px] text-left text-nowrap">
@@ -115,6 +117,9 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
               </div>
             </button>
           </div>
+          
+          {/* Language Selector - Moved to rightmost position */}
+          <LanguageSelector />
         </div>
       </div>
 
@@ -126,7 +131,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
           <div className="box-border content-stretch flex flex-row gap-2.5 items-center justify-start p-0 relative shrink-0 w-full">
             <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0">
               <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                <p className="block leading-[22px] whitespace-pre">My Points: 1P</p>
+                <p className="block leading-[22px] whitespace-pre">{t('profile.myPoints')}: 1P</p>
               </div>
             </div>
             
@@ -137,7 +142,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
             >
               <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.125px] text-center text-nowrap">
-                  <p className="block leading-[normal] whitespace-pre">Top Up</p>
+                  <p className="block leading-[normal] whitespace-pre">{t('profile.topUp')}</p>
                 </div>
               </div>
             </button>
@@ -161,7 +166,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
               {/* Left Side - All Info */}
               <div className="flex flex-row items-center gap-2 flex-1 min-w-0">
                 <span className="text-xs sm:text-sm font-normal text-[rgba(255,255,255,0.9)] flex-shrink-0">
-                  Daily Check-in
+{t('profile.dailyCheckIn')}
                 </span>
                 
                 <div className="bg-[rgba(255,255,255,0.15)] px-1.5 py-0.5 rounded text-xs flex-shrink-0">
@@ -169,14 +174,14 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
                 </div>
                 
                 <div className="bg-[rgba(255,255,255,0.15)] px-1.5 py-0.5 rounded text-xs flex-shrink-0">
-                  <span className="text-[rgba(255,255,255,0.9)]">9AM Reset</span>
+                  <span className="text-[rgba(255,255,255,0.9)]">{t('profile.resetTime')}</span>
                 </div>
               </div>
               
               {/* Claim Button */}
               <button className="bg-[#141414] border border-[#424242] shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)] rounded px-3 py-1 flex-shrink-0 hover:bg-[#1a1a1a] transition-colors">
                 <span className="text-xs font-normal text-[rgba(255,255,255,0.85)]">
-                  Claim
+{t('profile.claim')}
                 </span>
               </button>
             </div>
@@ -187,7 +192,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
             {/* My Profile */}
             <button 
               onClick={onNavigateToMyProfile}
-              className="relative shrink-0 w-full"
+              className="relative shrink-0 w-full hover:bg-[rgba(255,255,255,0.05)] transition-colors"
             >
               <div aria-hidden="true" className="absolute border-[#3c3c3c] border-[0px_0px_0.625px] border-solid inset-0 pointer-events-none" />
               <div className="flex flex-row items-center relative size-full">
@@ -206,7 +211,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
                   
                   <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
                     <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left w-full">
-                      <p className="block leading-[22px]">My Profile</p>
+                      <p className="block leading-[22px]">{t('profile.myProfile')}</p>
                     </div>
                   </div>
                   
@@ -241,7 +246,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
                   
                   <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
                     <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.016px] text-[rgba(255,255,255,0.85)] text-left w-full">
-                      <p className="block leading-[22px]">My Invite Code</p>
+                      <p className="block leading-[22px]">{t('profile.myInviteCode')}</p>
                     </div>
                   </div>
                   
@@ -276,7 +281,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
                   
                   <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
                     <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.016px] text-[rgba(255,255,255,0.85)] text-left w-full">
-                      <p className="block leading-[22px]">Support & Bug Reports</p>
+                      <p className="block leading-[22px]">{t('profile.support')}</p>
                     </div>
                   </div>
                   
@@ -313,7 +318,7 @@ export function ProfileScreen({ onNavigateToSupport, onNavigateToMyProfile, onNa
                   
                   <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
                     <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left w-full">
-                      <p className="block leading-[22px]">Discord</p>
+                      <p className="block leading-[22px]">{t('profile.discord')}</p>
                     </div>
                   </div>
                   

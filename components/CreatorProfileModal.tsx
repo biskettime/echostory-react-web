@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { X, Check, Users, BookOpen, UserPlus, UserCheck } from 'lucide-react';
 import { CreatorInfo } from '../data/stories/types';
 import { getStoriesByCreator } from '../data/stories';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateCharacterName, translateStoryTitle } from '../utils/storyTranslation';
 
 interface CreatorProfileModalProps {
   creator: CreatorInfo;
@@ -96,6 +98,17 @@ function StoryThumbnailImage({ characterName, fallbackImage, alt, className }: {
 export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, onFollowChange }: CreatorProfileModalProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(creator.stats.followers);
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   useEffect(() => {
     // 로컬 스토리지에서 팔로우 상태 확인
@@ -192,7 +205,7 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
               <div className="text-white text-lg font-medium">
                 {followerCount.toLocaleString()}
               </div>
-              <div className="text-[#808080] text-xs">Followers</div>
+              <div className="text-[#808080] text-xs">{t('storyDetail.followers')}</div>
             </div>
             <div className="text-center">
               <div className="text-white text-lg font-medium">
@@ -257,11 +270,11 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
                     {/* Story Info */}
                     <div className="flex-1 min-w-0">
                       <h5 className="text-white text-sm font-medium truncate mb-1">
-                        {story.title}
+                        {translateStoryTitle(story.title)}
                       </h5>
                       <div className="flex items-center gap-3 text-xs text-[#808080]">
-                        <span>{story.stats.views.toLocaleString()} views</span>
-                        <span>{story.stats.likes.toLocaleString()} likes</span>
+                        <span>{story.stats.views.toLocaleString()} {t('storyDetail.views')}</span>
+                        <span>{story.stats.likes.toLocaleString()} {t('storyDetail.likes')}</span>
                       </div>
                     </div>
                   </div>
@@ -296,12 +309,12 @@ export function CreatorProfileModal({ creator, isOpen, onClose, onStorySelect, o
               {isFollowing ? (
                 <>
                   <UserCheck className="w-4 h-4" />
-                  Following
+                  {t('storyDetail.following')}
                 </>
               ) : (
                 <>
                   <UserPlus className="w-4 h-4" />
-                  Follow
+                  {t('storyDetail.follow')}
                 </>
               )}
             </button>

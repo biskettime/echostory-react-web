@@ -1,9 +1,10 @@
 import { ArrowLeft, User, Settings, Trash2, Mail, MessageCircle, Calendar, Star, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 
 interface MyProfileScreenProps {
   onBack: () => void;
@@ -13,6 +14,17 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [autoSaveChats, setAutoSaveChats] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   const toggleSwitch = (setter: (value: boolean) => void, currentValue: boolean) => {
     setter(!currentValue);
@@ -33,7 +45,7 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
               >
                 <ChevronRight className="w-5 h-5 text-white rotate-180" />
               </button>
-              <h1 className="text-lg font-semibold text-white">My Profile</h1>
+              <h1 className="text-lg font-semibold text-white">{t('profile.myProfile')}</h1>
             </div>
           </div>
         </div>
@@ -55,7 +67,7 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
               <div className="bg-gradient-to-r from-[#dc5903] to-[#ff7b3d] bg-clip-text text-transparent">
                 <h2 className="text-xl font-bold mb-1">Alex</h2>
               </div>
-              <p className="text-[#cccccc] text-sm">Storytelling enthusiast • Level 3</p>
+              <p className="text-[#cccccc] text-sm">{t('profile.storytellingEnthusiast')} • {t('profile.level')} 3</p>
             </div>
 
             {/* Quick Stats Cards */}
@@ -67,7 +79,7 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                   </div>
                   <div>
                     <div className="text-xl font-bold text-white">12</div>
-                    <div className="text-xs text-[#999999]">Stories Created</div>
+                    <div className="text-xs text-[#999999]">{t('profile.storiesCreated')}</div>
                   </div>
                 </div>
               </Card>
@@ -79,7 +91,7 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                   </div>
                   <div>
                     <div className="text-xl font-bold text-white">186</div>
-                    <div className="text-xs text-[#999999]">Points Earned</div>
+                    <div className="text-xs text-[#999999]">{t('profile.pointsEarned')}</div>
                   </div>
                 </div>
               </Card>
@@ -91,45 +103,45 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                 <div className="w-8 h-8 bg-[#dc5903]/20 rounded-lg flex items-center justify-center">
                   <User className="w-4 h-4 text-[#dc5903]" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">Profile Information</h3>
+                <h3 className="text-lg font-semibold text-white">{t('profile.profileInformation')}</h3>
               </div>
               
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="username" className="text-[#cccccc] text-sm font-medium">Username</Label>
+                  <Label htmlFor="username" className="text-[#cccccc] text-sm font-medium">{t('profile.username')}</Label>
                   <Input 
                     id="username"
-                    placeholder="Enter your username"
+                    placeholder={t('profile.enterUsername')}
                     className="bg-[#1a1b1b] border-[#424242]/50 text-white placeholder:text-[#666666] focus:border-[#dc5903] focus:ring-1 focus:ring-[#dc5903]/30 transition-all duration-200 rounded-lg h-12"
                     defaultValue="Alex"
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[#cccccc] text-sm font-medium">Email Address</Label>
+                  <Label htmlFor="email" className="text-[#cccccc] text-sm font-medium">{t('profile.emailAddress')}</Label>
                   <Input 
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder={t('profile.enterEmail')}
                     className="bg-[#1a1b1b] border-[#424242]/50 text-white placeholder:text-[#666666] focus:border-[#dc5903] focus:ring-1 focus:ring-[#dc5903]/30 transition-all duration-200 rounded-lg h-12"
                     defaultValue="alex@echostory.com"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="bio" className="text-[#cccccc] text-sm font-medium">About Me</Label>
+                  <Label htmlFor="bio" className="text-[#cccccc] text-sm font-medium">{t('profile.aboutMe')}</Label>
                   <textarea
                     id="bio"
-                    placeholder="Tell us about yourself..."
+                    placeholder={t('profile.tellAboutYourself')}
                     className="w-full bg-[#1a1b1b] border border-[#424242]/50 rounded-lg px-4 py-3 text-white placeholder:text-[#666666] resize-none focus:border-[#dc5903] focus:ring-1 focus:ring-[#dc5903]/30 transition-all duration-200"
                     rows={3}
-                    defaultValue="I love interactive stories and AI conversations. Always exploring new narrative possibilities."
+                    defaultValue={t('profile.defaultBio')}
                   />
                 </div>
 
                 <Button className="w-full bg-gradient-to-r from-[#dc5903] to-[#ff7b3d] hover:from-[#e6850e] hover:to-[#ff8c52] text-white font-medium h-12 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
                   <Settings size={18} className="mr-2" />
-                  Update Profile
+                  {t('profile.updateProfile')}
                 </Button>
               </div>
             </Card>
@@ -140,14 +152,14 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                 <div className="w-8 h-8 bg-[#4caf50]/20 rounded-lg flex items-center justify-center">
                   <Settings className="w-4 h-4 text-[#4caf50]" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">Preferences</h3>
+                <h3 className="text-lg font-semibold text-white">{t('profile.preferences')}</h3>
               </div>
               
               <div className="space-y-6">
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <h4 className="text-white font-medium">Email Notifications</h4>
-                    <p className="text-[#999999] text-sm">Receive updates about your stories</p>
+                    <h4 className="text-white font-medium">{t('profile.emailNotifications')}</h4>
+                    <p className="text-[#999999] text-sm">{t('profile.receiveUpdates')}</p>
                   </div>
                   <button
                     onClick={() => toggleSwitch(setEmailNotifications, emailNotifications)}
@@ -163,8 +175,8 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <h4 className="text-white font-medium">Auto-save Conversations</h4>
-                    <p className="text-[#999999] text-sm">Automatically save chat history</p>
+                    <h4 className="text-white font-medium">{t('profile.autoSaveConversations')}</h4>
+                    <p className="text-[#999999] text-sm">{t('profile.autoSaveChatHistory')}</p>
                   </div>
                   <button
                     onClick={() => toggleSwitch(setAutoSaveChats, autoSaveChats)}
@@ -180,8 +192,8 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
 
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <h4 className="text-white font-medium">Dark Theme</h4>
-                    <p className="text-[#999999] text-sm">Use dark appearance</p>
+                    <h4 className="text-white font-medium">{t('profile.darkTheme')}</h4>
+                    <p className="text-[#999999] text-sm">{t('profile.useDarkAppearance')}</p>
                   </div>
                   <button
                     onClick={() => toggleSwitch(setDarkMode, darkMode)}
@@ -203,29 +215,29 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                 <div className="w-8 h-8 bg-[#9c27b0]/20 rounded-lg flex items-center justify-center">
                   <Calendar className="w-4 h-4 text-[#9c27b0]" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">Activity Summary</h3>
+                <h3 className="text-lg font-semibold text-white">{t('profile.activitySummary')}</h3>
               </div>
               
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#dc5903] mb-2">45</div>
-                  <div className="text-sm text-[#999999]">Conversations Started</div>
+                  <div className="text-sm text-[#999999]">{t('profile.conversationsStarted')}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#4caf50] mb-2">7</div>
-                  <div className="text-sm text-[#999999]">Days Active</div>
+                  <div className="text-sm text-[#999999]">{t('profile.daysActive')}</div>
                 </div>
               </div>
               
               <div className="mt-6 p-4 bg-[#1a1b1b]/50 rounded-lg border border-[#424242]/20">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[#cccccc] text-sm">Level Progress</span>
-                  <span className="text-[#dc5903] text-sm font-medium">Level 3</span>
+                  <span className="text-[#cccccc] text-sm">{t('profile.levelProgress')}</span>
+                  <span className="text-[#dc5903] text-sm font-medium">{t('profile.level')} 3</span>
                 </div>
                 <div className="w-full bg-[#424242] rounded-full h-2">
                   <div className="bg-gradient-to-r from-[#dc5903] to-[#ff7b3d] h-2 rounded-full w-3/4 transition-all duration-500"></div>
                 </div>
-                <div className="text-xs text-[#666666] mt-2">186 / 250 points to next level</div>
+                <div className="text-xs text-[#666666] mt-2">186 / 250 {t('profile.pointsToNextLevel')}</div>
               </div>
             </Card>
 
@@ -235,20 +247,20 @@ export function MyProfileScreen({ onBack }: MyProfileScreenProps) {
                 <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-red-400">Danger Zone</h3>
+                <h3 className="text-lg font-semibold text-red-400">{t('profile.dangerZone')}</h3>
               </div>
               
               <div className="border border-red-800/50 rounded-lg p-4 bg-red-900/10">
-                <h4 className="text-red-400 font-medium mb-2">Delete Account</h4>
+                <h4 className="text-red-400 font-medium mb-2">{t('profile.deleteAccount')}</h4>
                 <p className="text-[#cccccc] text-sm mb-4 leading-relaxed">
-                  Permanently delete your account and all associated data. This action cannot be undone and will remove all your stories, conversations, and progress.
+                  {t('profile.deleteAccountWarning')}
                 </p>
                 <Button 
                   variant="destructive" 
                   className="w-full bg-red-600 hover:bg-red-700 text-white font-medium h-12 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   <Trash2 size={18} className="mr-2" />
-                  Delete My Account
+                  {t('profile.deleteMyAccount')}
                 </Button>
               </div>
             </Card>

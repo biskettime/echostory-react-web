@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, Image, Heart, Users, Clock, UserPlus, UserCheck, CheckCircle, Bookmark } from 'lucide-react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateCharacterName, translateStoryTitle } from '../utils/storyTranslation';
+import { LanguageSelector } from './LanguageSelector';
 
 import { getActiveChatSessions, getRelativeTime, ChatSession } from '../data/chatSessions';
 import { getStory } from '../data/stories';
@@ -613,12 +616,24 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
 
   // Creator data is now managed with useState
 
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
+
   const tabs = [
-    { id: 'chat' as const, icon: MessageCircle, label: 'Chats' },
-    { id: 'album' as const, icon: Image, label: 'Album' },
-    { id: 'favorites' as const, icon: Bookmark, label: 'Favorites' },
-    { id: 'likes' as const, icon: Heart, label: 'Likes' },
-    { id: 'creator' as const, icon: Users, label: 'Following' }
+    { id: 'chat' as const, icon: MessageCircle, label: t('activity.chats') },
+    { id: 'album' as const, icon: Image, label: t('activity.album') },
+    { id: 'favorites' as const, icon: Bookmark, label: t('activity.favorites') },
+    { id: 'likes' as const, icon: Heart, label: t('activity.likes') },
+    { id: 'creator' as const, icon: Users, label: t('activity.following') }
   ];
 
   const handleChatRoomClick = (chatRoom: ChatRoom) => {
@@ -780,7 +795,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
                           <h3 className="text-white font-medium truncate">
-                            {session.characterName}
+                            {translateCharacterName(session.characterName)}
                           </h3>
                           <div className="flex items-center space-x-2">
                             <span className="text-xs text-gray-400">
@@ -794,7 +809,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                           </div>
                         </div>
                         <p className="text-gray-400 text-sm truncate">
-                          {lastMessage?.content || '대화를 시작해보세요'}
+                          {lastMessage?.content || t('activity.startConversation')}
                         </p>
                       </div>
                     </div>
@@ -804,8 +819,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
               <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                 <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                <p className="text-gray-400 text-lg mb-2">진행 중인 대화가 없습니다</p>
-                <p className="text-gray-500 text-sm">캐릭터와 대화를 시작해보세요!</p>
+                <p className="text-gray-400 text-lg mb-2">{t('activity.noActiveChats')}</p>
+                <p className="text-gray-500 text-sm">{t('activity.startChatWithCharacter')}</p>
               </div>
             )}
           </div>
@@ -828,7 +843,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                   className="w-8 h-8 rounded-full mr-3"
                 />
                 <div>
-                  <h2 className="text-white font-medium">{selectedAlbum.characterName}</h2>
+                  <h2 className="text-white font-medium">{translateCharacterName(selectedAlbum.characterName)}</h2>
                   <p className="text-gray-400 text-sm">{selectedAlbum.unlockedPhotos.length}장의 사진</p>
                 </div>
               </div>
@@ -843,7 +858,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                     >
                       <img
                         src={photo.imageUrl}
-                        alt={photo.description || '해금된 사진'}
+                        alt={photo.description || t('activity.unlockedPhoto')}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
@@ -881,8 +896,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
 
                       {/* Album info */}
                       <div className="flex-1">
-                        <h3 className="text-white font-medium mb-1">{album.characterName}</h3>
-                        <p className="text-gray-400 text-sm">{album.unlockedPhotos.length}장의 해금된 사진</p>
+                        <h3 className="text-white font-medium mb-1">{translateCharacterName(album.characterName)}</h3>
+                        <p className="text-gray-400 text-sm">{album.unlockedPhotos.length} {t('activity.unlockedPhotos')}</p>
                       </div>
 
                       {/* Preview images */}
@@ -1134,6 +1149,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
 
         {/* Right Side Controls */}
         <div className="box-border content-stretch flex flex-row gap-[15px] items-center justify-start pl-0 pr-[15px] py-0 relative shrink-0">
+          <LanguageSelector />
         </div>
       </div>
 

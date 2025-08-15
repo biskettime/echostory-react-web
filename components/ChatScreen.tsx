@@ -10,6 +10,8 @@ import { ProfileEditModal } from './ProfileEditModal';
 import { PointsGuideModal } from './PointsGuideModal';
 import { CharacterBackground } from './CharacterImage';
 import { Redo, Edit3, Send, Star, Home, Volume2, Play } from 'lucide-react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateCharacterName, translateStoryTitle } from '../utils/storyTranslation';
 import svgPaths from '../imports/svg-c6g2wd331h';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
 const imgThumbnail = "/images/chat-thumbnail.svg";
@@ -61,8 +63,19 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const [responsiveVoiceReady, setResponsiveVoiceReady] = useState(false);
   const [userNickname, setUserNickname] = useState(nickname);
   const [userInfo, setUserInfo] = useState('');
+  const [, forceUpdate] = useState({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const nextMessageIdRef = useRef(3);
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   // Available voice options (confirmed working in ResponsiveVoice)
   const voiceOptions = [
@@ -503,16 +516,16 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     // For now, return a generic response
     // TODO: Implement character-specific responses based on story data
     const genericResponses = [
-      "그렇게 생각하시는군요.",
-      "흥미로운 말씀이네요.",
-      "더 자세히 말씀해 주시겠어요?",
-      "그런 일이 있었군요.",
-      "어떻게 생각하세요?",
-      "정말 그런가요?",
-      "이해합니다."
+      t('chat.response1'),
+      t('chat.response2'),
+      t('chat.response3'),
+      t('chat.response4'),
+      t('chat.response5'),
+      t('chat.response6'),
+      t('chat.response7')
     ];
     return genericResponses[Math.floor(Math.random() * genericResponses.length)];
-  }, []);
+  }, [t]);
 
   const handleSendMessage = useCallback(() => {
     if (message.trim()) {
@@ -864,7 +877,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           <span className={`text-[12px] font-medium whitespace-nowrap transition-colors duration-200 ${
             isStoryMode ? 'text-white' : 'text-[rgba(255,255,255,0.7)]'
           }`}>
-            Novel Mode
+            {t('chat.novelMode')}
           </span>
           
           {/* Ant Design Style Switch */}
@@ -893,8 +906,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
             
             {/* Inner content (hidden but maintains structure) */}
             <span className="sr-only">
-              <span className={!isStoryMode ? 'block' : 'hidden'}>Chat Mode Active</span>
-              <span className={isStoryMode ? 'block' : 'hidden'}>Novel Mode Active</span>
+              <span className={!isStoryMode ? 'block' : 'hidden'}>{t('chat.chatModeActive')}</span>
+              <span className={isStoryMode ? 'block' : 'hidden'}>{t('chat.novelMode')}</span>
             </span>
           </button>
           
@@ -902,7 +915,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           <span className={`text-[12px] font-medium whitespace-nowrap transition-colors duration-200 ${
             !isStoryMode ? 'text-white' : 'text-[rgba(255,255,255,0.7)]'
           }`}>
-            Chat Mode
+            {t('chat.chatModeActive')}
           </span>
         </div>
       </div>
@@ -1030,7 +1043,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                           {/* Character Name and Level */}
                           <div className="flex items-center gap-[6.99px]">
                             <div className="text-[#a8a8a8] text-[12.289px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[18.85px]">
-                              {characterName}
+                              {translateCharacterName(characterName)}
                             </div>
                             <div className="bg-[rgba(59,59,60,0.8)] flex items-center gap-[3px] px-1.5 py-1 rounded-[10px]">
                               <div className="relative">
@@ -1049,7 +1062,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                                 {/* Voice Selector Dropdown */}
                                 {showVoiceSelector && (
                                   <div className="absolute bottom-full left-0 mb-2 bg-[rgba(40,40,40,0.95)] backdrop-blur-sm rounded-lg border border-[rgba(255,255,255,0.1)] p-2 min-w-[200px] z-50">
-                                    <div className="text-white/90 text-[10px] font-medium mb-2 px-1">음성 선택</div>
+                                    <div className="text-white/90 text-[10px] font-medium mb-2 px-1">{t('chat.selectVoice')}</div>
                                     {voiceOptions.map((voice) => (
                                       <div
                                         key={voice.id}
@@ -1169,7 +1182,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                       value={isStoryMode ? storyInput : message}
                       onChange={(e) => isStoryMode ? setStoryInput(e.target.value) : setMessage(e.target.value)}
                       onKeyDown={handleKeyDown}
-                      placeholder={isStoryMode ? "Enter content" : "Type a message"}
+                      placeholder={isStoryMode ? t('chat.enterContent') : t('chat.typeMessage')}
                       className="flex-1 bg-transparent text-white placeholder-[rgba(255,255,255,0.25)] outline-none text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[23.57px] focus:border-[rgba(255,149,0,0.8)] focus:ring-1 focus:ring-[rgba(255,149,0,0.8)] transition-colors"
                       maxLength={500}
                     />

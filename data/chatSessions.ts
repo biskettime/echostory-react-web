@@ -1,4 +1,5 @@
 // 채팅 세션 관리 시스템
+import { t } from '../utils/i18n';
 
 export interface ChatMessage {
   id: string;
@@ -177,12 +178,12 @@ class ChatSessionManager {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (diffMinutes < 1) return '방금 전';
-    if (diffMinutes < 60) return `${diffMinutes}분 전`;
-    if (diffHours < 24) return `${diffHours}시간 전`;
-    if (diffDays < 7) return `${diffDays}일 전`;
+    if (diffMinutes < 1) return t('time.justNow');
+    if (diffMinutes < 60) return t('time.minutesAgo', { minutes: diffMinutes });
+    if (diffHours < 24) return t('time.hoursAgo', { hours: diffHours });
+    if (diffDays < 7) return t('time.daysAgo', { days: diffDays });
     
-    return messageTime.toLocaleDateString('ko-KR');
+    return messageTime.toLocaleDateString();
   }
   
   // 모든 데이터 초기화 (디버깅용)

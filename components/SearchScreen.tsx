@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { getPublishedStories, searchStories, initializeSampleStories, CreatedStoryData } from '../data/stories';
 import { StoryCard } from './StoryCard';
 import { X } from 'lucide-react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateStoryTitle, translateCharacterName, translateStoryDescription } from '../utils/storyTranslation';
 // import imgSearch from "figma:asset/ef863f04724e3ed7ded20a0b62b98cd5a1b82d91.png";
 const imgSearch = "/images/search-icon.svg";
 
@@ -15,7 +17,18 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<CreatedStoryData[]>([]);
   const [allStories, setAllStories] = useState<CreatedStoryData[]>([]);
+  const [, forceUpdate] = useState({});
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   // Initialize stories
   useEffect(() => {
@@ -32,15 +45,53 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
   }, []);
 
   useEffect(() => {
-    // Filter stories based on search query
+    // Enhanced filter with Korean support
     if (searchQuery.trim() === '') {
       setSearchResults([]);
     } else {
-      const filtered = allStories.filter(story =>
-        story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        story.content.characterName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        story.introduction.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      const query = searchQuery.trim().toLowerCase();
+      
+      const filtered = allStories.filter(story => {
+        // Original English search
+        const englishMatch = 
+          story.title.toLowerCase().includes(query) ||
+          story.content.characterName?.toLowerCase().includes(query) ||
+          story.introduction.tags?.some(tag => tag.toLowerCase().includes(query)) ||
+          story.introduction.introduction.toLowerCase().includes(query) ||
+          story.metadata.category.toLowerCase().includes(query);
+        
+        // Korean translated search
+        const translatedTitle = translateStoryTitle(story.title).toLowerCase();
+        const translatedCharacterName = translateCharacterName(story.content.characterName || '').toLowerCase();
+        
+        // Korean category mapping
+        const categoryMapping: { [key: string]: string } = {
+          'romance': '로맨스',
+          'fantasy': '판타지',
+          'mystery': '미스터리',
+          'adventure': '모험',
+          'slice-of-life': '일상',
+          'school': '학원',
+          'drama': '드라마',
+          'comedy': '코미디'
+        };
+        
+        const koreanCategory = categoryMapping[story.metadata.category.toLowerCase()] || '';
+        
+        const koreanMatch = 
+          translatedTitle.includes(query) ||
+          translatedCharacterName.includes(query) ||
+          koreanCategory.includes(query) ||
+          story.introduction.tags?.some(tag => {
+            const translatedTag = categoryMapping[tag.toLowerCase()] || tag;
+            return translatedTag.toLowerCase().includes(query);
+          });
+        
+        return englishMatch || koreanMatch;
+      });
+      
+      console.log('SearchScreen - Query:', query);
+      console.log('SearchScreen - Results:', filtered);
       setSearchResults(filtered);
     }
   }, [searchQuery, allStories]);
@@ -115,7 +166,7 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="e.g. fantasy"
+                        placeholder={t('search.placeholder')}
                         className="flex flex-col font-['Inter:Regular',_'Noto_Sans_KR:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#888888] text-[13.125px] text-left w-full bg-transparent border-none outline-none text-white placeholder:text-[#888888] focus:border-[rgba(255,149,0,0.8)] focus:ring-1 focus:ring-[rgba(255,149,0,0.8)] transition-colors"
                       />
                     </div>
@@ -145,7 +196,7 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
           <div className="box-border content-stretch flex flex-row h-[300px] items-center justify-center p-0 relative shrink-0 w-[468.01px]">
             <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0">
               <div className="flex flex-col font-['Inter:Regular',_'Noto_Sans_KR:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#888888] text-[15px] text-left text-nowrap">
-                <p className="block leading-[25.14px] whitespace-pre">Please enter a search term</p>
+                <p className="block leading-[25.14px] whitespace-pre">{t('search.enterSearchTerm')}</p>
               </div>
             </div>
           </div>
@@ -154,19 +205,22 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
           <div className="flex-1 w-full overflow-y-auto px-4">
             <div className="mb-4">
               <p className="text-gray-400 text-sm">
-                {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{searchQuery}"
+                "{searchQuery}" {t('search.searchResults')} ({searchResults.length})
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-3">
               {searchResults.map((story) => (
                 <StoryCard
                   key={story.id}
                   id={story.id}
                   title={story.title}
-                  subtitle={story.introduction.introduction}
+                  subtitle={translateStoryDescription(story.title, story.introduction.introduction)}
                   author={story.creatorHandle}
                   tags={story.introduction.tags}
                   imageUrl={story.media.thumbnailImage}
+                  characterName={story.content.characterName}
+                  layout="horizontal"
+                  onStorySelect={onStorySelect}
                   stats={{
                     likes: story.stats.likes,
                     chats: story.stats.plays,
@@ -185,16 +239,16 @@ export function SearchScreen({ onBack, onStorySelect, safetyMode }: SearchScreen
                 style={{ backgroundImage: `url('${imgSearch}')` }}
               />
             </div>
-            <h3 className="text-white text-lg font-medium mb-2">No search results</h3>
+            <h3 className="text-white text-lg font-medium mb-2">{t('search.noResults')}</h3>
             <p className="text-gray-400 text-sm mb-4">
-              Try searching with different keywords<br />
-              or create a new story
+              {t('search.tryDifferentKeywords')}<br />
+              {t('search.orCreateNewStory')}
             </p>
             <button
               onClick={handleClearSearch}
               className="px-6 py-2 bg-[#dc5903] text-white rounded-full hover:bg-[#e6850e] transition-colors"
             >
-              Clear search
+              {t('search.clearSearch')}
             </button>
           </div>
         )}

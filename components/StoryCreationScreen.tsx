@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import svgPaths from "../imports/svg-3c8wh35w53";
 import { saveStory, saveStoryDraft, StoryFormData, getDraft, getStory, autoSaveStoryDraft } from '../data/stories';
 import { saveCharacterImage, getNextAvailableImageNumber } from '../utils/imageUtils';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 
 interface StoryCreationScreenProps {
   onBack: () => void;
@@ -15,6 +16,7 @@ type ActiveTab = 'content' | 'start-situation' | 'introduction';
 
 export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle, storyId }: StoryCreationScreenProps) {
   const [activeTab, setActiveTab] = useState<ActiveTab>('content');
+  const [forceUpdate, setForceUpdate] = useState(0);
   const [formData, setFormData] = useState<StoryFormData>({
     title: '',
     storySettings: '',
@@ -30,6 +32,16 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
     creatorComment: '',
     storyImages: []
   });
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   // Load existing story data if storyId is provided
   useEffect(() => {
@@ -739,26 +751,26 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
               </div>
               
               {/* Title */}
-              <h3 className="text-white text-[15px] font-medium mb-2">스토리 이미지</h3>
+              <h3 className="text-white text-[15px] font-medium mb-2">{t('create.storyImages')}</h3>
               
               {/* Description */}
               <p className="text-[rgba(255,255,255,0.5)] text-[13px] mb-1">
-                이미지를 추가하면 AI가 상황에 맞는 이미지를 유저에게 표시합니다.
+                {t('create.storyImagesDesc1')}
               </p>
               <p className="text-[rgba(255,255,255,0.4)] text-[12px] mb-6">
-                권장 이미지 사이즈: 512x768 (2:3)
+                {t('create.storyImagesDesc2')}
               </p>
               
               {/* Buttons */}
               <div className="flex flex-col gap-3 w-[200px]">
                 <label className="w-full">
                   <button className="w-full bg-[#ff6b00] text-white py-3 rounded-lg hover:bg-[#ff8800] transition-colors text-[14px] font-medium">
-                    AI로 생성
+                    {t('create.generateWithAI')}
                   </button>
                 </label>
                 <label className="w-full cursor-pointer">
                   <div className="w-full bg-[#3a3a3a] text-[rgba(255,255,255,0.85)] py-3 rounded-lg hover:bg-[#4a4a4a] transition-colors text-[14px] font-medium text-center">
-                    이미지 업로드
+                    {t('create.uploadImage')}
                   </div>
                   <input
                     type="file"
@@ -800,7 +812,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
               <div className="flex gap-2">
                 <label className="cursor-pointer">
                   <div className="bg-[#3a3a3a] text-[rgba(255,255,255,0.85)] px-4 py-2 rounded-md hover:bg-[#4a4a4a] transition-colors text-[13px] font-medium">
-                    이미지 추가
+                    {t('create.addImage')}
                   </div>
                   <input
                     type="file"
@@ -811,7 +823,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   />
                 </label>
                 <button className="bg-[#ff6b00] text-white px-4 py-2 rounded-md hover:bg-[#ff8800] transition-colors text-[13px] font-medium">
-                  AI로 생성
+                  {t('create.generateWithAI')}
                 </button>
               </div>
             </div>

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { X, Link, Copy } from 'lucide-react';
 import { toast } from 'sonner';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 
 interface InviteCodeModalProps {
   isOpen: boolean;
@@ -11,6 +12,17 @@ interface InviteCodeModalProps {
 
 export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
   const [activeTab, setActiveTab] = useState<'invite' | 'referral'>('invite');
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
   
   // Mock user data
   const userInviteData = {
@@ -25,9 +37,9 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
   const handleCopyInviteCode = async () => {
     try {
       await navigator.clipboard.writeText(userInviteData.inviteCode);
-      toast.success('Invite code copied to clipboard!');
+      toast.success(t('invite.inviteCodeCopied'));
     } catch (err) {
-      toast.error('Failed to copy invite code');
+      toast.error(t('invite.copyFailed'));
     }
   };
 
@@ -35,9 +47,9 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
     const inviteLink = `https://echostory.ai/invite/${userInviteData.inviteCode}`;
     try {
       await navigator.clipboard.writeText(inviteLink);
-      toast.success('Invite link copied to clipboard!');
+      toast.success(t('invite.inviteLinkCopied'));
     } catch (err) {
-      toast.error('Failed to copy invite link');
+      toast.error(t('invite.copyFailed'));
     }
   };
 
@@ -51,7 +63,7 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
         {/* Header with tabs */}
         <div className="bg-[#1f1f1f] rounded-t-lg p-4 pb-0">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white text-lg font-bold">Friend Referral</h2>
+            <h2 className="text-white text-lg font-bold">{t('invite.friendReferral')}</h2>
             <button 
               onClick={onClose}
               className="p-2 hover:bg-white/10 rounded-full transition-colors"
@@ -70,7 +82,7 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
                   : 'text-white/60 hover:text-white/80'
               }`}
             >
-              My Invite Code
+              {t('invite.myInviteCode')}
               {activeTab === 'invite' && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ff9500]" />
               )}
@@ -83,7 +95,7 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
                   : 'text-white/60 hover:text-white/80'
               }`}
             >
-              Enter Referral Code
+              {t('invite.enterReferralCode')}
             </button>
           </div>
         </div>
@@ -95,17 +107,17 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
               {/* Main Title */}
               <div>
                 <h3 className="text-white text-lg font-bold mb-3">
-                  Invite friends and get 1,000P
+                  {t('invite.inviteFriendsTitle')}
                 </h3>
                 <div className="text-white/80 text-sm leading-relaxed">
-                  <p>Every time an invited friend signs up,</p>
-                  <p>both you and your friend receive 1,000P instantly</p>
+                  <p>{t('invite.inviteFriendsDesc1')}</p>
+                  <p>{t('invite.inviteFriendsDesc2')}</p>
                 </div>
               </div>
 
               {/* Invite Code Display */}
               <div className="space-y-2">
-                <p className="text-white/60 text-xs">My invite code</p>
+                <p className="text-white/60 text-xs">{t('invite.myInviteCodeLabel')}</p>
                 <div className="bg-white/10 border border-white/10 rounded-lg p-3 text-center">
                   <span className="text-white text-lg font-bold tracking-[2px]">
                     {userInviteData.inviteCode}
@@ -113,7 +125,7 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
                 </div>
                 <div className="pt-2">
                   <p className="text-white/60 text-xs">
-                    Invited friends: {userInviteData.invitedFriends} ({userInviteData.earnedPoints}P earned)
+                    {t('invite.invitedFriends')}: {userInviteData.invitedFriends} ({userInviteData.earnedPoints}P {t('invite.pointsEarned')})
                   </p>
                 </div>
               </div>
@@ -126,14 +138,14 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
                   className="flex-1 bg-orange-500/20 border-orange-500/40 text-white hover:bg-orange-500/30 h-[38px] text-xs"
                 >
                   <Link size={12} className="mr-1" />
-                  Copy URL Link
+                  {t('invite.copyUrlLink')}
                 </Button>
                 <Button
                   onClick={handleCopyInviteCode}
                   className="flex-1 bg-[#dc5903] hover:bg-[#dc5903]/90 text-white h-[38px] shadow-[0px_2px_0px_0px_rgba(180,60,0,0.15)] text-xs"
                 >
                   <Copy size={12} className="mr-1" />
-                  Copy Invite Code
+                  {t('invite.copyInviteCode')}
                 </Button>
               </div>
             </>
@@ -142,19 +154,19 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
             <div className="space-y-4">
               <div>
                 <h3 className="text-white text-lg font-bold mb-3">
-                  Enter Referral Code
+                  {t('invite.enterReferralTitle')}
                 </h3>
                 <p className="text-white/80 text-sm">
-                  Enter a friend's invite code to get bonus points!
+                  {t('invite.enterReferralDesc')}
                 </p>
               </div>
               
               <div className="space-y-3">
                 <div>
-                  <label className="block text-white/60 text-xs mb-2">Referral Code</label>
+                  <label className="block text-white/60 text-xs mb-2">{t('invite.referralCodeLabel')}</label>
                   <input
                     type="text"
-                    placeholder="Enter code here..."
+                    placeholder={t('invite.enterCodePlaceholder')}
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder:text-white/40 focus:border-orange-500 focus:outline-none text-sm"
                     maxLength={6}
                   />
@@ -163,7 +175,7 @@ export function InviteCodeModal({ isOpen, onClose }: InviteCodeModalProps) {
                 <Button
                   className="w-full bg-[#dc5903] hover:bg-[#dc5903]/90 text-white h-[38px] text-sm"
                 >
-                  Submit Code
+                  {t('invite.submitCode')}
                 </Button>
               </div>
             </div>

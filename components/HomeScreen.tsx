@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { SafetyToggle } from './SafetyToggle';
+import { LanguageSelector } from './LanguageSelector';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateStoryTitle, translateCharacterName, translateStoryDescription } from '../utils/storyTranslation';
 import { 
   getPublishedStories, 
   getPopularStories, 
@@ -27,6 +30,17 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
   const [popularCurrentPage, setPopularCurrentPage] = useState(0);
   const [newCurrentPage, setNewCurrentPage] = useState(0);
   const [stories, setStories] = useState<CreatedStoryData[]>([]);
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   // Initialize sample stories and load data
   useEffect(() => {
@@ -66,6 +80,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
       
       // 중복 제거된 스토리 사용
       if (uniqueStories.length > 0) {
+        console.log('Loaded unique stories:', uniqueStories.map(s => ({ id: s.id, title: s.title, characterName: s.content.characterName })));
         setStories(uniqueStories);
       } else {
         console.log('데이터베이스가 비어있음, 샘플 스토리 직접 사용');
@@ -91,6 +106,9 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
     ? stories.filter(story => story.introduction.tags.includes(selectedTag))
     : stories;
   
+  console.log('All stories loaded:', stories.map(s => ({ id: s.id, title: s.title, characterName: s.content.characterName })));
+  console.log('Filtered stories:', filteredStories.map(s => ({ id: s.id, title: s.title, characterName: s.content.characterName })));
+  
   // Remove duplicates from main grid using Set to track unique IDs
   const uniqueStoryIds = new Set<string>();
   const mainGridStories = filteredStories.filter(story => {
@@ -100,6 +118,8 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
     uniqueStoryIds.add(story.id);
     return true; // Include unique story
   });
+  
+  console.log('Main grid stories:', mainGridStories.map(s => ({ id: s.id, title: s.title, characterName: s.content.characterName })));
 
   // For popular and new sections, allow some overlap but prioritize different stories
   const allAvailableStories = stories;
@@ -274,6 +294,9 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
             onToggle={onSafetyToggle}
             size="small"
           />
+          
+          {/* Language Selector - Moved to rightmost position */}
+          <LanguageSelector />
         </div>
       </div>
 
@@ -294,10 +317,10 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/50">
               <div className="absolute bottom-4 left-4 right-4">
                 <h3 className="text-white text-lg font-bold mb-1 drop-shadow-lg">
-                  Featured Stories
+                  {t('home.featuredStories')}
                 </h3>
                 <p className="text-white/90 text-sm drop-shadow-md">
-                  Discover amazing characters and immersive storylines
+                  {t('home.featuredDescription')}
                 </p>
               </div>
             </div>
@@ -348,10 +371,10 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                   </div>
                 </div>
                 <h3 className="text-white font-semibold mb-1 drop-shadow-xl">
-                  If you find a story you like
+                  {t('home.createPromotion')}
                 </h3>
                 <p className="text-white text-sm drop-shadow-lg font-medium">
-                  Create your own
+                  {t('home.createPromotionSub')}
                 </p>
               </div>
             </div>
@@ -405,10 +428,10 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                 
                 <div className="space-y-2">
                   <h3 className="text-white text-sm font-medium line-clamp-2 leading-tight">
-                    {story.content?.characterName || story.title}
+                    {story.content?.characterName ? translateCharacterName(story.content.characterName) : translateStoryTitle(story.title)}
                   </h3>
                   <p className="text-[#acacac] text-xs line-clamp-2 leading-tight">
-                    {story.introduction?.introduction || story.description || ''}
+                    {story.introduction?.introduction ? translateStoryDescription(story.title, story.introduction.introduction) : (story.description || '')}
                   </p>
                   
                   <div className="flex flex-wrap gap-1">
@@ -468,10 +491,10 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                 
                 <div className="space-y-2">
                   <h3 className="text-white text-sm font-medium line-clamp-2 leading-tight">
-                    {story.content?.characterName || story.title}
+                    {story.content?.characterName ? translateCharacterName(story.content.characterName) : translateStoryTitle(story.title)}
                   </h3>
                   <p className="text-[#acacac] text-xs line-clamp-2 leading-tight">
-                    {story.introduction?.introduction || story.description || ''}
+                    {story.introduction?.introduction ? translateStoryDescription(story.title, story.introduction.introduction) : (story.description || '')}
                   </p>
                   
                   <div className="flex flex-wrap gap-1">
@@ -539,10 +562,10 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                   
                   <div className="space-y-2">
                     <h3 className="text-white text-sm font-medium line-clamp-2 leading-tight">
-                      {story.content?.characterName || story.title}
+                      {story.content?.characterName ? translateCharacterName(story.content.characterName) : translateStoryTitle(story.title)}
                     </h3>
                     <p className="text-[#acacac] text-xs line-clamp-2 leading-tight">
-                      {story.introduction?.introduction || ''}
+                      {story.introduction?.introduction ? translateStoryDescription(story.title, story.introduction.introduction) : (story.description || '')}
                     </p>
                     
                     <div className="flex flex-wrap gap-1">

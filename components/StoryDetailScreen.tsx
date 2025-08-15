@@ -5,6 +5,8 @@ import { ProfileCreationModal } from './ProfileCreationModal';
 import { StoryEditModal } from './StoryEditModal';
 import { CreatorProfileModal } from './CreatorProfileModal';
 import { SafetyToggle } from './SafetyToggle';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateCharacterName, translateStoryTitle, translateTag, translateStoryDescription } from '../utils/storyTranslation';
 import svgPaths from "../imports/svg-bsii91cs4v";
 import lockSvgPaths from "../imports/svg-p3farl1j9x";
 
@@ -32,6 +34,21 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   const story = getStory(storyId);
   const creator = story ? getCreatorById(story.creatorId) : null;
   
+  // Debug: Log story data
+  useEffect(() => {
+    if (story) {
+      console.log('StoryDetailScreen - Story data:', {
+        id: story.id,
+        title: story.title,
+        characterName: story.content.characterName,
+        storySettingsLength: story.content.storySettings?.length || 0,
+        characterDescriptionLength: story.content.characterDescription?.length || 0,
+        storySettings: story.content.storySettings?.substring(0, 200) + '...',
+        characterDescription: story.content.characterDescription?.substring(0, 200) + '...'
+      });
+    }
+  }, [story]);
+  
   // Gallery state
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentThumbnailIndex, setCurrentThumbnailIndex] = useState(0);
@@ -54,6 +71,17 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   // Like and favorite states
   const [isLiked, setIsLiked] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
   
   // Character image loading
   const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
@@ -89,11 +117,20 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   // Update story edit data when story changes
   useEffect(() => {
     if (story) {
-      setStoryEditData({
+      const newStoryEditData = {
         storySetting: story.content.storySettings || '',
         characterName: story.content.characterName || '',
         characterDescription: story.content.characterDescription || ''
+      };
+      
+      console.log('StoryDetailScreen - Setting storyEditData:', {
+        storySettingLength: newStoryEditData.storySetting.length,
+        characterDescriptionLength: newStoryEditData.characterDescription.length,
+        storySetting: newStoryEditData.storySetting.substring(0, 200) + '...',
+        characterDescription: newStoryEditData.characterDescription.substring(0, 200) + '...'
       });
+      
+      setStoryEditData(newStoryEditData);
     }
   }, [story]);
 
@@ -483,7 +520,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                   <div className="absolute inset-0 bg-[#2a2a2a] flex items-center justify-center">
                     <div className="text-white text-center">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-                      <p className="text-sm opacity-70">Loading images...</p>
+                      <p className="text-sm opacity-70">{t('storyDetail.loadingImages')}</p>
                     </div>
                   </div>
                 ) : (
@@ -704,14 +741,14 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
               {/* Story Title */}
               <div>
                 <h1 className="text-[22.313px] font-light text-white leading-[37.71px] whitespace-nowrap">
-                  {story?.title}
+                  {story ? translateStoryTitle(story.title) : ''}
                 </h1>
               </div>
 
               {/* Story Description */}
               <div>
                 <p className="text-[14.875px] font-light text-[rgba(255,255,255,0.8)] leading-[25.14px]">
-                  {story?.introduction.introduction}
+                  {story ? translateStoryDescription(story.title, story.introduction.introduction) : ''}
                 </p>
               </div>
 
@@ -719,7 +756,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
               <div className="flex flex-wrap gap-1 pt-1">
                 {story?.introduction.tags.map((tag, index) => (
                   <div key={index} className="bg-[rgba(0,0,0,0.5)] px-1.5 py-[3.18px] rounded">
-                    <span className="text-[#ff9500] text-[12.289px] font-light leading-[20.43px]">{tag}</span>
+                    <span className="text-[#ff9500] text-[12.289px] font-light leading-[20.43px]">{translateTag(tag)}</span>
                   </div>
                 ))}
               </div>
@@ -767,10 +804,10 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                           {creator.handle}
                         </span>
                         <span className="text-[#808080] text-[12px] leading-[20px]">
-                          {creator.stats.followers.toLocaleString()} followers
+                          {creator.stats.followers.toLocaleString()} {t('storyDetail.followers')}
                         </span>
                         <span className="text-[#808080] text-[12px] leading-[20px]">
-                          {creator.stats.totalStories} stories
+                          {creator.stats.totalStories} {t('storyDetail.stories')}
                         </span>
                       </div>
                     </div>
@@ -870,7 +907,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             <div className="space-y-4">
               <div>
                 <h3 className="text-white text-[15.805px] font-light leading-[26.71px]">
-                  Story Settings
+{t('storyDetail.storySettings')}
                 </h3>
               </div>
 
@@ -889,7 +926,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             <div className="space-y-4">
               <div>
                 <h3 className="text-white text-[15.805px] font-light leading-[26.71px]">
-                  Character Description
+{t('storyDetail.characterDescription')}
                 </h3>
               </div>
 
@@ -934,7 +971,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                 className="bg-[#dc5903] h-10 rounded-md shadow-[0px_2px_0px_0px_rgba(180,60,0,0.15)] flex-1 hover:bg-[#e6850e] transition-colors"
               >
                 <div className="flex items-center justify-center w-full h-full px-4">
-                  <span className="text-white text-[13.125px] font-medium">Start Chat</span>
+                  <span className="text-white text-[13.125px] font-medium">{t('storyDetail.startChat')}</span>
                 </div>
               </button>
             </div>

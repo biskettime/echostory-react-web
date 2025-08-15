@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import svgPaths from "../imports/svg-p0qi0bj4sf";
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { searchStories } from '../data/stories';
+import { translateStoryTitle, translateCharacterName } from '../utils/storyTranslation';
 // import imgSearch from "figma:asset/ef863f04724e3ed7ded20a0b62b98cd5a1b82d91.png";
 const imgSearch = "/images/search-icon.svg";
 
@@ -10,6 +13,74 @@ interface SearchModalProps {
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [, forceUpdate] = useState({});
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
+
+  // Enhanced search functionality with Korean support
+  useEffect(() => {
+    if (searchQuery.trim().length > 0) {
+      const query = searchQuery.trim().toLowerCase();
+      
+      // Get all stories first
+      const allStories = searchStories(''); // Get all stories
+      
+      // Enhanced search that includes translated titles and character names
+      const results = allStories.filter(story => {
+        // Original English search
+        const englishMatch = 
+          story.title.toLowerCase().includes(query) ||
+          story.introduction.introduction.toLowerCase().includes(query) ||
+          story.content.characterName.toLowerCase().includes(query) ||
+          story.introduction.tags.some(tag => tag.toLowerCase().includes(query)) ||
+          story.metadata.category.toLowerCase().includes(query);
+        
+        // Korean translated search
+        const translatedTitle = translateStoryTitle(story.title).toLowerCase();
+        const translatedCharacterName = translateCharacterName(story.content.characterName).toLowerCase();
+        
+        // Korean category mapping
+        const categoryMapping: { [key: string]: string } = {
+          'romance': '로맨스',
+          'fantasy': '판타지',
+          'mystery': '미스터리',
+          'adventure': '모험',
+          'slice-of-life': '일상',
+          'school': '학원',
+          'drama': '드라마',
+          'comedy': '코미디'
+        };
+        
+        const koreanCategory = categoryMapping[story.metadata.category.toLowerCase()] || '';
+        
+        const koreanMatch = 
+          translatedTitle.includes(query) ||
+          translatedCharacterName.includes(query) ||
+          koreanCategory.includes(query) ||
+          story.introduction.tags.some(tag => {
+            const translatedTag = categoryMapping[tag.toLowerCase()] || tag;
+            return translatedTag.toLowerCase().includes(query);
+          });
+        
+        return englishMatch || koreanMatch;
+      });
+      
+      console.log('Search query:', query);
+      console.log('Search results:', results);
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
 
   if (!isOpen) return null;
 
@@ -71,7 +142,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ex. 판타지"
+                placeholder={t('search.placeholder')}
                 className="flex-1 bg-transparent border-none outline-none text-white text-sm placeholder:text-[#888888] min-w-0"
                 autoFocus
               />
@@ -80,24 +151,67 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 bg-[#1a1b1b] overflow-hidden">
+        <div className="flex-1 flex flex-col px-4 bg-[#1a1b1b] overflow-hidden">
           {searchQuery.length === 0 ? (
             /* Empty State */
-            <div className="text-center">
-              <div className="text-[#888888] text-sm">
-                검색어를 입력해주세요
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-[#888888] text-sm">
+                  {t('search.enterSearchTerm')}
+                </div>
               </div>
             </div>
           ) : (
             /* Search Results */
-            <div className="w-full max-w-full">
-              <div className="text-center text-[#888888] text-sm mb-4">
-                "{searchQuery}"에 대한 검색 결과
+            <div className="flex-1 flex flex-col py-4">
+              <div className="text-[#888888] text-sm mb-4">
+                "{searchQuery}" {t('search.searchResults')}
               </div>
-              {/* Here you can add actual search results */}
-              <div className="text-center text-[#666666] text-xs">
-                검색 결과가 없습니다
-              </div>
+              
+              {searchResults.length > 0 ? (
+                <div className="flex-1 overflow-y-auto space-y-3">
+                  {searchResults.map((story) => (
+                    <div key={story.id} className="bg-[#2a2b2b] rounded-lg p-4 hover:bg-[#3a3b3b] transition-colors cursor-pointer">
+                      <div className="flex items-start gap-3">
+                        <div className="w-12 h-12 bg-[#3a3b3b] rounded-lg flex-shrink-0 overflow-hidden">
+                          <img 
+                            src={story.thumbnailImage || '/images/echostory.png'} 
+                            alt={story.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = '/images/echostory.png';
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-white text-sm font-medium mb-1 truncate">
+                            {story.content?.characterName ? translateCharacterName(story.content.characterName) : translateStoryTitle(story.title)}
+                          </h3>
+                          <p className="text-[#888888] text-xs line-clamp-2">
+                            {story.introduction?.introduction || story.description || ''}
+                          </p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="text-[#666666] text-xs">
+                              {story.stats?.views || 0} {t('search.views')}
+                            </span>
+                            <span className="text-[#666666] text-xs">•</span>
+                            <span className="text-[#666666] text-xs">
+                              {story.stats?.likes || 0} {t('search.likes')}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center text-[#666666] text-sm">
+                    {t('search.noResults')}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -106,7 +220,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
         {searchQuery.length === 0 && (
           <div className="px-4 pb-6 flex-shrink-0">
             <div className="mb-3">
-              <h3 className="text-white text-sm font-medium mb-3">인기 검색어</h3>
+              <h3 className="text-white text-sm font-medium mb-3">{t('search.popularSearches')}</h3>
               <div className="flex flex-wrap gap-2">
                 {['판타지', '로맨스', '학원', '일상', '미스터리'].map((tag) => (
                   <button

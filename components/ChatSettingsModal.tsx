@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../utils/i18n';
 import svgPaths from '../imports/svg-dk96dgb4cb';
 
 interface ChatSettingsModalProps {
@@ -55,7 +56,7 @@ export function ChatSettingsModal({
               {/* Title */}
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0">
                 <div className="flex flex-col font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[16.734px] text-left text-nowrap">
-                  <p className="block leading-[18px] whitespace-pre">Chat Settings</p>
+                  <p className="block leading-[18px] whitespace-pre">{t('chat.chatSettings')}</p>
                 </div>
               </div>
               
@@ -126,7 +127,7 @@ export function ChatSettingsModal({
                       {/* Section Label */}
                       <div className="box-border content-stretch flex flex-row items-center justify-start p-0 relative shrink-0 w-full">
                         <div className="basis-0 flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium grow justify-center leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[#999999] text-[11.25px] text-left tracking-[0.5px] uppercase">
-                          <p className="block leading-[12px]">MY PROFILE</p>
+                          <p className="block leading-[12px]">{t('chat.myProfile')}</p>
                         </div>
                       </div>
                       
@@ -140,7 +141,7 @@ export function ChatSettingsModal({
                         
                         <div className="h-[16.8px] overflow-clip relative shrink-0 w-full">
                           <div className="absolute flex flex-col font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light justify-center leading-[0] left-0 not-italic text-[#999999] text-[11.25px] text-left top-[7.81px] translate-y-[-50%] w-[54.96px]">
-                            <p className="block leading-[16.8px]">No information entered</p>
+                            <p className="block leading-[16.8px]">{t('chat.noInformationEntered')}</p>
                           </div>
                         </div>
                       </div>
@@ -179,7 +180,7 @@ export function ChatSettingsModal({
                         
                         <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                           <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#cccccc] text-[11.25px] text-center text-nowrap">
-                            <p className="block leading-[normal] whitespace-pre">Edit</p>
+                            <p className="block leading-[normal] whitespace-pre">{t('chat.edit')}</p>
                           </div>
                         </div>
                       </button>
@@ -221,7 +222,7 @@ export function ChatSettingsModal({
                         </div>
                         
                         <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.125px] text-left text-nowrap">
-                          <p className="block leading-[14px] whitespace-pre">Background Image</p>
+                          <p className="block leading-[14px] whitespace-pre">{t('chat.backgroundImage')}</p>
                         </div>
                       </div>
                       
@@ -229,7 +230,7 @@ export function ChatSettingsModal({
                       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                         <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#999999] text-[11.25px] text-left w-full">
                           <p className="block leading-[15.6px]">
-                            Display background images suitable for the story
+{t('chat.backgroundImageDesc')}
                           </p>
                         </div>
                       </div>
@@ -263,7 +264,7 @@ export function ChatSettingsModal({
                       {/* Section Label */}
                       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                         <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#999999] text-[11.25px] text-left tracking-[0.5px] uppercase w-full">
-                          <p className="block leading-[12px]">CURRENT VOICE</p>
+                          <p className="block leading-[12px]">{t('chat.currentVoice')}</p>
                         </div>
                       </div>
                       
@@ -317,7 +318,7 @@ export function ChatSettingsModal({
                         
                         <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                           <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#cccccc] text-[11.25px] text-center text-nowrap">
-                            <p className="block leading-[normal] whitespace-pre">Change</p>
+                            <p className="block leading-[normal] whitespace-pre">{t('chat.change')}</p>
                           </div>
                         </div>
                       </button>

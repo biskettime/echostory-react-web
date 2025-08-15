@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 import svgPaths from "../imports/svg-dzkl73gmd9";
 
 interface StoryEditModalProps {
@@ -20,6 +21,17 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
   const [storySetting, setStorySetting] = useState(storyData.storySetting);
   const [characterName, setCharacterName] = useState(storyData.characterName);
   const [characterDescription, setCharacterDescription] = useState(storyData.characterDescription);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -43,7 +55,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-[rgba(0,0,0,0.45)]"
+        className="absolute inset-0 bg-[rgba(0,0,0,0.45)] backdrop-blur-sm"
         onClick={handleCancel}
       />
       
@@ -57,7 +69,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
               <div className="bg-[#1f1f1f] box-border content-stretch flex flex-col items-start justify-start p-0 relative rounded-tl-lg rounded-tr-lg shrink-0 w-full">
                 <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                   <div className="flex flex-col font-['Inter:Semi_Bold','Noto_Sans_KR:Bold',sans-serif] font-semibold justify-center leading-[0] not-italic relative shrink-0 text-[15px] text-[rgba(255,255,255,0.85)] text-left w-full">
-                    <p className="block leading-[24px]">Edit Story</p>
+                    <p className="block leading-[24px]">{t('storyDetail.editStory')}</p>
                   </div>
                 </div>
               </div>
@@ -76,7 +88,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                         </div>
                       </div>
                       <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] mr-[-0.01px] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                        <p className="block leading-[22px] whitespace-pre">Story Settings</p>
+                        <p className="block leading-[22px] whitespace-pre">{t('storyDetail.storySettingsLabel')}</p>
                       </div>
                     </div>
                   </div>
@@ -95,7 +107,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                                   onChange={(e) => setStorySetting(e.target.value)}
                                   className="box-border content-stretch flex flex-col h-[140px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full bg-transparent border-none outline-none text-[rgba(255,255,255,0.85)] text-[13.125px] leading-[22px] resize-none focus:ring-0"
                                   maxLength={2000}
-                                  placeholder="Enter story settings..."
+                                  placeholder={t('storyDetail.storySettingsPlaceholder')}
                                 />
                               </div>
                             </div>
@@ -123,7 +135,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                         </div>
                       </div>
                       <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] mr-[-0.01px] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                        <p className="block leading-[22px] whitespace-pre">Character Name</p>
+                        <p className="block leading-[22px] whitespace-pre">{t('storyDetail.characterNameLabel')}</p>
                       </div>
                     </div>
                   </div>
@@ -143,7 +155,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                                   onChange={(e) => setCharacterName(e.target.value)}
                                   className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-[rgba(255,255,255,0.85)] text-left w-full bg-transparent border-none outline-none leading-[22px] focus:ring-0"
                                   maxLength={10}
-                                  placeholder="Character name"
+                                  placeholder={t('storyDetail.characterNamePlaceholder')}
                                 />
                               </div>
                             </div>
@@ -175,7 +187,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                         </div>
                       </div>
                       <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] mr-[-0.01px] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                        <p className="block leading-[22px] whitespace-pre">Character Description</p>
+                        <p className="block leading-[22px] whitespace-pre">{t('storyDetail.characterDescriptionLabel')}</p>
                       </div>
                     </div>
                   </div>
@@ -194,7 +206,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                                   onChange={(e) => setCharacterDescription(e.target.value)}
                                   className="box-border content-stretch flex flex-col h-[74px] items-start justify-start max-h-inherit max-w-inherit min-h-inherit px-[11px] py-1 relative w-full bg-transparent border-none outline-none text-[rgba(255,255,255,0.85)] text-[13.016px] leading-[22px] resize-none focus:ring-0"
                                   maxLength={500}
-                                  placeholder="Enter character description..."
+                                  placeholder={t('storyDetail.characterDescriptionPlaceholder')}
                                 />
                               </div>
                             </div>
@@ -224,7 +236,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                       <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]" />
                       <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                         <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-[rgba(255,255,255,0.85)] text-center text-nowrap">
-                          <p className="block leading-[normal] whitespace-pre">Cancel</p>
+                          <p className="block leading-[normal] whitespace-pre">{t('chat.cancel')}</p>
                         </div>
                       </div>
                     </button>
@@ -237,7 +249,7 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
                     >
                       <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
                         <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.125px] text-center text-nowrap">
-                          <p className="block leading-[normal] whitespace-pre">저장</p>
+                          <p className="block leading-[normal] whitespace-pre">{t('chat.save')}</p>
                         </div>
                       </div>
                     </button>

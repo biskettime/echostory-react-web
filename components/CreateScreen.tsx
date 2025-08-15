@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StoryCreationTab } from './StoryCreationTab';
 import { ImageGenerationTab } from './ImageGenerationTab';
+import { LanguageSelector } from './LanguageSelector';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 import svgPaths from '../imports/svg-atk68p6tff';
 
 interface CreateScreenProps {
@@ -11,6 +13,17 @@ interface CreateScreenProps {
 
 export function CreateScreen({ onBack, onNavigateToStoryCreation, onNavigateToInProgressStory }: CreateScreenProps) {
   const [activeTab, setActiveTab] = useState<'stories' | 'images'>('stories');
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   return (
     <div className="bg-[#1a1b1b] h-full flex flex-col relative w-full">
@@ -36,6 +49,7 @@ export function CreateScreen({ onBack, onNavigateToStoryCreation, onNavigateToIn
 
         {/* Right Side Controls */}
         <div className="box-border content-stretch flex flex-row gap-[15px] items-center justify-start pl-0 pr-[15px] py-0 relative shrink-0">
+          <LanguageSelector />
         </div>
       </div>
 
@@ -50,7 +64,7 @@ export function CreateScreen({ onBack, onNavigateToStoryCreation, onNavigateToIn
                 : 'text-[rgba(255,255,255,0.7)] hover:text-white'
             }`}
           >
-            My Stories
+{t('create.myStories')}
             {activeTab === 'stories' && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#dc5903]" />
             )}

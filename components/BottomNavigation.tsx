@@ -1,4 +1,6 @@
 import { Star, Plus, MessageCircle, User } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener, getCurrentLanguage } from '../utils/i18n';
 
 interface BottomNavigationProps {
   activeTab: 'home' | 'create' | 'activity' | 'profile';
@@ -6,11 +8,22 @@ interface BottomNavigationProps {
 }
 
 export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationProps) {
+  const [, forceUpdate] = useState({});
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
+
   const tabs = [
-    { id: 'home' as const, icon: Star, label: 'Stories' },
-    { id: 'create' as const, icon: Plus, label: 'Create' },
-    { id: 'activity' as const, icon: MessageCircle, label: 'Activity' },
-    { id: 'profile' as const, icon: User, label: 'Profile' }
+    { id: 'home' as const, icon: Star, label: t('nav.stories') },
+    { id: 'create' as const, icon: Plus, label: t('nav.create') },
+    { id: 'activity' as const, icon: MessageCircle, label: t('nav.activity') },
+    { id: 'profile' as const, icon: User, label: t('nav.profile') }
   ];
 
   return (

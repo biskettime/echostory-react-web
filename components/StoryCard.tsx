@@ -2,6 +2,9 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Badge } from './ui/badge';
 import { Heart, MessageCircle, TrendingUp, Sparkles, Clock } from 'lucide-react';
 import { Button } from './ui/button';
+import { useState, useEffect } from 'react';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { translateStoryTitle, translateCharacterName, translateTag } from '../utils/storyTranslation';
 
 interface StoryCardProps {
   id: string;
@@ -21,9 +24,12 @@ interface StoryCardProps {
   description?: string;
   mood?: 'romantic' | 'professional' | 'magical' | 'healing' | 'cozy' | 'futuristic';
   layout?: 'vertical' | 'horizontal';
+  characterName?: string;
+  onStorySelect?: (storyId: string) => void;
 }
 
 export function StoryCard({ 
+  id,
   title, 
   subtitle, 
   author, 
@@ -35,8 +41,86 @@ export function StoryCard({
   isNew,
   description,
   mood = 'romantic',
-  layout = 'vertical'
+  layout = 'vertical',
+  characterName,
+  onStorySelect
 }: StoryCardProps) {
+  const [, forceUpdate] = useState({});
+  const [finalImageUrl, setFinalImageUrl] = useState<string>('');
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      forceUpdate({});
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
+
+  // Enhanced image handling
+  useEffect(() => {
+    const loadImage = async () => {
+      // First try character images if characterName is provided
+      if (characterName) {
+        // Character name mapping for file names
+        const nameMapping: { [key: string]: string } = {
+          'Jiyeon': 'Jiyeon',
+          'Yuki Tanaka': 'Yuki',
+          'Yuki': 'Yuki',
+          'Suyeon': 'Suyeon',
+          'Jiwon': 'Jiwon',
+          'Sohee': 'Sohee',
+          'Seoyeon': 'Seoyeon',
+          'Hayoung': 'Hayoung',
+          'Mina': 'Mina',
+          'Haruka': 'Haruka',
+          'Taehyun': 'Taehyun',
+          'Minjun': 'Minjun',
+          'Jihoon': 'Jihoon',
+          'Hyunwoo': 'Hyunwoo',
+          'Seungmin': 'Seungmin',
+          'Jungwoo': 'Jungwoo',
+          'Donghyun': 'Donghyun'
+        };
+
+        const mappedName = nameMapping[characterName] || characterName.replace(/[^a-zA-Z0-9가-힣]/g, '');
+        
+        console.log(`StoryCard - Character: "${characterName}" -> Mapped: "${mappedName}"`);
+        
+        for (let i = 1; i <= 10; i++) {
+          try {
+            const response = await fetch(`/data/ch_img/${mappedName}_${i}.png`, { method: 'HEAD' });
+            if (response.ok) {
+              console.log(`StoryCard - Found image: /data/ch_img/${mappedName}_${i}.png`);
+              setFinalImageUrl(`/data/ch_img/${mappedName}_${i}.png`);
+              return;
+            }
+          } catch (error) {
+            // Continue to next image
+          }
+        }
+      }
+
+      // Then try the provided imageUrl
+      if (imageUrl && imageUrl !== '/images/sample.png') {
+        try {
+          const response = await fetch(imageUrl, { method: 'HEAD' });
+          if (response.ok) {
+            setFinalImageUrl(imageUrl);
+            return;
+          }
+        } catch (error) {
+          // Continue to fallback
+        }
+      }
+
+      // Finally fallback to echostory.png
+      setFinalImageUrl('/images/echostory.png');
+    };
+
+    loadImage();
+  }, [imageUrl, characterName]);
   
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -65,74 +149,54 @@ export function StoryCard({
 
   if (layout === 'horizontal') {
     return (
-      <div className="group bg-card/80 backdrop-blur-sm rounded-xl overflow-hidden border border-border/50 hover:border-primary/20 transition-all duration-300 hover:shadow-lg">
-        <div className="flex">
+      <div className="group bg-[#2a2b2b] rounded-lg overflow-hidden border border-[#3a3b3b] hover:border-[#ff9500]/30 transition-all duration-200 hover:bg-[#2f3030]">
+        <div className="flex items-center p-3 gap-3">
           {/* Image Section */}
-          <div className="relative flex-shrink-0 w-20 h-20">
+          <div className="relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
             <ImageWithFallback 
-              src={imageUrl} 
-              alt={title}
+              src={finalImageUrl || '/images/echostory.png'} 
+              alt={characterName ? translateCharacterName(characterName) : translateStoryTitle(title)}
               className="w-full h-full object-cover"
             />
-            <div className={`absolute inset-0 bg-gradient-to-br ${getMoodGradient(mood)} opacity-0 group-hover:opacity-100 transition-opacity`} />
             
             {ranking && (
-              <div className="absolute -top-1 -left-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-lg">
+              <div className="absolute -top-1 -left-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-lg">
                 {ranking}
-              </div>
-            )}
-            
-            {isHot && (
-              <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1">
-                <TrendingUp size={10} />
-              </div>
-            )}
-            
-            {isNew && (
-              <div className="absolute top-1 right-1 bg-green-500 text-white rounded-full p-1">
-                <Sparkles size={10} />
               </div>
             )}
           </div>
 
           {/* Content Section */}
-          <div className="flex-1 p-3 min-w-0">
-            <div className="flex items-start justify-between mb-2">
-              <div className="min-w-0 flex-1">
-                <h3 className="font-bold text-foreground truncate group-hover:text-primary transition-colors">
-                  {title}
-                </h3>
-                <p className="text-xs text-muted-foreground truncate mb-1">{subtitle}</p>
-              </div>
-              
-              {stats && (
-                <div className="flex items-center space-x-1 ml-2">
-                  <div className={`w-2 h-2 rounded-full ${
-                    stats.popularity >= 95 ? 'bg-red-500' :
-                    stats.popularity >= 90 ? 'bg-orange-500' :
-                    stats.popularity >= 80 ? 'bg-yellow-500' : 'bg-green-500'
-                  } animate-pulse`} />
-                  <span className="text-xs text-muted-foreground">{stats.popularity}%</span>
-                </div>
-              )}
-            </div>
-
+          <div className="flex-1 min-w-0 relative">
+            {/* Open Story Button */}
+            <button 
+              onClick={() => onStorySelect?.(id)}
+              className="absolute top-0 right-0 text-xs px-2 py-1 bg-[#ff9500] text-white rounded-md hover:bg-[#e6850e] transition-colors"
+            >
+              {t('storyCard.openStory')}
+            </button>
+            
+            <h3 className="font-medium text-white text-sm truncate mb-1 group-hover:text-[#ff9500] transition-colors pr-16">
+              {characterName ? translateCharacterName(characterName) : translateStoryTitle(title)}
+            </h3>
+            <p className="text-xs text-gray-400 truncate mb-2">{subtitle}</p>
+            
             <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-1">
+              <div className="flex gap-1">
                 {tags.slice(0, 2).map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs px-2 py-0 bg-primary/10 text-primary">
-                    #{tag}
-                  </Badge>
+                  <span key={index} className="text-xs px-2 py-0.5 bg-[#ff9500]/20 text-[#ff9500] rounded-full">
+                    #{translateTag(tag)}
+                  </span>
                 ))}
               </div>
               
               {stats && (
-                <div className="flex items-center space-x-3 text-xs text-muted-foreground">
-                  <div className="flex items-center space-x-1">
+                <div className="flex items-center gap-3 text-xs text-gray-500">
+                  <div className="flex items-center gap-1">
                     <Heart size={10} />
                     <span>{formatNumber(stats.likes)}</span>
                   </div>
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center gap-1">
                     <MessageCircle size={10} />
                     <span>{formatNumber(stats.chats)}</span>
                   </div>
@@ -150,8 +214,8 @@ export function StoryCard({
       {/* Image Section */}
       <div className="relative aspect-[4/5] overflow-hidden">
         <ImageWithFallback 
-          src={imageUrl} 
-          alt={title}
+          src={finalImageUrl || '/images/echostory.png'} 
+          alt={characterName ? translateCharacterName(characterName) : translateStoryTitle(title)}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         <div className={`absolute inset-0 bg-gradient-to-t ${getMoodGradient(mood)} opacity-0 group-hover:opacity-100 transition-opacity`} />
@@ -163,6 +227,14 @@ export function StoryCard({
         )}
         
         <div className="absolute top-2 right-2 flex flex-col space-y-1">
+          {/* Open Story Button */}
+          <button 
+            onClick={() => onStorySelect?.(id)}
+            className="text-xs px-2 py-1 bg-[#ff9500] text-white rounded-md hover:bg-[#e6850e] transition-colors shadow-lg"
+          >
+            {t('storyCard.openStory')}
+          </button>
+          
           {isHot && (
             <Badge className="bg-red-500 text-white text-xs px-2 py-1 shadow-lg">
               <TrendingUp size={10} className="mr-1" />
@@ -184,7 +256,7 @@ export function StoryCard({
             className="bg-white/90 text-gray-900 hover:bg-white transform translate-y-4 group-hover:translate-y-0 transition-transform"
           >
             <MessageCircle size={14} className="mr-1" />
-            Start Chat
+            {t('storyCard.startChat')}
           </Button>
         </div>
       </div>
@@ -193,7 +265,7 @@ export function StoryCard({
       <div className="p-4 space-y-3">
         <div>
           <h3 className="font-bold text-foreground group-hover:text-primary transition-colors mb-1">
-            {title}
+            {characterName ? translateCharacterName(characterName) : translateStoryTitle(title)}
           </h3>
           <p className="text-sm text-muted-foreground line-clamp-2">{subtitle}</p>
         </div>
@@ -207,7 +279,7 @@ export function StoryCard({
         <div className="flex flex-wrap gap-1 mb-2">
           {tags.slice(0, 3).map((tag, index) => (
             <Badge key={index} variant="secondary" className="text-xs px-2 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-              #{tag}
+              #{translateTag(tag)}
             </Badge>
           ))}
         </div>

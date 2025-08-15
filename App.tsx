@@ -13,6 +13,7 @@ import { TopUpScreen } from './components/TopUpScreen';
 import { SearchScreen } from './components/SearchScreen';
 import { BottomNavigation } from './components/BottomNavigation';
 import { initializeSampleStories } from './data/stories';
+import { initializeI18n } from './utils/i18n';
 
 type Screen = 'home' | 'story-detail' | 'chat' | 'profile' | 'create' | 'activity' | 'story-creation' | 'in-progress-story' | 'my-profile' | 'support' | 'top-up' | 'search';
 type BottomTab = 'home' | 'create' | 'activity' | 'profile';
@@ -28,6 +29,7 @@ export default function App() {
   // Initialize sample stories on app start
   useEffect(() => {
     initializeSampleStories();
+    initializeI18n();
     
     // Force enable scrolling and hide scrollbars
     const forceEnableScrolling = () => {
@@ -60,6 +62,8 @@ export default function App() {
     // Also run after a short delay to override any other scripts
     setTimeout(forceEnableScrolling, 100);
   }, []);
+
+
 
   const handleStorySelect = (storyId: string) => {
     setSelectedStoryId(storyId);

@@ -156,8 +156,8 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
     e.stopPropagation();
     
     const confirmMessage = story.status === 'published' 
-      ? '정말로 이 발행된 스토리를 삭제하시겠습니까?' 
-      : '정말로 이 드래프트를 삭제하시겠습니까?';
+      ? 'Are you sure you want to delete this published story?' 
+      : 'Are you sure you want to delete this draft?';
     
     if (confirm(confirmMessage)) {
       try {
@@ -171,7 +171,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
         await loadUserStories();
       } catch (error) {
         console.error('Failed to delete story:', error);
-        alert('스토리 삭제에 실패했습니다.');
+        alert('Failed to delete story.');
       }
     }
   };
@@ -296,7 +296,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
       {/* Stories List */}
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <div className="text-[rgba(255,255,255,0.7)]">로딩 중...</div>
+          <div className="text-[rgba(255,255,255,0.7)]">Loading...</div>
         </div>
       ) : (
         <div className="space-y-3">
