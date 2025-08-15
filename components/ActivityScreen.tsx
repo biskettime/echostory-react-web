@@ -86,7 +86,13 @@ function ActivityCharacterImage({ characterName, className }: { characterName: s
         '미나': 'Mina',
         '수연': 'Suyeon',
         '소연': 'Soyeon',
-        '유키': 'Yuki'
+        '유키': 'Yuki',
+        // New male characters
+        '태현': 'Taehyun',
+        '현우': 'Hyunwoo',
+        '승민': 'Seungmin',
+        '정우': 'Jungwoo',
+        '동현': 'Donghyun'
       };
       
       const mappedName = nameMapping[firstName] || firstName;
@@ -405,7 +411,13 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         '미나': 'Mina',
         '수연': 'Suyeon',
         '소연': 'Soyeon',
-        '유키': 'Yuki'
+        '유키': 'Yuki',
+        // New male characters
+        '태현': 'Taehyun',
+        '현우': 'Hyunwoo',
+        '승민': 'Seungmin',
+        '정우': 'Jungwoo',
+        '동현': 'Donghyun'
       };
       
       const mappedName = nameMapping[firstName] || firstName;

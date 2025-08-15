@@ -9,7 +9,7 @@ import { VoiceSettingsModal } from './VoiceSettingsModal';
 import { ProfileEditModal } from './ProfileEditModal';
 import { PointsGuideModal } from './PointsGuideModal';
 import { CharacterBackground } from './CharacterImage';
-import { Redo, Edit3, Send, Star, Home } from 'lucide-react';
+import { Redo, Edit3, Send, Star, Home, Volume2, Play } from 'lucide-react';
 import svgPaths from '../imports/svg-c6g2wd331h';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
 const imgThumbnail = "/images/chat-thumbnail.svg";
@@ -56,11 +56,103 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [storyInput, setStoryInput] = useState('');
   const [backgroundImageEnabled, setBackgroundImageEnabled] = useState(true);
-  const [currentVoice, setCurrentVoice] = useState('Hyewon');
+  const [currentVoice, setCurrentVoice] = useState('Korean Female');
+  const [showVoiceSelector, setShowVoiceSelector] = useState(false);
   const [userNickname, setUserNickname] = useState(nickname);
   const [userInfo, setUserInfo] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const nextMessageIdRef = useRef(3);
+
+  // Available voice options (confirmed working in ResponsiveVoice)
+  const voiceOptions = [
+    { id: 'korean-female', name: 'Korean Female', label: '한국어 여성', lang: 'ko', testText: '안녕하세요, 저는 한국어 음성입니다.' },
+    { id: 'us-female', name: 'US English Female', label: '미국 영어 여성', lang: 'en', testText: 'Hello, I am an American English female voice.' },
+    { id: 'us-male', name: 'US English Male', label: '미국 영어 남성', lang: 'en', testText: 'Hello, I am an American English male voice.' },
+    { id: 'uk-female', name: 'UK English Female', label: '영국 영어 여성', lang: 'en', testText: 'Hello, I am a British English female voice.' },
+    { id: 'uk-male', name: 'UK English Male', label: '영국 영어 남성', lang: 'en', testText: 'Hello, I am a British English male voice.' },
+    { id: 'japanese-female', name: 'Japanese Female', label: '일본어 여성', lang: 'ja', testText: 'こんにちは、私は日本語の女性の声です。' },
+  ];
+
+  // TTS function using ResponsiveVoice
+  const handleTTS = (text: string) => {
+    // Check if ResponsiveVoice is loaded
+    if (typeof (window as any).responsiveVoice === 'undefined') {
+      console.error('❌ ResponsiveVoice not loaded, falling back to browser TTS');
+      // Fallback to browser TTS
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ko-KR';
+      utterance.rate = 0.8;
+      utterance.pitch = 1.0;
+      utterance.volume = 0.9;
+      window.speechSynthesis.speak(utterance);
+      return;
+    }
+
+    // Cancel any ongoing speech
+    (window as any).responsiveVoice.cancel();
+    
+    // Use selected voice or auto-detect
+    const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text);
+    const hasEnglish = /[a-zA-Z]/.test(text);
+    
+    let voiceName = currentVoice;
+    let rate = 0.9;
+    let pitch = 1.0;
+    
+    // Adjust rate and pitch based on voice type
+    if (voiceName.includes('Korean')) {
+      rate = hasEnglish ? 0.8 : 0.85; // Slower for mixed content
+      pitch = 1.0;
+    } else if (voiceName.includes('Male')) {
+      rate = 0.85;
+      pitch = 0.9; // Lower pitch for male voices
+    } else {
+      rate = 0.9;
+      pitch = 1.0;
+    }
+    
+    console.log('🎵 Using ResponsiveVoice:', voiceName, 'for text:', text.substring(0, 50) + '...');
+    
+    // Speak with ResponsiveVoice
+    (window as any).responsiveVoice.speak(text, voiceName, {
+      rate: rate,
+      pitch: pitch,
+      volume: 0.9,
+      onstart: () => console.log('🎵 ResponsiveVoice TTS started'),
+      onend: () => console.log('🎵 ResponsiveVoice TTS ended'),
+      onerror: (e: any) => {
+        console.error('❌ ResponsiveVoice TTS error:', e);
+        // Fallback to browser TTS on error
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = hasKorean ? 'ko-KR' : 'en-US';
+        utterance.rate = 0.8;
+        window.speechSynthesis.speak(utterance);
+      }
+    });
+  };
+
+  // Test voice function
+  const handleTestVoice = (voice: { name: string; testText: string }) => {
+    if (typeof (window as any).responsiveVoice === 'undefined') {
+      console.error('❌ ResponsiveVoice not loaded');
+      return;
+    }
+
+    // Cancel any ongoing speech
+    (window as any).responsiveVoice.cancel();
+    
+    // Play test audio
+    (window as any).responsiveVoice.speak(voice.testText, voice.name, {
+      rate: voice.name.includes('Male') ? 0.85 : 0.9,
+      pitch: voice.name.includes('Male') ? 0.9 : 1.0,
+      volume: 0.9,
+      onstart: () => console.log('🎵 Testing voice:', voice.name),
+      onend: () => console.log('🎵 Voice test completed'),
+      onerror: (e: any) => console.error('❌ Voice test error:', e)
+    });
+  };
 
   // Gallery state for story images
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -81,6 +173,20 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   // If no images, use sample.png
   const finalStoryImages = safeStoryImages.length > 0 ? safeStoryImages : ['/images/sample.png'];
   console.log('ChatScreen - storyId:', storyId, 'story:', story);
+
+  // Close voice selector when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showVoiceSelector) {
+        setShowVoiceSelector(false);
+      }
+    };
+
+    if (showVoiceSelector) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showVoiceSelector]);
 
   // Initialize sample stories and get story data
   useEffect(() => {
@@ -844,10 +950,55 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                               {characterName}
                             </div>
                             <div className="bg-[rgba(59,59,60,0.8)] flex items-center gap-[3px] px-1.5 py-1 rounded-[10px]">
-                              <div className="relative shrink-0 size-[11.99px]">
-                                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 12 12">
-                                  <path d="M11.0814 9.01671L9.60541 8.1643C9.58116 8.15041 9.55441 8.14144 9.52669 8.13789C9.49897 8.13435 9.47083 8.1363 9.44386 8.14363C9.4169 8.15096 9.39164 8.16353 9.36953 8.18062C9.34743 8.19772 9.3289 8.219 9.31502 8.24325L9.04873 8.70492C8.98985 8.80662 9.02464 8.93776 9.12634 8.99664L10.6023 9.84905C10.6266 9.86294 10.6533 9.87191 10.6811 9.87546C10.7088 9.879 10.7369 9.87706 10.7639 9.86973C10.7909 9.86239 10.8161 9.84982 10.8382 9.83273C10.8603 9.81564 10.8788 9.79435 10.8927 9.7701L11.159 9.30843C11.2179 9.20673 11.1818 9.07559 11.0814 9.01671Z" fill="white" fillOpacity="0.8"/>
-                                </svg>
+                              <div className="relative">
+                                <button 
+                                  onClick={() => handleTTS(msg.content)}
+                                  onContextMenu={(e) => {
+                                    e.preventDefault();
+                                    setShowVoiceSelector(!showVoiceSelector);
+                                  }}
+                                  className="relative shrink-0 size-[11.99px] hover:scale-110 transition-transform cursor-pointer"
+                                  title="클릭: 음성 재생 | 우클릭: 음성 선택"
+                                >
+                                  <Volume2 className="block size-full text-white/80" />
+                                </button>
+                                
+                                {/* Voice Selector Dropdown */}
+                                {showVoiceSelector && (
+                                  <div className="absolute bottom-full left-0 mb-2 bg-[rgba(40,40,40,0.95)] backdrop-blur-sm rounded-lg border border-[rgba(255,255,255,0.1)] p-2 min-w-[200px] z-50">
+                                    <div className="text-white/90 text-[10px] font-medium mb-2 px-1">음성 선택</div>
+                                    {voiceOptions.map((voice) => (
+                                      <div
+                                        key={voice.id}
+                                        className={`flex items-center justify-between px-2 py-1 rounded text-[9px] transition-colors ${
+                                          currentVoice === voice.name
+                                            ? 'bg-[rgba(11,147,246,0.6)] text-white'
+                                            : 'text-white/70 hover:bg-[rgba(255,255,255,0.1)] hover:text-white'
+                                        }`}
+                                      >
+                                        <button
+                                          onClick={() => {
+                                            setCurrentVoice(voice.name);
+                                            setShowVoiceSelector(false);
+                                          }}
+                                          className="flex-1 text-left"
+                                        >
+                                          {voice.label}
+                                        </button>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleTestVoice(voice);
+                                          }}
+                                          className="ml-2 p-1 rounded hover:bg-[rgba(255,255,255,0.2)] transition-colors"
+                                          title="테스트 재생"
+                                        >
+                                          <Play className="w-3 h-3" />
+                                        </button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                               <div className="text-[rgba(255,255,255,0.8)] text-[9.688px] font-medium leading-[10px]">
                                 12P

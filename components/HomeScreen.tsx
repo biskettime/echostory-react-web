@@ -178,8 +178,8 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
           .toLowerCase()
           .replace(/^./, str => str.toUpperCase());
         
-        // Try to find character image
-        for (let i = 1; i <= 10; i++) {
+        // Try to find character image (limit to 5 to reduce 404 errors)
+        for (let i = 1; i <= 5; i++) {
           const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
           try {
             const response = await fetch(imagePath, { method: 'HEAD' });
@@ -188,7 +188,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
               return;
             }
           } catch (error) {
-            // Continue to next image
+            // Continue to next image silently
           }
         }
         
@@ -268,22 +268,30 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        {/* Main Banner */}
+        {/* Featured Stories Banner */}
         <div className="mx-4 mt-4 mb-4">
           <div 
-            className="relative cursor-pointer group overflow-hidden rounded-xl bg-gradient-to-r from-purple-600/30 to-blue-600/30 h-[160px]"
+            className="relative cursor-pointer group overflow-hidden rounded-xl h-[160px]"
             onClick={() => onStorySelect(1)}
+            style={{
+              backgroundImage: 'url(/data/amazing.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
+            }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/30">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/50">
               <div className="absolute bottom-4 left-4 right-4">
-                <h3 className="text-white text-lg font-bold mb-1">
+                <h3 className="text-white text-lg font-bold mb-1 drop-shadow-lg">
                   Featured Stories
                 </h3>
-                <p className="text-white/80 text-sm">
+                <p className="text-white/90 text-sm drop-shadow-md">
                   Discover amazing characters and immersive storylines
                 </p>
               </div>
             </div>
+            {/* Hover effect */}
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         </div>
 

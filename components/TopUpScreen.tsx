@@ -15,22 +15,22 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
   const [showTopUpModal, setShowTopUpModal] = useState(false);
 
   const pointPackages = [
-    { id: 1, points: 100, price: 1100, popular: false },
-    { id: 2, points: 500, price: 5500, popular: true, bonus: 50 },
-    { id: 3, points: 1000, price: 11000, popular: false, bonus: 150 },
-    { id: 4, points: 2000, price: 22000, popular: false, bonus: 400 },
-    { id: 5, points: 5000, price: 55000, popular: false, bonus: 1200 },
-    { id: 6, points: 10000, price: 110000, popular: false, bonus: 3000 },
+    { id: 1, points: 100, price: 0.99, popular: false },
+    { id: 2, points: 500, price: 4.99, popular: true, bonus: 50 },
+    { id: 3, points: 1000, price: 9.99, popular: false, bonus: 150 },
+    { id: 4, points: 2000, price: 19.99, popular: false, bonus: 400 },
+    { id: 5, points: 5000, price: 49.99, popular: false, bonus: 1200 },
+    { id: 6, points: 10000, price: 99.99, popular: false, bonus: 3000 },
   ];
 
   const recentTransactions = [
-    { id: 1, points: 1000, amount: 11000, date: '2024-01-15', status: 'Completed' },
-    { id: 2, points: 500, amount: 5500, date: '2024-01-10', status: 'Completed' },
-    { id: 3, points: 100, amount: 1100, date: '2024-01-05', status: 'Completed' },
+    { id: 1, points: 1000, amount: 9.99, date: '2024-01-15', status: 'Completed' },
+    { id: 2, points: 500, amount: 4.99, date: '2024-01-10', status: 'Completed' },
+    { id: 3, points: 100, amount: 0.99, date: '2024-01-05', status: 'Completed' },
   ];
 
   const handlePurchase = (points: number, amount: number) => {
-    console.log(`Purchased ${points} points for ₩${amount}`);
+    console.log(`Purchased ${points} points for $${amount}`);
     // Handle purchase logic here
   };
 
@@ -115,7 +115,7 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
                     )}
                   </div>
                   <div className="text-white/60 text-sm">
-                    ₩{pkg.price.toLocaleString()}
+                    ${pkg.price.toFixed(2)}
                   </div>
                   {pkg.bonus && (
                     <div className="text-[#ff9500] text-xs">
@@ -152,7 +152,7 @@ export function TopUpScreen({ onBack }: TopUpScreenProps) {
                   </div>
                   <div className="text-right space-y-1">
                     <div className="text-white/60 text-sm">
-                      ₩{transaction.amount.toLocaleString()}
+                      ${transaction.amount.toFixed(2)}
                     </div>
                     <Badge 
                       variant="secondary" 

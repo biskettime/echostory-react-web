@@ -20,12 +20,12 @@ export function TopUpModal({ isOpen, onClose, currentPoints, onPointsPurchase }:
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'kakaopay' | 'toss'>('card');
 
   const pointPackages: PointPackage[] = [
-    { points: 100, price: 1100 },
-    { points: 500, price: 5500, bonus: 50 },
-    { points: 1000, price: 11000, bonus: 150, popular: true },
-    { points: 2000, price: 22000, bonus: 400 },
-    { points: 5000, price: 55000, bonus: 1200 },
-    { points: 10000, price: 110000, bonus: 3000 },
+    { points: 100, price: 0.99 },
+    { points: 500, price: 4.99, bonus: 50 },
+    { points: 1000, price: 9.99, bonus: 150, popular: true },
+    { points: 2000, price: 19.99, bonus: 400 },
+    { points: 5000, price: 49.99, bonus: 1200 },
+    { points: 10000, price: 99.99, bonus: 3000 },
   ];
 
   const handlePurchase = () => {
@@ -111,7 +111,7 @@ export function TopUpModal({ isOpen, onClose, currentPoints, onPointsPurchase }:
                       )}
                     </div>
                     <div className="text-[#aaaaaa] text-sm">
-                      ₩{pkg.price.toLocaleString()}
+                      ${pkg.price.toFixed(2)}
                     </div>
                     {pkg.bonus && (
                       <div className="text-[#ff9500] text-xs mt-1">
@@ -209,7 +209,7 @@ export function TopUpModal({ isOpen, onClose, currentPoints, onPointsPurchase }:
                 <div className="flex justify-between">
                   <span className="text-[#ffffff] font-medium">결제 금액</span>
                   <span className="text-[#ffffff] font-bold">
-                    ₩{selectedPackage.price.toLocaleString()}
+                    ${selectedPackage.price.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -224,7 +224,7 @@ export function TopUpModal({ isOpen, onClose, currentPoints, onPointsPurchase }:
               onClick={handlePurchase}
               className="w-full bg-[#dc5903] hover:bg-[#e6850e] text-white py-3 rounded-lg font-medium transition-colors shadow-[0px_2px_0px_0px_rgba(180,60,0,0.15)]"
             >
-              ₩{selectedPackage.price.toLocaleString()} 결제하기
+              ${selectedPackage.price.toFixed(2)} 결제하기
             </button>
           )}
           
