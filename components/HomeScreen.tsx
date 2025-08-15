@@ -161,10 +161,48 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
   };
 
   const StoryImage = ({ story, className }: { story: CreatedStoryData; className: string }) => {
+    const [imageSrc, setImageSrc] = useState<string>(getStoryThumbnailWithFallback(story));
+    
+    useEffect(() => {
+      const loadCharacterImage = async () => {
+        if (!story?.content.characterName) {
+          setImageSrc(getStoryThumbnailWithFallback(story));
+          return;
+        }
+        
+        const characterName = story.content.characterName;
+        const firstName = characterName.split(' ')[0];
+        const sanitizedName = firstName
+          .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+          .replace(/\s+/g, '_')
+          .toLowerCase()
+          .replace(/^./, str => str.toUpperCase());
+        
+        // Try to find character image
+        for (let i = 1; i <= 10; i++) {
+          const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
+          try {
+            const response = await fetch(imagePath, { method: 'HEAD' });
+            if (response.ok) {
+              setImageSrc(imagePath);
+              return;
+            }
+          } catch (error) {
+            // Continue to next image
+          }
+        }
+        
+        // No character image found, use story thumbnail
+        setImageSrc(getStoryThumbnailWithFallback(story));
+      };
+      
+      loadCharacterImage();
+    }, [story]);
+    
     return (
       <div className="relative">
         <img
-          src={getStoryThumbnailWithFallback(story)}
+          src={imageSrc}
           alt={story.title}
           className={className}
           loading="lazy"

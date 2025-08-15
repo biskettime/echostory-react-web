@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import svgPaths from "../imports/svg-3c8wh35w53";
 import { saveStory, saveStoryDraft, StoryFormData, getDraft, getStory, autoSaveStoryDraft } from '../data/stories';
+import { saveCharacterImage, getNextAvailableImageNumber } from '../utils/imageUtils';
 
 interface StoryCreationScreenProps {
   onBack: () => void;
@@ -333,12 +334,45 @@ interface TabPanelProps {
 function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProps) {
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
+    if (files && formData.characterName) {
       const newImages: string[] = [];
       
       for (const file of Array.from(files)) {
         try {
-          // 파일을 Base64로 변환
+          // 캐릭터 이미지를 data/ch_img 폴더에 저장
+          const nextImageNumber = await getNextAvailableImageNumber(formData.characterName);
+          
+          try {
+            // 서버에 이미지 저장 시도
+            const savedPath = await saveCharacterImage(file, formData.characterName, nextImageNumber);
+            newImages.push(savedPath);
+          } catch (saveError) {
+            console.warn('서버 저장 실패, Base64로 폴백:', saveError);
+            // 서버 저장 실패 시 Base64로 폴백
+            const base64 = await convertFileToBase64(file);
+            newImages.push(base64);
+          }
+        } catch (error) {
+          console.error('이미지 처리 실패:', error);
+          // 최후의 수단으로 Base64 변환 시도
+          try {
+            const base64 = await convertFileToBase64(file);
+            newImages.push(base64);
+          } catch (base64Error) {
+            console.error('Base64 변환도 실패:', base64Error);
+          }
+        }
+      }
+      
+      if (newImages.length > 0) {
+        onInputChange('storyImages', [...formData.storyImages, ...newImages]);
+      }
+    } else if (files && !formData.characterName) {
+      // 캐릭터 이름이 없으면 기존 방식으로 처리
+      const newImages: string[] = [];
+      
+      for (const file of Array.from(files)) {
+        try {
           const base64 = await convertFileToBase64(file);
           newImages.push(base64);
         } catch (error) {

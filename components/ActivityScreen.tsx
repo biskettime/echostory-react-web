@@ -5,6 +5,7 @@ import { getActiveChatSessions, getRelativeTime, ChatSession } from '../data/cha
 import { getStory } from '../data/stories';
 import { getAllCreators } from '../data/stories/creatorData';
 import { CreatorProfileModal } from './CreatorProfileModal';
+import { CharacterImage } from './CharacterImage';
 
 type ActivityTab = 'chat' | 'album' | 'favorites' | 'likes' | 'creator';
 
@@ -586,7 +587,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                         <img
                           src={session.characterImage}
                           alt={session.characterName}
-                          className="w-12 h-12 rounded-full bg-gray-600"
+                          className="w-12 h-12 rounded-full bg-gray-600 object-cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.src = '/images/sample.png';

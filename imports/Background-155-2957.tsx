@@ -117,7 +117,7 @@ function Container4() {
       style={{ top: "calc(50% + 0.065px)" }}
     >
       <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.8)] text-left text-nowrap">
-        <p className="block leading-[18.86px] whitespace-pre">소설 모드</p>
+        <p className="block leading-[18.86px] whitespace-pre">Novel Mode</p>
       </div>
     </div>
   );
@@ -131,7 +131,7 @@ function Container5() {
       style={{ top: "calc(50% + 0.065px)" }}
     >
       <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.8)] text-left text-nowrap">
-        <p className="block leading-[18.86px] whitespace-pre">대화 모드</p>
+        <p className="block leading-[18.86px] whitespace-pre">Chat Mode</p>
       </div>
     </div>
   );

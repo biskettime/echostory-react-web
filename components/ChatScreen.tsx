@@ -8,6 +8,7 @@ import { ChatSettingsModal } from './ChatSettingsModal';
 import { VoiceSettingsModal } from './VoiceSettingsModal';
 import { ProfileEditModal } from './ProfileEditModal';
 import { PointsGuideModal } from './PointsGuideModal';
+import { CharacterBackground } from './CharacterImage';
 import { Redo, Edit3, Send, Star, Home } from 'lucide-react';
 import svgPaths from '../imports/svg-c6g2wd331h';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
@@ -40,6 +41,7 @@ interface Suggestion {
 }
 
 export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
+  console.log('🚀 ChatScreen mounted with storyId:', storyId);
   const [message, setMessage] = useState('');
   const [isStoryMode, setIsStoryMode] = useState(false);
   const [showFirstMessage, setShowFirstMessage] = useState(false);
@@ -138,6 +140,68 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   }
   
   const characterName = story.content.characterName || story.title || 'Character';
+  
+  // 캐릭터 이미지 동적 로딩
+  const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
+  
+  // 캐릭터 이미지 상태 변경 시 로그 출력
+  useEffect(() => {
+    console.log('🖼️ Character image src changed:', characterImageSrc);
+  }, [characterImageSrc]);
+  
+  useEffect(() => {
+    const loadCharacterImage = async () => {
+      console.log('=== CHARACTER IMAGE LOADING DEBUG ===');
+      console.log('Original characterName:', characterName);
+      
+      if (!characterName) {
+        console.log('No character name provided');
+        return;
+      }
+      
+      // 캐릭터 이름을 파일명에 적합하게 변환
+      // 전체 이름에서 첫 번째 이름만 사용 (예: "Yuki Tanaka" → "Yuki")
+      const firstName = characterName.split(' ')[0];
+      console.log('First name extracted:', firstName);
+      
+      const sanitizedName = firstName
+        .replace(/[^a-zA-Z0-9가-힣]/g, '_')
+        .replace(/\s+/g, '_')
+        // 첫 글자는 대문자, 나머지는 소문자로 변환 (파일명 형식에 맞춤)
+        .toLowerCase()
+        .replace(/^./, str => str.toUpperCase());
+      
+      console.log('Sanitized name for file:', sanitizedName);
+      
+      // 1-10번 이미지 중 존재하는 첫 번째 이미지 찾기
+      for (let i = 1; i <= 10; i++) {
+        const imagePath = `/data/ch_img/${sanitizedName}_${i}.png`;
+        console.log(`Trying image path: ${imagePath}`);
+        
+        try {
+          const response = await fetch(imagePath, { method: 'HEAD' });
+          console.log(`Response for ${imagePath}:`, response.status, response.ok);
+          
+          if (response.ok) {
+            console.log('✅ Found character image:', imagePath);
+            setCharacterImageSrc(imagePath);
+            return;
+          }
+        } catch (error) {
+          console.log(`❌ Error fetching ${imagePath}:`, error);
+        }
+      }
+      
+      // 캐릭터 이미지가 없으면 스토리 이미지나 기본 이미지 사용
+      const fallbackImage = (finalStoryImages[0] && !finalStoryImages[0].includes('character-')) 
+        ? finalStoryImages[0] 
+        : '/images/sample.png';
+      console.log('❌ No character image found, using fallback:', fallbackImage);
+      setCharacterImageSrc(fallbackImage);
+    };
+    
+    loadCharacterImage();
+  }, [characterName, finalStoryImages]);
 
   // Story mode paragraphs - All in English
   const [storyParagraphs, setStoryParagraphs] = useState<StoryParagraph[]>([
@@ -191,8 +255,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     ];
   });
 
-  // Use story-specific background image
-  const backgroundImage = story?.media?.thumbnailImage || story?.media?.storyImages?.[0] || imgThumbnail;
+  // Use character-specific background image, fallback to story image
+  const backgroundImage = characterImageSrc || story?.media?.thumbnailImage || story?.media?.storyImages?.[0] || imgThumbnail;
 
   // Scroll to bottom (with debounce) - Keep messages at bottom
   useEffect(() => {
@@ -611,7 +675,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           <span className={`text-[12px] font-medium whitespace-nowrap transition-colors duration-200 ${
             isStoryMode ? 'text-white' : 'text-[rgba(255,255,255,0.7)]'
           }`}>
-            소설 모드
+            Novel Mode
           </span>
           
           {/* Ant Design Style Switch */}
@@ -640,8 +704,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
             
             {/* Inner content (hidden but maintains structure) */}
             <span className="sr-only">
-              <span className={!isStoryMode ? 'block' : 'hidden'}>대화 모드 활성</span>
-              <span className={isStoryMode ? 'block' : 'hidden'}>소설 모드 활성</span>
+              <span className={!isStoryMode ? 'block' : 'hidden'}>Chat Mode Active</span>
+              <span className={isStoryMode ? 'block' : 'hidden'}>Novel Mode Active</span>
             </span>
           </button>
           
@@ -649,7 +713,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           <span className={`text-[12px] font-medium whitespace-nowrap transition-colors duration-200 ${
             !isStoryMode ? 'text-white' : 'text-[rgba(255,255,255,0.7)]'
           }`}>
-            대화 모드
+            Chat Mode
           </span>
         </div>
       </div>
@@ -759,9 +823,16 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                       <div className="flex items-start gap-[7px] max-w-[400px] min-w-[400px]">
                         {/* Character Avatar */}
                         <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
-                          <div 
-                            className="bg-no-repeat bg-size-[100%_150%] bg-top-left rounded-[14.5px] shrink-0 size-[28.99px]"
-                            style={{ backgroundImage: `url('${story?.media?.storyImages?.[0] || story?.media?.thumbnailImage || imgThumbnail}')` }}
+                                                  <img 
+                            src={characterImageSrc || story?.media?.storyImages?.[0] || story?.media?.thumbnailImage || imgThumbnail}
+                            alt="Character avatar"
+                            className="rounded-[14.5px] shrink-0 size-[28.99px] object-cover"
+                            onLoad={() => console.log('✅ Character image loaded in message:', characterImageSrc)}
+                            onError={(e) => {
+                              console.log('❌ Character image failed to load in message:', characterImageSrc);
+                              const target = e.target as HTMLImageElement;
+                              target.src = '/images/sample.png';
+                            }}
                           />
                         </div>
                         
@@ -803,14 +874,20 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                   <div className="flex justify-start pt-1.5">
                     <div className="flex items-start gap-[7px] max-w-[400px] min-w-[400px]">
                       <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
-                        <div 
-                          className="bg-no-repeat bg-size-[100%_150%] bg-top-left rounded-[14.5px] shrink-0 size-[28.99px]"
-                          style={{ 
-                            backgroundImage: `url('${
-                              (finalStoryImages[0] && !finalStoryImages[0].includes('character-')) 
-                                ? finalStoryImages[0] 
-                                : '/images/sample.png'
-                            }')` 
+                        <img 
+                          src={
+                            characterImageSrc || 
+                            (finalStoryImages[0] && !finalStoryImages[0].includes('character-')) 
+                              ? finalStoryImages[0] 
+                              : '/images/sample.png'
+                          }
+                          alt="Character avatar"
+                          className="rounded-[14.5px] shrink-0 size-[28.99px] object-cover"
+                          onLoad={() => console.log('✅ Character image loaded in first message:', characterImageSrc)}
+                          onError={(e) => {
+                            console.log('❌ Character image failed to load in first message:', characterImageSrc);
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/images/sample.png';
                           }}
                         />
                       </div>
