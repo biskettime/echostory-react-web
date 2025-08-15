@@ -886,8 +886,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
               ) : (
                 <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                   <Image className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                  <p className="text-gray-400 text-lg mb-2">No unlocked albums</p>
-                  <p className="text-gray-500 text-sm">Chat with characters to unlock 2 or more photos!</p>
+                  <p className="text-gray-400 text-lg mb-2">{t('activity.noUnlockedAlbums')}</p>
+                  <p className="text-gray-500 text-sm">{t('activity.chatToUnlock2OrMorePhotos')}</p>
                 </div>
               )}
             </div>
@@ -926,8 +926,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
                           <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
               <Bookmark className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-              <p className="text-gray-400 text-lg mb-2">No favorite stories</p>
-              <p className="text-gray-500 text-sm">Try tapping the bookmark icon on story detail pages</p>
+              <p className="text-gray-400 text-lg mb-2">{t('activity.noFavoriteStories')}</p>
+              <p className="text-gray-500 text-sm">{t('activity.tryTappingBookmarkIcon')}</p>
             </div>
             )}
           </div>
@@ -965,8 +965,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
             ) : (
                           <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
               <Heart className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-              <p className="text-gray-400 text-lg mb-2">No liked stories</p>
-              <p className="text-gray-500 text-sm">Try tapping the heart icon on story detail pages</p>
+              <p className="text-gray-400 text-lg mb-2">{t('activity.noLikedStories')}</p>
+              <p className="text-gray-500 text-sm">{t('activity.tryTappingHeartIcon')}</p>
             </div>
             )}
           </div>
@@ -1072,8 +1072,8 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
                 return (
                   <div className="flex-1 flex flex-col justify-center items-center px-4 pt-60">
                     <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
-                    <p className="text-gray-400 text-lg mb-2">No followed creators</p>
-                    <p className="text-gray-500 text-sm">Follow creators you like</p>
+                    <p className="text-gray-400 text-lg mb-2">{t('activity.noFollowedCreators')}</p>
+                    <p className="text-gray-500 text-sm">{t('activity.followCreatorsYouLike')}</p>
                   </div>
                 );
               }

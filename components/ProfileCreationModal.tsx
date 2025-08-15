@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 import svgPaths from "../imports/svg-zujabktrkg";
 
 interface ProfileCreationModalProps {
@@ -12,6 +13,7 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
   const [name, setName] = useState('');
   const [info, setInfo] = useState('');
   const [mounted, setMounted] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -27,6 +29,16 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
       };
     }
   }, [isOpen]);
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
 
   if (!isOpen || !mounted) return null;
 
@@ -81,7 +93,7 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
           
           {/* Header */}
           <div className="mb-6">
-            <h2 className="text-white text-lg font-semibold">Add New Profile</h2>
+            <h2 className="text-white text-lg font-semibold">{t('profile.addNewProfile')}</h2>
           </div>
 
           {/* Form Content */}
@@ -91,12 +103,12 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
             <div className="space-y-2">
               {/* Label */}
               <label htmlFor="name" className="text-white text-sm font-medium">
-                Name
+                {t('profile.name')}
               </label>
               
               {/* Description */}
               <p className="text-[#999999] text-xs leading-relaxed">
-                The name the character will call you
+                {t('profile.nameDescription')}
               </p>
 
               {/* Input Field */}
@@ -106,7 +118,7 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name"
+                  placeholder={t('profile.enterYourName')}
                   className="w-full bg-[#141414] border border-[#424242] rounded-md px-3 py-2.5 text-white text-sm placeholder:text-[#666666] focus:border-[#dc5903] focus:ring-1 focus:ring-[#dc5903]/30 transition-all duration-200 outline-none pr-16"
                   maxLength={20}
                 />
@@ -120,12 +132,12 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
             <div className="space-y-2">
               {/* Label */}
               <label htmlFor="info" className="text-white text-sm font-medium">
-                My Information
+                {t('profile.myInformation')}
               </label>
               
               {/* Description */}
               <p className="text-[#999999] text-xs leading-relaxed">
-                Information about yourself that the character will recognize
+                {t('profile.myInfoDescription')}
               </p>
 
               {/* Textarea Field */}
@@ -134,7 +146,7 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
                   id="info"
                   value={info}
                   onChange={(e) => setInfo(e.target.value)}
-                  placeholder="Enter your gender, age, and other information that the character should know about you for more natural conversations."
+                  placeholder={t('profile.myInfoPlaceholder')}
                   className="w-full bg-[#141414] border border-[#424242] rounded-md px-3 py-2.5 text-white text-sm placeholder:text-[#666666] resize-none focus:border-[#dc5903] focus:ring-1 focus:ring-[#dc5903]/30 transition-all duration-200 outline-none"
                   maxLength={1000}
                   rows={4}
@@ -152,7 +164,7 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
               onClick={handleCancel}
               className="bg-[#141414] border border-[#424242] rounded-md px-4 py-2 text-white text-sm hover:bg-[#1a1a1a] transition-colors"
             >
-              Cancel
+              {t('profile.cancel')}
             </button>
             
             <button
@@ -160,7 +172,7 @@ export function ProfileCreationModal({ isOpen, onClose, onCreateProfile }: Profi
               disabled={!name.trim()}
               className="bg-[#dc5903] rounded-md px-4 py-2 text-white text-sm hover:bg-[#e6850e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg"
             >
-              Add
+              {t('profile.add')}
             </button>
           </div>
         </div>

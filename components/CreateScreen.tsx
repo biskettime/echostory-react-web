@@ -77,7 +77,7 @@ export function CreateScreen({ onBack, onNavigateToStoryCreation, onNavigateToIn
                 : 'text-[rgba(255,255,255,0.7)] hover:text-white'
             }`}
           >
-            Image Generation
+{t('create.imageGeneration')}
             {activeTab === 'images' && (
               <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#dc5903]" />
             )}

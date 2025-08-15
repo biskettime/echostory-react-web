@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
+import { t, addLanguageChangeListener, removeLanguageChangeListener, getCurrentLanguage } from '../utils/i18n';
+import { translateCharacterName, translateStorySettingsContent, translateCharacterDescriptionContent } from '../utils/storyTranslation';
 import svgPaths from "../imports/svg-dzkl73gmd9";
 
 interface StoryEditModalProps {
@@ -15,27 +16,57 @@ interface StoryEditModalProps {
     characterName: string;
     characterDescription: string;
   };
+  storyTitle: string;
 }
 
-export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEditModalProps) {
-  const [storySetting, setStorySetting] = useState(storyData.storySetting);
-  const [characterName, setCharacterName] = useState(storyData.characterName);
-  const [characterDescription, setCharacterDescription] = useState(storyData.characterDescription);
+export function StoryEditModal({ isOpen, onClose, onSave, storyData, storyTitle }: StoryEditModalProps) {
+  const [storySetting, setStorySetting] = useState('');
+  const [characterName, setCharacterName] = useState('');
+  const [characterDescription, setCharacterDescription] = useState('');
   const [forceUpdate, setForceUpdate] = useState(0);
+
+  // Initialize with translated content based on current language
+  useEffect(() => {
+    const currentLang = getCurrentLanguage();
+    if (currentLang === 'en') {
+      setStorySetting(storyData.storySetting);
+      setCharacterName(storyData.characterName);
+      setCharacterDescription(storyData.characterDescription);
+    } else {
+      setStorySetting(translateStorySettingsContent(storyTitle, storyData.storySetting));
+      setCharacterName(translateCharacterName(storyData.characterName));
+      setCharacterDescription(translateCharacterDescriptionContent(storyTitle, storyData.characterDescription));
+    }
+  }, [storyData, storyTitle, isOpen]);
 
   // Language change listener
   useEffect(() => {
     const handleLanguageChange = () => {
+      const currentLang = getCurrentLanguage();
+      if (currentLang === 'en') {
+        setStorySetting(storyData.storySetting);
+        setCharacterName(storyData.characterName);
+        setCharacterDescription(storyData.characterDescription);
+      } else {
+        setStorySetting(translateStorySettingsContent(storyTitle, storyData.storySetting));
+        setCharacterName(translateCharacterName(storyData.characterName));
+        setCharacterDescription(translateCharacterDescriptionContent(storyTitle, storyData.characterDescription));
+      }
       setForceUpdate(prev => prev + 1);
     };
 
     addLanguageChangeListener(handleLanguageChange);
     return () => removeLanguageChangeListener(handleLanguageChange);
-  }, []);
+  }, [storyData, storyTitle]);
 
   if (!isOpen) return null;
 
   const handleSave = () => {
+    const currentLang = getCurrentLanguage();
+    
+    // If in Korean mode, we need to save the original English data
+    // For now, we'll save the edited content as-is since reverse translation is complex
+    // In a real implementation, you might want to maintain both original and translated versions
     onSave({
       storySetting: storySetting.trim(),
       characterName: characterName.trim(),
@@ -44,10 +75,17 @@ export function StoryEditModal({ isOpen, onClose, onSave, storyData }: StoryEdit
   };
 
   const handleCancel = () => {
-    // Reset to original data
-    setStorySetting(storyData.storySetting);
-    setCharacterName(storyData.characterName);
-    setCharacterDescription(storyData.characterDescription);
+    // Reset to original translated data based on current language
+    const currentLang = getCurrentLanguage();
+    if (currentLang === 'en') {
+      setStorySetting(storyData.storySetting);
+      setCharacterName(storyData.characterName);
+      setCharacterDescription(storyData.characterDescription);
+    } else {
+      setStorySetting(translateStorySettingsContent(storyTitle, storyData.storySetting));
+      setCharacterName(translateCharacterName(storyData.characterName));
+      setCharacterDescription(translateCharacterDescriptionContent(storyTitle, storyData.characterDescription));
+    }
     onClose();
   };
 

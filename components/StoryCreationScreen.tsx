@@ -197,7 +197,7 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
             <div aria-hidden="true" className="absolute border border-[#424242] border-solid inset-0 pointer-events-none rounded-md shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]" />
             <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
               <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-center text-nowrap">
-                <p className="block leading-[normal] whitespace-pre">Save Draft</p>
+                <p className="block leading-[normal] whitespace-pre">{t('create.draft')}</p>
               </div>
             </div>
           </button>
@@ -209,7 +209,7 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
           >
             <div className="box-border content-stretch flex flex-col items-center justify-start p-0 relative shrink-0">
               <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.234px] text-center text-nowrap">
-                <p className="block leading-[normal] whitespace-pre">Publish</p>
+                <p className="block leading-[normal] whitespace-pre">{t('create.published')}</p>
               </div>
             </div>
           </button>
@@ -491,7 +491,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[80px]">
-                  <p className="block leading-[22px]">Story Settings</p>
+                  <p className="block leading-[22px]">{t('storyDetail.storySettingsLabel')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
@@ -614,7 +614,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[80px]">
-                  <p className="block leading-[22px]">Character Name</p>
+                  <p className="block leading-[22px]">{t('storyDetail.characterNameLabel')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
@@ -672,7 +672,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[100px]">
-                  <p className="block leading-[22px]">Character Description</p>
+                  <p className="block leading-[22px]">{t('storyDetail.characterDescriptionLabel')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
@@ -730,8 +730,8 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
-                  <p className="block mb-0">Upload or generate images for your story (optional).</p>
-                  <p className="block">These will be shown to users browsing stories.</p>
+                  <p className="block mb-0">{t('create.storyImagesDesc1')}</p>
+                  <p className="block">{t('create.storyImagesDesc2')}</p>
                 </div>
               </div>
             </div>

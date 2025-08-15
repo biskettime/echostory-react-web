@@ -3,6 +3,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Heart, Bookmark } from 'lucide-re
 import { getStory, initializeSampleStories, getCreatorById, updateStory } from '../data/stories';
 import { ProfileCreationModal } from './ProfileCreationModal';
 import { StoryEditModal } from './StoryEditModal';
+import { ProfileEditModal } from './ProfileEditModal';
 import { CreatorProfileModal } from './CreatorProfileModal';
 import { SafetyToggle } from './SafetyToggle';
 import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
@@ -38,6 +39,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   const [selectedProfileId, setSelectedProfileId] = useState('default');
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showProfileEditModal, setShowProfileEditModal] = useState(false);
   const [showStoryEditModal, setShowStoryEditModal] = useState(false);
   const [showCreatorProfile, setShowCreatorProfile] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -469,6 +471,42 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
       setSelectedProfileId(profileId);
     }
     setShowProfileDropdown(false);
+  };
+
+  const handleProfileEdit = () => {
+    setShowProfileEditModal(true);
+  };
+
+  const handleProfileEditSave = (nickname: string, info: string) => {
+    // Update the selected profile
+    const updatedProfiles = profiles.map(profile => 
+      profile.id === selectedProfileId 
+        ? { ...profile, name: nickname, info: info }
+        : profile
+    );
+    setProfiles(updatedProfiles);
+    setShowProfileEditModal(false);
+  };
+
+  const handleProfileDelete = () => {
+    // Don't allow deleting the default profile if it's the only one
+    if (profiles.length <= 1) {
+      alert(t('profile.cannotDeleteLastProfile'));
+      return;
+    }
+
+    // Show confirmation dialog
+    const confirmMessage = t('profile.deleteProfileConfirm');
+    if (confirm(confirmMessage)) {
+      // Remove the selected profile
+      const updatedProfiles = profiles.filter(profile => profile.id !== selectedProfileId);
+      setProfiles(updatedProfiles);
+      
+      // Select the first remaining profile
+      if (updatedProfiles.length > 0) {
+        setSelectedProfileId(updatedProfiles[0].id);
+      }
+    }
   };
 
   const handleStoryEdit = () => {
@@ -1026,7 +1064,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                           }}
                           className="w-full px-3 py-2 text-left text-[#ff9500] text-[13.234px] hover:bg-[#404041] transition-colors border-t border-[#4a4a4a] mt-1 pt-2"
                         >
-                          + New Chat Profile
+{t('profile.newChatProfile')}
                         </button>
                       </div>
                     )}
@@ -1036,13 +1074,16 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                 {/* Action Buttons */}
                 <div className="flex gap-3">
                   <button
-                    onClick={handleStoryEdit}
+                    onClick={handleProfileEdit}
                     className="bg-[#3a3a3a] border border-[#4a4a4a] rounded-md px-4 h-8 hover:bg-[#404040] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]"
                   >
                     <span className="text-white text-[13.234px] font-medium">{t('storyDetail.edit')}</span>
                   </button>
                   
-                  <button className="bg-[#3a3a3a] border border-[#4a4a4a] rounded-md px-4 h-8 hover:bg-[#404040] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]">
+                  <button 
+                    onClick={handleProfileDelete}
+                    className="bg-[#3a3a3a] border border-[#4a4a4a] rounded-md px-4 h-8 hover:bg-[#404040] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]"
+                  >
                     <span className="text-white text-[13.234px] font-medium">{t('storyDetail.delete')}</span>
                   </button>
                 </div>
@@ -1107,7 +1148,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             <div className="flex items-center px-[15px] py-3 gap-2.5">
               {/* Edit Button */}
               <button
-                onClick={handleStoryEdit}
+                onClick={handleProfileEdit}
                 className="bg-[rgba(255,255,255,0.1)] border border-[#444444] rounded-lg w-10 h-10 flex items-center justify-center hover:bg-[rgba(255,255,255,0.15)] transition-colors shadow-[0px_2px_0px_0px_rgba(255,255,255,0.04)]"
               >
                 <svg className="w-[13.99px] h-[13.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
@@ -1139,6 +1180,17 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
           />
         )}
 
+        {/* Profile Edit Modal */}
+        {showProfileEditModal && selectedProfile && (
+          <ProfileEditModal
+            onClose={() => setShowProfileEditModal(false)}
+            onBack={() => setShowProfileEditModal(false)}
+            currentNickname={selectedProfile.name}
+            currentInfo={selectedProfile.info}
+            onSave={handleProfileEditSave}
+          />
+        )}
+
         {/* Story Edit Modal */}
         {showStoryEditModal && (
           <StoryEditModal
@@ -1146,6 +1198,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             onClose={() => setShowStoryEditModal(false)}
             onSave={handleStoryEditSave}
             storyData={storyEditData}
+            storyTitle={story?.title || ''}
           />
         )}
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Pencil, Calendar, Heart, MessageSquare, Eye, Play, Trash2 } from 'lucide-react';
 import { PlayUnavailableModal } from './PlayUnavailableModal';
 import { getAllStories, getUserDrafts, deleteStory, deleteDraft, CreatedStoryData, StoryDraft } from '../data/stories';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 
 interface StoryCreationTabProps {
   onNavigateToStoryCreation: () => void;
@@ -25,10 +26,21 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
   const [showPlayModal, setShowPlayModal] = useState(false);
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   // Load user's stories and drafts
   useEffect(() => {
     loadUserStories();
+  }, []);
+
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
   }, []);
 
   const loadUserStories = async () => {
@@ -109,10 +121,10 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
     
-    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    return 'just now';
+    if (days > 0) return `${days} ${days > 1 ? t('create.daysAgo') : t('create.dayAgo')}`;
+    if (hours > 0) return `${hours} ${hours > 1 ? t('create.hoursAgo') : t('create.hourAgo')}`;
+    if (minutes > 0) return `${minutes} ${minutes > 1 ? t('create.minutesAgo') : t('create.minuteAgo')}`;
+    return t('create.justNow');
   };
 
   const getStatusColor = (status: Story['status']) => {
@@ -131,13 +143,13 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
   const getStatusText = (status: Story['status']) => {
     switch (status) {
       case 'published':
-        return 'Published';
+        return t('create.published');
       case 'draft':
-        return 'Draft';
+        return t('create.draft');
       case 'in-progress':
-        return 'In Progress';
+        return t('create.inProgress');
       default:
-        return 'Unknown';
+        return t('create.unknown');
     }
   };
 
@@ -156,8 +168,8 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
     e.stopPropagation();
     
     const confirmMessage = story.status === 'published' 
-      ? 'Are you sure you want to delete this published story?' 
-      : 'Are you sure you want to delete this draft?';
+      ? t('create.deletePublishedConfirm')
+      : t('create.deleteDraftConfirm');
     
     if (confirm(confirmMessage)) {
       try {
@@ -171,7 +183,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
         await loadUserStories();
       } catch (error) {
         console.error('Failed to delete story:', error);
-        alert('Failed to delete story.');
+        alert(t('create.deleteStoryFailed'));
       }
     }
   };
@@ -289,14 +301,14 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
             className="w-full bg-gradient-to-r from-[#dc5903] to-[#ff7700] hover:from-[#e6850e] hover:to-[#ff8800] text-white rounded-lg p-4 flex items-center justify-center space-x-3 transition-all duration-200 shadow-lg"
           >
             <Plus className="w-5 h-5" />
-            <span className="font-medium">Create New Story</span>
+            <span className="font-medium">{t('create.createNewStory')}</span>
           </button>
         </div>
 
       {/* Stories List */}
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <div className="text-[rgba(255,255,255,0.7)]">Loading...</div>
+          <div className="text-[rgba(255,255,255,0.7)]">{t('create.loading')}</div>
         </div>
       ) : (
         <div className="space-y-3">
@@ -336,7 +348,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
                   {/* Last Edited */}
                   <div className="flex items-center space-x-2 text-xs text-gray-400 mb-3">
                     <Calendar className="w-3 h-3" />
-                    <span>Last edited {story.lastEdited}</span>
+                    <span>{t('create.lastEdited')} {story.lastEdited}</span>
                   </div>
 
                   {/* Stats with interactive like button */}
@@ -382,7 +394,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
                       ? 'bg-[#dc5903] hover:bg-[#e6850e] text-white' 
                       : 'bg-[#424242] hover:bg-[#525252] text-gray-300'
                   }`}
-                  title={story.status === 'published' ? 'Play story' : 'Cannot play - not published yet'}
+                  title={story.status === 'published' ? t('create.playStory') : t('create.cannotPlay')}
                 >
                   <Play className="w-3 h-3" />
                 </button>
@@ -397,7 +409,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
             {/* Progress indicator */}
             <div className="pt-3 border-t border-[#424242]">
               <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-                <span>Story completion</span>
+                <span>{t('create.storyCompletion')}</span>
                 <span>{getProgressPercentage(story)}%</span>
               </div>
               <div className="w-full bg-[#424242] rounded-full h-1.5">
@@ -415,7 +427,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
               <div className="flex items-center space-x-2 text-xs text-gray-400">
                 <Pencil className="w-3 h-3" />
                 <span>
-                  Click to {story.status === 'published' ? 'view/edit' : 'continue editing'}
+                  {t('create.clickTo')} {story.status === 'published' ? t('create.clickToViewEdit') : t('create.clickToContinueEdit')}
                 </span>
               </div>
               <div className="text-[#dc5903] opacity-0 group-hover:opacity-100 transition-opacity">
@@ -429,7 +441,7 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
             <button 
               onClick={(e) => handleDeleteClick(e, story)}
               className="absolute bottom-2 right-2 text-gray-400 hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-all"
-              title="Delete story"
+              title={t('create.deleteStory')}
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -442,8 +454,8 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
               <div className="w-16 h-16 bg-[#2a2a2a] rounded-full flex items-center justify-center mx-auto mb-4">
                 <Pencil className="w-8 h-8 text-gray-400" />
               </div>
-              <h3 className="text-white font-medium mb-2">No stories yet</h3>
-              <p className="text-gray-400 text-sm">Create your first story to get started</p>
+              <h3 className="text-white font-medium mb-2">{t('create.noStoriesYet')}</h3>
+              <p className="text-gray-400 text-sm">{t('create.createFirstStory')}</p>
             </div>
           )}
         </div>
