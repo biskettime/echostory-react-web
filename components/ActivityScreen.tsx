@@ -483,9 +483,19 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
       // Complete image list (remove duplicates, prioritize character images)
       const totalImages = [...new Set([...albumImages, ...messageImages])];
       
-      // Create album if there are images or sufficient conversation
-      if (totalImages.length > 0 || session.messages.length >= 5) {
-        const unlockedPhotos = totalImages.map((imageUrl, index) => ({
+      // Get chat message count for this story to determine unlocked images
+      const chatMessageCount = parseInt(localStorage.getItem(`chatMessages_${session.storyId}`) || '0', 10);
+      // First image is always unlocked, additional images unlock every 10 messages starting from 10
+      const unlockedImageCount = chatMessageCount < 10 ? 1 : Math.min(1 + Math.floor(chatMessageCount / 10), 10);
+      
+      console.log(`🔓 Album - Story ${session.storyId}: ${chatMessageCount} messages, ${unlockedImageCount} images unlocked`);
+      
+      // Only include unlocked images
+      const unlockedImages = totalImages.slice(0, unlockedImageCount);
+      
+      // Create album only if there are unlocked images
+      if (unlockedImages.length > 0) {
+        const unlockedPhotos = unlockedImages.map((imageUrl, index) => ({
           id: index + 1,
           imageUrl: imageUrl,
           unlockedDate: new Date(session.lastMessageAt).toISOString().split('T')[0],
@@ -500,71 +510,7 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
         });
       }
     }
-    
-    // Add sample albums if no albums exist
-    if (albums.length === 0) {
-      // Add Haruka character album with actual character images
-      const harukaImages: string[] = [];
-      for (let i = 1; i <= 5; i++) {
-        const imagePath = `/data/ch_img/Haruka_${i}.png`;
-        try {
-          const response = await fetch(imagePath, { method: 'HEAD' });
-          if (response.ok) {
-            harukaImages.push(imagePath);
-          }
-        } catch (error) {
-          // Continue to next image
-        }
-      }
-      
-      if (harukaImages.length > 0) {
-        albums.push({
-          characterId: 4,
-          characterName: "Haruka",
-          characterImage: harukaImages[0],
-          unlockedPhotos: harukaImages.map((imageUrl, index) => ({
-            id: index + 1,
-            imageUrl: imageUrl,
-            unlockedDate: "2024-01-18",
-            description: index === 0 ? "Main Portrait" : 
-                        index === 1 ? "Practice Room" :
-                        index === 2 ? "On Stage" : 
-                        index === 3 ? "Daily Life" : `Photo ${index + 1}`
-          }))
-        });
-      }
-      
-      // Add Jihoon character album as fallback
-      const jihoonImages: string[] = [];
-      for (let i = 1; i <= 5; i++) {
-        const imagePath = `/data/ch_img/Jihoon_${i}.png`;
-        try {
-          const response = await fetch(imagePath, { method: 'HEAD' });
-          if (response.ok) {
-            jihoonImages.push(imagePath);
-          }
-        } catch (error) {
-          // Continue to next image
-        }
-      }
-      
-      if (jihoonImages.length > 0) {
-        albums.push({
-          characterId: 2,
-          characterName: "Jihoon",
-          characterImage: jihoonImages[0],
-          unlockedPhotos: jihoonImages.map((imageUrl, index) => ({
-            id: index + 1,
-            imageUrl: imageUrl,
-            unlockedDate: "2024-01-15",
-            description: index === 0 ? "First Meeting" : 
-                        index === 1 ? "Walking Together" :
-                        index === 2 ? "Special Day" : 
-                        index === 3 ? "Casual Moment" : `Photo ${index + 1}`
-          }))
-        });
-      }
-    }
+
     
     return albums;
   };
@@ -581,6 +527,20 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     };
     
     loadAlbums();
+  }, [realChatSessions]);
+  
+  // Listen for chat message count updates to refresh albums
+  useEffect(() => {
+    const handleChatMessageUpdate = async (event: CustomEvent) => {
+      console.log('🔄 Album - Chat message count updated, refreshing albums...');
+      const albums = await generateAlbumsFromSessions();
+      setCharacterAlbums(albums);
+    };
+    
+    window.addEventListener('chatMessageCountUpdated', handleChatMessageUpdate as EventListener);
+    return () => {
+      window.removeEventListener('chatMessageCountUpdated', handleChatMessageUpdate as EventListener);
+    };
   }, [realChatSessions]);
 
   // Sample favorite character data

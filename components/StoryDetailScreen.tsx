@@ -27,13 +27,55 @@ interface StoryDetailScreenProps {
 }
 
 export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, onSafetyToggle, onFollowChange }: StoryDetailScreenProps) {
+  // All state definitions at the top
+  const [isStoriesLoaded, setIsStoriesLoaded] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentThumbnailIndex, setCurrentThumbnailIndex] = useState(0);
+  const [chatMessageCount, setChatMessageCount] = useState(0);
+  const [profiles, setProfiles] = useState<Profile[]>([
+    { id: 'default', name: 'Alex', info: '' }
+  ]);
+  const [selectedProfileId, setSelectedProfileId] = useState('default');
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showStoryEditModal, setShowStoryEditModal] = useState(false);
+  const [showCreatorProfile, setShowCreatorProfile] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [, forceUpdate] = useState({});
+  const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
+  const [characterImages, setCharacterImages] = useState<string[]>([]);
+  const [isCharacterImagesLoaded, setIsCharacterImagesLoaded] = useState(false);
+  const [storyEditData, setStoryEditData] = useState({
+    storySetting: '',
+    characterName: '',
+    characterDescription: ''
+  });
+  
+  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
+  
   // Initialize sample stories
   useEffect(() => {
-    initializeSampleStories();
+    console.log('StoryDetailScreen - Initializing sample stories...');
+    try {
+      initializeSampleStories();
+      console.log('StoryDetailScreen - Sample stories initialization complete');
+      setIsStoriesLoaded(true);
+    } catch (error) {
+      console.error('StoryDetailScreen - Failed to initialize stories:', error);
+      setIsStoriesLoaded(true); // Still set to true to avoid infinite loading
+    }
   }, []);
 
-  const story = getStory(storyId);
+  const story = isStoriesLoaded ? getStory(storyId) : null;
   const creator = story ? getCreatorById(story.creatorId) : null;
+  
+  // Debug: Log story lookup
+  console.log('StoryDetailScreen - Story lookup:', {
+    storyId,
+    storyFound: !!story,
+    storyTitle: story?.title
+  });
   
   // Debug: Log story data
   useEffect(() => {
@@ -50,13 +92,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     }
   }, [story]);
   
-  // Gallery state
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [currentThumbnailIndex, setCurrentThumbnailIndex] = useState(0);
-  const thumbnailContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Chat message tracking for image unlocking
-  const [chatMessageCount, setChatMessageCount] = useState(0);
+
   
   // Load chat message count from localStorage
   useEffect(() => {
@@ -81,9 +117,16 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     };
   }, [storyId]);
   
+
+  
+
+  
   // Function to get unlocked image count based on chat messages
   const getUnlockedImageCount = (messageCount: number): number => {
-    // First image is always unlocked, then 1 more image per 10 messages
+    // First image is always unlocked, additional images unlock every 10 messages starting from 10
+    if (messageCount < 10) {
+      return 1; // Only first image unlocked
+    }
     return Math.min(1 + Math.floor(messageCount / 10), 10); // Max 10 images
   };
   
@@ -93,24 +136,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     return imageIndex < unlockedCount;
   };
   
-  // Profile states
-  const [profiles, setProfiles] = useState<Profile[]>([
-    { id: 'default', name: 'Alex', info: '' }
-  ]);
-  const [selectedProfileId, setSelectedProfileId] = useState('default');
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  
-  // Story edit states
-  const [showStoryEditModal, setShowStoryEditModal] = useState(false);
-  
-  // Creator profile modal state
-  const [showCreatorProfile, setShowCreatorProfile] = useState(false);
-  
-  // Like and favorite states
-  const [isLiked, setIsLiked] = useState(false);
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [, forceUpdate] = useState({});
+
 
   // Language change listener
   useEffect(() => {
@@ -122,10 +148,35 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     return () => removeLanguageChangeListener(handleLanguageChange);
   }, []);
   
-  // Character image loading
-  const [characterImageSrc, setCharacterImageSrc] = useState<string>('');
-  const [characterImages, setCharacterImages] = useState<string[]>([]);
-  const [isCharacterImagesLoaded, setIsCharacterImagesLoaded] = useState(false);
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showProfileDropdown) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    if (showProfileDropdown) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showProfileDropdown]);
+  
+  // Auto-scroll effect when thumbnail selection changes
+  useEffect(() => {
+    if (thumbnailContainerRef.current) {
+      const container = thumbnailContainerRef.current;
+      const thumbnailWidth = 64.58 + 8; // thumbnail width + gap
+      const scrollPosition = currentThumbnailIndex * thumbnailWidth;
+      
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentThumbnailIndex]);
+  
+
 
   // Load like and favorite status from localStorage
   useEffect(() => {
@@ -138,20 +189,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     }
   }, [storyId]);
   
-  const [storyEditData, setStoryEditData] = useState(() => {
-    if (story) {
-      return {
-        storySetting: story.content.storySettings || '',
-        characterName: story.content.characterName || '',
-        characterDescription: story.content.characterDescription || ''
-      };
-    }
-    return {
-      storySetting: '',
-      characterName: '',
-      characterDescription: ''
-    };
-  });
+
 
   // Update story edit data when story changes
   useEffect(() => {
@@ -254,10 +292,42 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
 
   const selectedProfile = profiles.find(p => p.id === selectedProfileId);
 
-  if (!story) {
+  // Show loading state while stories are being initialized
+  if (!isStoriesLoaded) {
     return (
       <div className="flex items-center justify-center h-full bg-[#1a1b1b] text-white">
-        <p>Story not found</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Loading story...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!story) {
+    console.error('StoryDetailScreen - Story not found:', {
+      storyId,
+      allStoriesCount: 'checking...'
+    });
+    
+    // Try to get all stories for debugging
+    import('../data/stories').then(({ getPublishedStories }) => {
+      const allStories = getPublishedStories();
+      console.log('StoryDetailScreen - All available stories:', allStories.map(s => ({ id: s.id, title: s.title })));
+    });
+    
+    return (
+      <div className="flex items-center justify-center h-full bg-[#1a1b1b] text-white">
+        <div className="text-center">
+          <p>Story not found</p>
+          <p className="text-sm text-gray-400 mt-2">Story ID: {storyId}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-[#ff9500] text-white rounded"
+          >
+            Reload Page
+          </button>
+        </div>
       </div>
     );
   }
@@ -317,29 +387,40 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     isUnlocked: isImageUnlocked(index) // Check if image is unlocked based on chat messages
   }));
 
+
+  
+
+
   // Check if current image is locked
   const currentImageIsLocked = !galleryImages[currentImageIndex]?.isUnlocked;
 
-  // Auto-scroll effect when thumbnail selection changes
-  useEffect(() => {
-    scrollThumbnailIntoView(currentThumbnailIndex);
-  }, [currentThumbnailIndex]);
+
 
   const handlePreviousImage = () => {
     if (currentImageIndex > 0) {
-      const newIndex = currentImageIndex - 1;
-      setCurrentImageIndex(newIndex);
-      setCurrentThumbnailIndex(newIndex);
-      scrollThumbnailIntoView(newIndex);
+      // Find the previous unlocked image
+      for (let i = currentImageIndex - 1; i >= 0; i--) {
+        if (isImageUnlocked(i)) {
+          setCurrentImageIndex(i);
+          setCurrentThumbnailIndex(i);
+          scrollThumbnailIntoView(i);
+          break;
+        }
+      }
     }
   };
 
   const handleNextImage = () => {
     if (currentImageIndex < galleryImages.length - 1) {
-      const newIndex = currentImageIndex + 1;
-      setCurrentImageIndex(newIndex);
-      setCurrentThumbnailIndex(newIndex);
-      scrollThumbnailIntoView(newIndex);
+      // Find the next unlocked image
+      for (let i = currentImageIndex + 1; i < galleryImages.length; i++) {
+        if (isImageUnlocked(i)) {
+          setCurrentImageIndex(i);
+          setCurrentThumbnailIndex(i);
+          scrollThumbnailIntoView(i);
+          break;
+        }
+      }
     }
   };
 
@@ -358,13 +439,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
   };
 
   const handleThumbnailClick = (index: number) => {
-    if (!isImageUnlocked(index)) {
-      // Show unlock requirement message
-      const messagesNeeded = (index * 10) - chatMessageCount;
-      alert(`이 이미지를 해금하려면 ${messagesNeeded}개의 메시지를 더 보내야 합니다. (현재: ${chatMessageCount}개)`);
-      return;
-    }
-    
+    // Allow viewing any image, even if locked (will show blurred)
     setCurrentImageIndex(index);
     setCurrentThumbnailIndex(index);
     scrollThumbnailIntoView(index);
@@ -465,19 +540,7 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
     setIsFavorited(!isFavorited);
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (showProfileDropdown) {
-        setShowProfileDropdown(false);
-      }
-    };
 
-    if (showProfileDropdown) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [showProfileDropdown]);
 
   return (
     <div className="bg-[#1a1b1b] relative overflow-hidden">
@@ -598,6 +661,31 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                         }}
                       />
                     )}
+                    
+                    {/* Main Image Lock Overlay */}
+                    {currentImageIsLocked && (
+                      <div className="absolute inset-0 bg-[rgba(0,0,0,0.7)] flex flex-col items-center justify-center">
+                        <div className="w-[40px] h-[40px] mb-4">
+                          <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 30 30">
+                            <g>
+                              <path
+                                d={lockSvgPaths.p3032d100}
+                                fill="rgba(255,255,255,0.9)"
+                              />
+                            </g>
+                          </svg>
+                        </div>
+                        <div className="text-white text-center px-4">
+                          <p className="text-lg font-semibold mb-2">이미지가 잠겨있습니다</p>
+                          <p className="text-sm opacity-80">
+                            해금하려면 {((currentImageIndex) * 10) - chatMessageCount}개의 메시지를 더 보내세요
+                          </p>
+                          <p className="text-xs opacity-60 mt-1">
+                            현재: {chatMessageCount}개 / 필요: {(currentImageIndex) * 10}개
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 
@@ -646,12 +734,18 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                   </>
                 )}
                 
-                {/* Gallery Navigation Arrows - Only show when not locked */}
-                {!currentImageIsLocked && (
+                {/* Gallery Navigation Arrows - Always show */}
+                {(
                   <div className="absolute inset-0 flex items-center justify-between px-2.5">
                     {/* Left Arrow */}
                     <button 
-                      onClick={handlePreviousImage}
+                      onClick={() => {
+                        if (currentImageIndex > 0) {
+                          const newIndex = currentImageIndex - 1;
+                          setCurrentImageIndex(newIndex);
+                          setCurrentThumbnailIndex(newIndex);
+                        }
+                      }}
                       disabled={currentImageIndex === 0}
                       className={`bg-[rgba(0,0,0,0.5)] w-9 h-9 rounded-[18px] flex items-center justify-center hover:bg-[rgba(0,0,0,0.7)] transition-colors ${
                         currentImageIndex === 0 ? 'opacity-30 cursor-not-allowed' : ''
@@ -668,7 +762,13 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
                     
                     {/* Right Arrow */}
                     <button 
-                      onClick={handleNextImage}
+                      onClick={() => {
+                        if (currentImageIndex < galleryImages.length - 1) {
+                          const newIndex = currentImageIndex + 1;
+                          setCurrentImageIndex(newIndex);
+                          setCurrentThumbnailIndex(newIndex);
+                        }
+                      }}
                       disabled={currentImageIndex >= galleryImages.length - 1}
                       className={`bg-[rgba(0,0,0,0.5)] w-9 h-9 rounded-[18px] flex items-center justify-center hover:bg-[rgba(0,0,0,0.7)] transition-colors ${
                         currentImageIndex >= galleryImages.length - 1 ? 'opacity-30 cursor-not-allowed' : ''

@@ -55,28 +55,7 @@ export const ko = {
     response7: '이해합니다.'
   },
 
-  // Invite Code Modal
-  invite: {
-    friendReferral: '친구 추천',
-    myInviteCode: '내 초대 코드',
-    enterReferralCode: '추천 코드 입력',
-    inviteFriendsTitle: '친구 초대하고 1,000P 받기',
-    inviteFriendsDesc1: '초대한 친구가 가입할 때마다',
-    inviteFriendsDesc2: '당신과 친구 모두 즉시 1,000P를 받습니다',
-    myInviteCodeLabel: '내 초대 코드',
-    invitedFriends: '초대한 친구',
-    pointsEarned: 'P 획득',
-    copyUrlLink: 'URL 링크 복사',
-    copyInviteCode: '초대 코드 복사',
-    enterReferralTitle: '추천 코드 입력',
-    enterReferralDesc: '친구의 초대 코드를 입력하고 보너스 포인트를 받으세요!',
-    referralCodeLabel: '추천 코드',
-    enterCodePlaceholder: '코드를 입력하세요...',
-    submitCode: '코드 제출',
-    inviteCodeCopied: '초대 코드가 클립보드에 복사되었습니다!',
-    inviteLinkCopied: '초대 링크가 클립보드에 복사되었습니다!',
-    copyFailed: '복사에 실패했습니다'
-  },
+
 
   // Activity Screen
   activity: {
@@ -162,13 +141,7 @@ export const ko = {
     addImage: '이미지 추가'
   },
 
-  // Search Screen
-  search: {
-    searchPlaceholder: '스토리, 캐릭터, 크리에이터 검색...',
-    recentSearches: '최근 검색',
-    popularTags: '인기 태그',
-    clearAll: '모두 지우기'
-  },
+
 
   // Story Detail
   storyDetail: {

@@ -170,7 +170,14 @@ export function StoryCard({
           <div className="flex-1 min-w-0 relative">
             {/* Open Story Button */}
             <button 
-              onClick={() => onStorySelect?.(id)}
+              onClick={() => {
+                console.log('StoryCard - Open Story button clicked:', {
+                  id,
+                  title,
+                  characterName
+                });
+                onStorySelect?.(id);
+              }}
               className="absolute top-0 right-0 text-xs px-2 py-1 bg-[#ff9500] text-white rounded-md hover:bg-[#e6850e] transition-colors"
             >
               {t('storyCard.openStory')}

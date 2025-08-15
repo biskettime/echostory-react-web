@@ -55,28 +55,7 @@ export const en = {
     response7: 'I understand.'
   },
 
-  // Invite Code Modal
-  invite: {
-    friendReferral: 'Friend Referral',
-    myInviteCode: 'My Invite Code',
-    enterReferralCode: 'Enter Referral Code',
-    inviteFriendsTitle: 'Invite friends and get 1,000P',
-    inviteFriendsDesc1: 'Every time an invited friend signs up,',
-    inviteFriendsDesc2: 'both you and your friend receive 1,000P instantly',
-    myInviteCodeLabel: 'My invite code',
-    invitedFriends: 'Invited friends',
-    pointsEarned: 'P earned',
-    copyUrlLink: 'Copy URL Link',
-    copyInviteCode: 'Copy Invite Code',
-    enterReferralTitle: 'Enter Referral Code',
-    enterReferralDesc: 'Enter a friend\'s invite code to get bonus points!',
-    referralCodeLabel: 'Referral Code',
-    enterCodePlaceholder: 'Enter code here...',
-    submitCode: 'Submit Code',
-    inviteCodeCopied: 'Invite code copied to clipboard!',
-    inviteLinkCopied: 'Invite link copied to clipboard!',
-    copyFailed: 'Failed to copy'
-  },
+
 
   // Activity Screen
   activity: {
@@ -162,13 +141,7 @@ export const en = {
     addImage: 'Add Image'
   },
 
-  // Search Screen
-  search: {
-    searchPlaceholder: 'Search stories, characters, creators...',
-    recentSearches: 'Recent Searches',
-    popularTags: 'Popular Tags',
-    clearAll: 'Clear All'
-  },
+
 
   // Story Detail
   storyDetail: {

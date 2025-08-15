@@ -554,7 +554,14 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                 <div 
                   key={story.id}
                   className="cursor-pointer"
-                  onClick={() => onStorySelect(story.id)}
+                  onClick={() => {
+                    console.log('HomeScreen - Story card clicked:', {
+                      storyId: story.id,
+                      title: story.title,
+                      characterName: story.content?.characterName
+                    });
+                    onStorySelect(story.id);
+                  }}
                 >
                   <div className="relative mb-2">
                     <StoryImage story={story} className="w-full h-[140px] object-cover rounded-xl" />

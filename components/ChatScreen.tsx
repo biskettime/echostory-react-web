@@ -554,7 +554,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
       localStorage.setItem(`chatMessages_${storyId}`, newCount.toString());
       
       // Log for debugging
-      console.log(`📊 Chat message count updated: ${newCount} (unlocked images: ${Math.min(1 + Math.floor(newCount / 10), 10)})`);
+      const unlockedImages = newCount < 10 ? 1 : Math.min(1 + Math.floor(newCount / 10), 10);
+      console.log(`📊 Chat message count updated: ${newCount} (unlocked images: ${unlockedImages})`);
       
       // Dispatch custom event to notify StoryDetailScreen of count change
       window.dispatchEvent(new CustomEvent('chatMessageCountUpdated', { 

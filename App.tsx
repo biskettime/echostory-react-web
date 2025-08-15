@@ -28,8 +28,10 @@ export default function App() {
 
   // Initialize sample stories on app start
   useEffect(() => {
+    console.log('App - Initializing...');
     initializeSampleStories();
     initializeI18n();
+    console.log('App - Sample stories initialized');
     
     // Force enable scrolling and hide scrollbars
     const forceEnableScrolling = () => {
@@ -66,8 +68,14 @@ export default function App() {
 
 
   const handleStorySelect = (storyId: string) => {
+    console.log('App - handleStorySelect called:', {
+      storyId,
+      currentScreen,
+      selectedStoryId
+    });
     setSelectedStoryId(storyId);
     setCurrentScreen('story-detail');
+    console.log('App - Screen changed to story-detail');
   };
 
   const handleBackToHome = () => {
@@ -194,6 +202,7 @@ export default function App() {
             />
           );
         case 'story-detail':
+          console.log('App - Rendering story-detail screen:', { selectedStoryId, currentScreen });
           return selectedStoryId ? (
             <StoryDetailScreen 
               storyId={selectedStoryId}
