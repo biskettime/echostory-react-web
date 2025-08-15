@@ -8,7 +8,9 @@ interface ChatSettingsModalProps {
   userName?: string;
   currentVoice?: string;
   backgroundImageEnabled?: boolean;
+  autoPlayEnabled?: boolean;
   onBackgroundToggle?: (enabled: boolean) => void;
+  onAutoPlayToggle?: (enabled: boolean) => void;
   onEditProfile?: () => void;
   onChangeVoice?: () => void;
 }
@@ -19,7 +21,9 @@ export function ChatSettingsModal({
   userName = "Alex",
   currentVoice = "Hyewon",
   backgroundImageEnabled = true,
+  autoPlayEnabled = false,
   onBackgroundToggle,
+  onAutoPlayToggle,
   onEditProfile,
   onChangeVoice
 }: ChatSettingsModalProps) {
@@ -27,6 +31,10 @@ export function ChatSettingsModal({
   
   const handleBackgroundToggle = () => {
     onBackgroundToggle?.(!backgroundImageEnabled);
+  };
+
+  const handleAutoPlayToggle = () => {
+    onAutoPlayToggle?.(!autoPlayEnabled);
   };
 
   const handleEditProfile = () => {
@@ -323,6 +331,70 @@ export function ChatSettingsModal({
                         </div>
                       </button>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Auto Play Section */}
+              <div className="bg-[#2a2a2a] relative rounded-lg w-full">
+                <div
+                  aria-hidden="true"
+                  className="absolute border border-[rgba(255,255,255,0.01)] border-solid inset-0 pointer-events-none rounded-lg"
+                />
+                <div className="flex flex-row items-center relative w-full">
+                  <div className="box-border content-stretch flex flex-row items-center justify-between pl-[16.63px] pr-[16.61px] py-[12.625px] relative w-full">
+                    
+                    <div className="basis-0 box-border content-stretch flex flex-col gap-[3.18px] grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
+                      {/* Icon and Title */}
+                      <div className="box-border content-stretch flex flex-row items-center justify-start p-0 relative shrink-0 w-full" style={{ gap: "7.10543e-15px" }}>
+                        <div className="box-border content-stretch flex flex-col items-start justify-start pl-0 pr-2 py-0 relative shrink-0">
+                          <div className="box-border content-stretch flex flex-row items-center justify-start p-0 relative shrink-0">
+                            <div className="relative shrink-0 size-[13.99px]">
+                              <svg
+                                className="block size-full"
+                                fill="none"
+                                preserveAspectRatio="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
+                                  fill="white"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#ffffff] text-[13.125px] text-left text-nowrap">
+                          <p className="block leading-[14px] whitespace-pre">{t('chat.autoPlay')}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Description */}
+                      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
+                        <div className="flex flex-col font-['Inter:Medium',_'Noto_Sans_KR:Regular',_sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[#999999] text-[11.25px] text-left w-full">
+                          <p className="block leading-[15.6px]">
+                            {t('chat.autoPlayDesc')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Toggle Switch */}
+                    <button
+                      onClick={handleAutoPlayToggle}
+                      className="box-border content-stretch flex flex-col h-[23.99px] items-start justify-start mr-[-0.01px] p-0 relative shrink-0"
+                    >
+                      <div className={`relative rounded-full transition-colors duration-200 ${
+                        autoPlayEnabled ? 'bg-[#007AFF]' : 'bg-[#39393D]'
+                      }`} style={{ width: '42px', height: '24px' }}>
+                        <div
+                          className={`absolute top-[2px] w-5 h-5 bg-white rounded-full transition-transform duration-200 ${
+                            autoPlayEnabled ? 'translate-x-[18px]' : 'translate-x-[2px]'
+                          }`}
+                        />
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>

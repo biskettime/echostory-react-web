@@ -11,7 +11,8 @@ import { PointsGuideModal } from './PointsGuideModal';
 import { CharacterBackground } from './CharacterImage';
 import { Redo, Edit3, Send, Star, Home, Volume2, Play } from 'lucide-react';
 import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
-import { translateCharacterName, translateStoryTitle } from '../utils/storyTranslation';
+import { translateCharacterName, translateStoryTitle, translateStartingSituation, translateFirstDialogue } from '../utils/storyTranslation';
+import { getCurrentLanguage } from '../utils/i18n';
 import svgPaths from '../imports/svg-c6g2wd331h';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
 const imgThumbnail = "/images/chat-thumbnail.svg";
@@ -58,24 +59,50 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [storyInput, setStoryInput] = useState('');
   const [backgroundImageEnabled, setBackgroundImageEnabled] = useState(true);
+  const [autoPlayEnabled, setAutoPlayEnabled] = useState(false);
   const [currentVoice, setCurrentVoice] = useState('Korean Female');
   const [showVoiceSelector, setShowVoiceSelector] = useState(false);
   const [responsiveVoiceReady, setResponsiveVoiceReady] = useState(false);
   const [userNickname, setUserNickname] = useState(nickname);
   const [userInfo, setUserInfo] = useState('');
   const [, forceUpdate] = useState({});
+  const [isComposing, setIsComposing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const nextMessageIdRef = useRef(3);
+
+  // Get story data based on storyId (moved up to avoid hooks order issues)
+  const story = getStory(storyId);
+  const characterName = story?.content?.characterName || story?.title || 'Character';
 
   // Language change listener
   useEffect(() => {
     const handleLanguageChange = () => {
+      // Update initial narration message when language changes
+      if (story) {
+        const originalNarration = story.startSituation?.startingSituation || 
+          `${characterName}과의 만남이 시작됩니다.`;
+        const translatedNarration = translateStartingSituation(story.title, originalNarration);
+        
+        setMessages(prevMessages => {
+          if (prevMessages.length > 0 && prevMessages[0].isNarration) {
+            return [
+              {
+                ...prevMessages[0],
+                content: translatedNarration
+              },
+              ...prevMessages.slice(1)
+            ];
+          }
+          return prevMessages;
+        });
+      }
+      
       forceUpdate({});
     };
 
     addLanguageChangeListener(handleLanguageChange);
     return () => removeLanguageChangeListener(handleLanguageChange);
-  }, []);
+  }, [story, characterName]);
 
   // Available voice options (confirmed working in ResponsiveVoice)
   const voiceOptions = [
@@ -232,8 +259,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showImageGallery, setShowImageGallery] = useState(false);
 
-  // Get story data based on storyId
-  const story = getStory(storyId);
+
 
   // Get story images with fallback
   const storyImages = story ? [
@@ -341,7 +367,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     );
   }
   
-  const characterName = story.content.characterName || story.title || 'Character';
+
   
   // 캐릭터 이미지 동적 로딩 - EchoStory 로고로 시작
   const [characterImageSrc, setCharacterImageSrc] = useState<string>('/images/echostory.png');
@@ -443,14 +469,18 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
 
   // Initialize messages with narration from story data
   const [messages, setMessages] = useState<Message[]>(() => {
-    const initialNarration = story?.startSituation?.startingSituation || 
+    const originalNarration = story?.startSituation?.startingSituation || 
       `${characterName}과의 만남이 시작됩니다.`;
+    
+    const translatedNarration = story?.title 
+      ? translateStartingSituation(story.title, originalNarration)
+      : originalNarration;
     
     return [
       {
         id: 1,
         sender: 'character',
-        content: initialNarration,
+        content: translatedNarration,
         timestamp: new Date(),
         isNarration: true
       }
@@ -470,6 +500,28 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     const timeoutId = setTimeout(scrollToBottom, 50);
     return () => clearTimeout(timeoutId);
   }, [messages.length, storyParagraphs.length]);
+
+  // Auto play character messages when enabled
+  useEffect(() => {
+    if (!autoPlayEnabled || messages.length === 0) return;
+
+    // Get the last message
+    const lastMessage = messages[messages.length - 1];
+    
+    // Only auto-play character messages that are not typing and not narration
+    if (lastMessage && 
+        lastMessage.sender === 'character' && 
+        !lastMessage.isTyping && 
+        !lastMessage.isNarration) {
+      
+      console.log('🔊 Auto-playing character message:', lastMessage.content);
+      
+      // Small delay to ensure the message is fully rendered
+      setTimeout(() => {
+        handleTTS(lastMessage.content);
+      }, 500);
+    }
+  }, [messages, autoPlayEnabled, handleTTS]);
 
   // Show first character message
   useEffect(() => {
@@ -491,7 +543,10 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     if (!story) return 'Hello!';
     
     // Get first dialogue from story data
-    return story.startSituation?.firstDialogue || 'Hello!';
+    const originalDialogue = story.startSituation?.firstDialogue || 'Hello!';
+    
+    // Translate the dialogue based on current language
+    return translateFirstDialogue(story.title, originalDialogue);
   }, [story]);
 
   const handleFirstMessageComplete = useCallback(() => {
@@ -629,7 +684,12 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
     setStoryParagraphs(prev => [...prev, newParagraph]);
   }, [storyParagraphs.length]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    // IME 입력 중일 때는 처리하지 않음 (한국어, 일본어, 중국어 등)
+    if (e.nativeEvent.isComposing || isComposing) {
+      return;
+    }
+    
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (isStoryMode) {
@@ -638,7 +698,94 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
         handleSendMessage();
       }
     }
-  }, [handleSendMessage, handleSendStoryInput, isStoryMode]);
+  }, [handleSendMessage, handleSendStoryInput, isStoryMode, isComposing]);
+
+  const handleCompositionStart = useCallback(() => {
+    setIsComposing(true);
+  }, []);
+
+  const handleCompositionEnd = useCallback(() => {
+    setIsComposing(false);
+  }, []);
+
+  // Message action handlers
+  const handleRegenerateMessage = useCallback((messageId: number) => {
+    console.log('🔄 Regenerating message:', messageId);
+    console.log('Current messages:', messages);
+    
+    // Find the message and regenerate character response
+    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+    console.log('Message index:', messageIndex);
+    
+    if (messageIndex > 0) {
+      const userMessage = messages[messageIndex - 1];
+      console.log('User message:', userMessage);
+      
+      if (userMessage && userMessage.sender === 'user') {
+        console.log('✅ Found user message, regenerating...');
+        
+        // Remove the current character message and generate a new one
+        setMessages(prev => {
+          const newMessages = prev.slice(0, messageIndex);
+          console.log('Messages after slice:', newMessages);
+          return newMessages;
+        });
+        
+        // Generate new response with typing animation
+        setTimeout(() => {
+          const newResponseId = nextMessageIdRef.current;
+          nextMessageIdRef.current += 1;
+          
+          const responseContent = getCharacterResponse(userMessage.content, storyId);
+          console.log('New response content:', responseContent);
+          
+          // Add message with typing animation
+          const newResponse: Message = {
+            id: newResponseId,
+            sender: 'character',
+            content: responseContent,
+            timestamp: new Date(),
+            isTyping: true
+          };
+          
+          console.log('Adding new response:', newResponse);
+          setMessages(prev => [...prev, newResponse]);
+          
+          // Save to chat session
+          if (currentChatSession) {
+            addChatMessage(currentChatSession.id, 'character', responseContent);
+          }
+        }, 1000);
+      } else {
+        console.log('❌ No valid user message found');
+      }
+    } else {
+      console.log('❌ Invalid message index:', messageIndex);
+    }
+  }, [messages, getCharacterResponse, storyId, currentChatSession]);
+
+  const handleEditMessage = useCallback((messageId: number) => {
+    console.log('Editing message:', messageId);
+    // TODO: Implement edit functionality - could open a modal or make message editable
+    alert(t('chat.editNotImplemented'));
+  }, [t]);
+
+  const handleDeleteMessage = useCallback((messageId: number) => {
+    console.log('Deleting message:', messageId);
+    if (confirm(t('chat.confirmDelete'))) {
+      // Find the message to be deleted
+      const messageToDelete = messages.find(msg => msg.id === messageId);
+      
+      // Remove from UI
+      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+      
+      // If it's a user message and there's a chat session, we might want to handle it differently
+      // For now, just remove from UI - chat session persistence can be handled later
+      if (messageToDelete && currentChatSession) {
+        console.log(`Deleted ${messageToDelete.sender} message: "${messageToDelete.content}"`);
+      }
+    }
+  }, [t, messages, currentChatSession]);
 
   const handleInfoClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -691,6 +838,11 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
   const handleBackgroundToggle = useCallback((enabled: boolean) => {
     console.log('Background toggle:', enabled);
     setBackgroundImageEnabled(enabled);
+  }, []);
+
+  const handleAutoPlayToggle = useCallback((enabled: boolean) => {
+    setAutoPlayEnabled(enabled);
+    console.log('Auto play toggled:', enabled);
   }, []);
 
   const handleEditProfile = useCallback(() => {
@@ -1028,15 +1180,30 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                     ) : msg.sender === 'user' ? (
                       /* User Message */
                       <div className="max-w-[400px] flex flex-col items-end">
-                        <div className="bg-[rgba(11,147,246,0.6)] backdrop-blur-sm px-3 py-2 rounded-bl-[12px] rounded-br-[3px] rounded-tl-[12px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
+                        <div className="bg-[rgba(11,147,246,0.3)] backdrop-blur-sm px-3 py-2 rounded-bl-[12px] rounded-br-[3px] rounded-tl-[12px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
                           <p className="text-[rgba(255,255,255,0.85)] text-[14.18px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
                             {msg.content}
                           </p>
                         </div>
+                        
+                        {/* Delete Button - Show only for the last user message */}
+                        {msg.sender === 'user' && messages.indexOf(msg) === messages.length - 1 && (
+                          <div className="flex items-center justify-end mt-2 mr-1">
+                            <button
+                              onClick={() => handleDeleteMessage(msg.id)}
+                              className="bg-[rgba(40,40,40,0.8)] hover:bg-[rgba(50,50,50,0.8)] backdrop-blur-sm rounded-full p-2 transition-colors border border-[rgba(255,255,255,0.1)]"
+                              title={t('chat.delete')}
+                            >
+                              <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       /* Character Message - Matching Figma Design */
-                      <div className="flex items-start gap-[7px] max-w-[400px] min-w-[400px]">
+                      <div className="flex items-start gap-[7px] max-w-[85%]">
                         {/* Character Avatar */}
                         <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
                                                   <img 
@@ -1117,13 +1284,66 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                           </div>
                           
                           {/* Message Bubble */}
-                          <div className="bg-[rgba(59,59,59,0.7)] backdrop-blur-sm rounded-bl-[12px] rounded-br-[12px] rounded-tl-[3px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
+                          <div className="bg-[rgba(59,59,59,0.4)] backdrop-blur-sm rounded-bl-[12px] rounded-br-[12px] rounded-tl-[3px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
                             <div className="px-3 py-2">
-                              <p className="text-[rgba(255,255,255,0.85)] text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
-                                {msg.content}
-                              </p>
+                              {msg.isTyping ? (
+                                <TypingAnimation 
+                                  text={msg.content} 
+                                  onComplete={() => {
+                                    setMessages(prev => 
+                                      prev.map(m => 
+                                        m.id === msg.id 
+                                          ? { ...m, isTyping: false }
+                                          : m
+                                      )
+                                    );
+                                  }}
+                                />
+                              ) : (
+                                <p className="text-[rgba(255,255,255,0.85)] text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
+                                  {msg.content}
+                                </p>
+                              )}
                             </div>
                           </div>
+                          
+                          {/* Action Buttons - Show only for the last character message and not while typing */}
+                          {msg.sender === 'character' && messages.indexOf(msg) === messages.length - 1 && !msg.isTyping && (
+                            <div className="flex items-center gap-2 mt-2 ml-1">
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  console.log('🔄 Regenerate button clicked for message:', msg.id);
+                                  handleRegenerateMessage(msg.id);
+                                }}
+                                className="bg-[rgba(40,40,40,0.8)] hover:bg-[rgba(50,50,50,0.8)] backdrop-blur-sm rounded-full p-2 transition-colors border border-[rgba(255,255,255,0.1)]"
+                                title={t('chat.regenerate')}
+                              >
+                                <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => handleEditMessage(msg.id)}
+                                className="bg-[rgba(40,40,40,0.8)] hover:bg-[rgba(50,50,50,0.8)] backdrop-blur-sm rounded-full p-2 transition-colors border border-[rgba(255,255,255,0.1)]"
+                                title={t('chat.edit')}
+                              >
+                                <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteMessage(msg.id)}
+                                className="bg-[rgba(40,40,40,0.8)] hover:bg-[rgba(50,50,50,0.8)] backdrop-blur-sm rounded-full p-2 transition-colors border border-[rgba(255,255,255,0.1)]"
+                                title={t('chat.delete')}
+                              >
+                                <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -1133,7 +1353,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                 {/* Show typing animation for first message */}
                 {showFirstMessage && !firstMessageAdded && (
                   <div className="flex justify-start pt-1.5">
-                    <div className="flex items-start gap-[7px] max-w-[400px] min-w-[400px]">
+                    <div className="flex items-start gap-[7px] max-w-[85%]">
                       <div className="flex flex-col items-start justify-start pb-[6.13px] pt-0 pr-[7px] pl-0">
                         <img 
                           src={
@@ -1158,7 +1378,7 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                             {characterName}
                           </div>
                         </div>
-                        <div className="bg-[rgba(59,59,59,0.7)] backdrop-blur-sm rounded-bl-[12px] rounded-br-[12px] rounded-tl-[3px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
+                        <div className="bg-[rgba(59,59,59,0.4)] backdrop-blur-sm rounded-bl-[12px] rounded-br-[12px] rounded-tl-[3px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
                           <div className="px-3 py-2">
                             <TypingAnimation 
                               text={getInitialCharacterMessage()} 
@@ -1196,6 +1416,8 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
                       value={isStoryMode ? storyInput : message}
                       onChange={(e) => isStoryMode ? setStoryInput(e.target.value) : setMessage(e.target.value)}
                       onKeyDown={handleKeyDown}
+                      onCompositionStart={handleCompositionStart}
+                      onCompositionEnd={handleCompositionEnd}
                       placeholder={isStoryMode ? t('chat.enterContent') : t('chat.typeMessage')}
                       className="flex-1 bg-transparent text-white placeholder-[rgba(255,255,255,0.25)] outline-none text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[23.57px] focus:border-[rgba(255,149,0,0.8)] focus:ring-1 focus:ring-[rgba(255,149,0,0.8)] transition-colors"
                       maxLength={500}
@@ -1235,10 +1457,11 @@ export function ChatScreen({ storyId, onBack, nickname }: ChatScreenProps) {
           userName={userNickname}
           currentVoice={currentVoice}
           backgroundImageEnabled={backgroundImageEnabled}
+          autoPlayEnabled={autoPlayEnabled}
           onBackgroundToggle={handleBackgroundToggle}
+          onAutoPlayToggle={handleAutoPlayToggle}
           onEditProfile={handleEditProfile}
           onChangeVoice={handleChangeVoice}
-          onPointsGuide={handlePointsGuide}
         />
       )}
 

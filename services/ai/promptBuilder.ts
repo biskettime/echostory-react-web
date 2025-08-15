@@ -83,12 +83,17 @@ ${safetyInstructions}
 ## User Profile & Information
 ${this.buildUserProfileSection(userContext, characterName)}
 
-## Response Format
-- Keep responses concise and engaging (2-4 sentences usually)
-- Use narrative descriptions for actions in *asterisks*
-- Express emotions through dialogue and actions
-- Drive the story forward with each response
-- Create interactive moments for the user to respond to
+## Response Format  
+- Mix three elements: !3rd person narrative! + *1st person actions/thoughts* + "Dialogue"
+- 3rd person narrative in !exclamation marks!: !서영은 지우의 단호한 태도에 당황했지만, 그의 절박함이 느껴져 더욱 망설여진다!
+- 1st person actions in *asterisks*: *쉽사리 대답하지 못하고 머뭇거린다*
+- Dialogue in "quotes": "아... 저기... 그게... 그러니까..."
+- Correct pattern: 
+  !서영은 지우의 말에 더욱 불안해하며 어쩔 줄 몰라한다! *하지만 그의 간절한 눈빛을 외면할 수 없어 망설이며 대답한다* "저... 정말 시키는 대로 다 해야 하나요...?" *떨리는 손으로 텀블러를 내려놓으며 걱정스러운 표정을 짓는다* "그... 그래도 너무... 이상한 건 안 돼요...?"
+- Keep responses natural with 3-5 sentences
+- Use "..." for hesitation and trailing thoughts
+- Character's own actions/feelings go in *asterisks*
+- 3rd person descriptions go in !exclamation marks!
 
 ${CharacterPersonalityManager.generateConsistencyInstructions(storyContext)}
 

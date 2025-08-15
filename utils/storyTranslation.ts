@@ -320,3 +320,81 @@ export const translateCharacterDescriptionContent = (storyTitle: string, origina
   }
   return originalContent; // 매핑이 없으면 원본 반환
 };
+
+// Starting Situation 번역
+export const translateStartingSituation = (storyTitle: string, originalContent: string): string => {
+  const currentLang = getCurrentLanguage();
+  if (currentLang === 'en') {
+    return originalContent;
+  }
+  
+  // 스토리 제목에서 캐릭터 키 추출
+  const getCharacterKey = (title: string): string => {
+    if (title.includes('Jiyeon')) return 'drunkTeacherJiyeon';
+    if (title.includes('Yuki')) return 'mysteriousYuki';
+    if (title.includes('Suyeon')) return 'artistSuyeon';
+    if (title.includes('Haruka')) return 'japaneseIdolHaruka';
+    if (title.includes('Jiwon')) return 'cafeOwnerJiwon';
+    if (title.includes('Sohee')) return 'bookstoreEmployeeSohee';
+    if (title.includes('Seoyeon')) return 'danceInstructorSeoyeon';
+    if (title.includes('Hayoung')) return 'medicalStudentHayoung';
+    if (title.includes('Minjun')) return 'ceoMinjun';
+    if (title.includes('Jihoon')) return 'rebelliousGuitaristJihoon';
+    if (title.includes('Mina')) return 'shyLibrarianMina';
+    if (title.includes('Taehyun')) return 'personalTrainerTaehyun';
+    if (title.includes('Hyunwoo')) return 'artStudentHyunwoo';
+    if (title.includes('Seungmin')) return 'baristaSeungmin';
+    if (title.includes('Jungwoo')) return 'veterinarianJungwoo';
+    if (title.includes('Donghyun')) return 'gamerStreamerDonghyun';
+    return '';
+  };
+  
+  const characterKey = getCharacterKey(storyTitle);
+  if (characterKey) {
+    const translationKey = `startingSituation.${characterKey}`;
+    const translated = t(translationKey);
+    if (translated !== translationKey) {
+      return translated;
+    }
+  }
+  return originalContent; // 매핑이 없으면 원본 반환
+};
+
+// First Dialogue 번역
+export const translateFirstDialogue = (storyTitle: string, originalContent: string): string => {
+  const currentLang = getCurrentLanguage();
+  if (currentLang === 'en') {
+    return originalContent;
+  }
+  
+  // 스토리 제목에서 캐릭터 키 추출
+  const getCharacterKey = (title: string): string => {
+    if (title.includes('Jiyeon')) return 'drunkTeacherJiyeon';
+    if (title.includes('Yuki')) return 'mysteriousYuki';
+    if (title.includes('Suyeon')) return 'artistSuyeon';
+    if (title.includes('Haruka')) return 'japaneseIdolHaruka';
+    if (title.includes('Jiwon')) return 'cafeOwnerJiwon';
+    if (title.includes('Sohee')) return 'bookstoreEmployeeSohee';
+    if (title.includes('Seoyeon')) return 'danceInstructorSeoyeon';
+    if (title.includes('Hayoung')) return 'medicalStudentHayoung';
+    if (title.includes('Minjun')) return 'ceoMinjun';
+    if (title.includes('Jihoon')) return 'rebelliousGuitaristJihoon';
+    if (title.includes('Mina')) return 'shyLibrarianMina';
+    if (title.includes('Taehyun')) return 'personalTrainerTaehyun';
+    if (title.includes('Hyunwoo')) return 'artStudentHyunwoo';
+    if (title.includes('Seungmin')) return 'baristaSeungmin';
+    if (title.includes('Jungwoo')) return 'veterinarianJungwoo';
+    if (title.includes('Donghyun')) return 'gamerStreamerDonghyun';
+    return '';
+  };
+  
+  const characterKey = getCharacterKey(storyTitle);
+  if (characterKey) {
+    const translationKey = `firstDialogue.${characterKey}`;
+    const translated = t(translationKey);
+    if (translated !== translationKey) {
+      return translated;
+    }
+  }
+  return originalContent; // 매핑이 없으면 원본 반환
+};

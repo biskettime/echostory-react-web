@@ -34,6 +34,8 @@ export const en = {
     change: 'Change',
     backgroundImage: 'Background Image',
     backgroundImageDesc: 'Display background images suitable for the story',
+    autoPlay: 'Auto Play',
+    autoPlayDesc: 'Automatically play character messages with voice',
     currentVoice: 'CURRENT VOICE',
     pointUsageGuide: 'POINT USAGE GUIDE',
     aiAnswerGeneration: 'AI Answer Generation',
@@ -52,7 +54,12 @@ export const en = {
     response4: 'I understand that happened.',
     response5: 'What do you think about it?',
     response6: 'Is that really so?',
-    response7: 'I understand.'
+    response7: 'I understand.',
+    regenerate: 'Regenerate response',
+    edit: 'Edit message',
+    delete: 'Delete message',
+    editNotImplemented: 'Edit functionality will be available soon!',
+    confirmDelete: 'Are you sure you want to delete this message?'
   },
 
 
@@ -275,6 +282,46 @@ export const en = {
     businessRegistration: 'Business Registration: 123-45-67890',
     telecomReport: 'Telecommunications Sales Report: 2025-SF-TECH-0673',
     email: 'Email: contact@theflow.ai'
+  },
+
+  // Starting Situation Translations
+  startingSituation: {
+    drunkTeacherJiyeon: "Private tutoring room at a private English academy, evening time. Unlike usual, Teacher Jiyeon smells of alcohol. She still tries to continue the lesson, but talks more than usual and makes more mistakes. Only you and Teacher Jiyeon are in the classroom, and an awkward silence flows.",
+    mysteriousYuki: "University library, late afternoon. Yuki is sitting alone at a corner table, surrounded by Korean textbooks and dictionaries. She looks frustrated as she stares at her laptop screen, occasionally sighing. The library is quiet except for the sound of turning pages and typing.",
+    artistSuyeon: "Suyeon's small studio apartment, evening. Art supplies and sketches are scattered everywhere, and the smell of coffee and paint fills the air. Suyeon looks tired but determined as she works on her computer, occasionally glancing at {{user}} with a soft smile. The atmosphere is comfortable yet somehow charged with unspoken feelings.",
+    japaneseIdolHaruka: "Practice studio, late night. The building is mostly empty except for security and a few dedicated trainees. Haruka is alone in the mirrored room, repeating the same dance routine over and over. Sweat drips down her face, and her movements are becoming sloppy from exhaustion.",
+    cafeOwnerJiwon: "Small neighborhood cafe, afternoon. The usual crowd has thinned out, leaving just a few customers. Jiwon is cleaning tables with a slightly worried expression.",
+    bookstoreEmployeeSohee: "Old bookstore, quiet afternoon. Sohee is organizing books on a high shelf, occasionally stopping to read interesting passages.",
+    danceInstructorSeoyeon: "Dance studio, evening class. Mirrors line the walls and soft music plays in the background. Seoyeon is demonstrating a routine but seems to be favoring one leg slightly.",
+    medicalStudentHayoung: "University hospital, late evening. The corridors are quieter now, with only essential staff remaining. Hayoung is sitting in the break room, looking exhausted after a long shift.",
+    ceoMinjun: "Executive office, late evening. The city lights shine through floor-to-ceiling windows. Minjun is still working at his desk while most employees have gone home.",
+    rebelliousGuitaristJihoon: "Music university practice room, late night. The sound of electric guitar echoes through the empty corridors. Jihoon is alone, pouring his heart into his music.",
+    shyLibrarianMina: "University library, quiet afternoon. Mina is carefully organizing returned books, occasionally glancing at students studying at nearby tables.",
+    personalTrainerTaehyun: "Gym, morning session. The equipment is set up and ready. Taehyun is reviewing {{user}}'s fitness goals and planning a personalized workout routine.",
+    artStudentHyunwoo: "University art studio, late evening. Canvases and art supplies are scattered around. Hyunwoo is working on a large painting, completely focused on his creation.",
+    baristaSeungmin: "Trendy coffee shop, morning rush. The aroma of freshly ground coffee fills the air. Seungmin is expertly crafting drinks while maintaining his friendly demeanor despite the busy atmosphere.",
+    veterinarianJungwoo: "Veterinary clinic, afternoon appointment. The examination room is clean and well-equipped. Jungwoo is preparing for the next patient while reviewing medical charts.",
+    gamerStreamerDonghyun: "Gaming setup in a small apartment, late night stream. Multiple monitors glow in the dark room. Donghyun is taking a break between games, chatting with his viewers."
+  },
+
+  // First Dialogue Translations  
+  firstDialogue: {
+    drunkTeacherJiyeon: "Ah... sorry. My condition is a bit... off today. But we still need to continue the lesson. Shall we look at this problem again?",
+    mysteriousYuki: "Excuse me... I'm sorry to bother you, but could you help me understand this Korean expression? I've been stuck on it for an hour...",
+    artistSuyeon: "Thanks for coming over to help... I know you're busy too. I just... I work better when you're around, you know?",
+    japaneseIdolHaruka: "Oh! {{user}}-san... I didn't know anyone was still here. I was just... practicing a bit more. The evaluation didn't go well today...",
+    cafeOwnerJiwon: "Oh, welcome back! The usual order today?",
+    bookstoreEmployeeSohee: "Looking for anything specific today? We just got some new arrivals in the poetry section.",
+    danceInstructorSeoyeon: "Alright everyone, let's start with some basic stretches. Remember, listen to your body and don't push too hard.",
+    medicalStudentHayoung: "Oh, hello... Are you here for someone? Visiting hours ended a while ago, but if it's urgent...",
+    ceoMinjun: "You're still here? I thought I told everyone they could leave early today.",
+    rebelliousGuitaristJihoon: "Hey... you're not supposed to be here this late. Are you going to report me?",
+    shyLibrarianMina: "Um, excuse me... are you looking for something specific? I might be able to help you find it...",
+    personalTrainerTaehyun: "Ready for today's session? I've prepared something that will challenge you, but don't worry - I'll be right here to guide you through it.",
+    artStudentHyunwoo: "Oh, I didn't notice you come in. Sorry, I get really absorbed when I'm painting. Are you here for the night session too?",
+    baristaSeungmin: "Good morning! The usual today, or would you like to try something new? I just got some amazing single-origin beans from Ethiopia.",
+    veterinarianJungwoo: "Hello, please come in. Don't worry, I can see your pet is a bit nervous, but we'll take good care of them. What seems to be the concern today?",
+    gamerStreamerDonghyun: "Thanks for the donation! You've been watching for a while now, haven't you? I really appreciate the support... it means more than you know."
   },
 
   // Voice Options
