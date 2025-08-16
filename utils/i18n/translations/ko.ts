@@ -6,17 +6,18 @@ export const ko = {
     search: '검색',
     activity: '활동',
     profile: '프로필',
-    stories: '스토리'
+    stories: '케이브'
   },
 
   // Home Screen
   home: {
-    featuredStories: '추천 스토리',
-    featuredDescription: '놀라운 캐릭터들과 몰입감 있는 스토리를 발견하세요',
-    createPromotion: '마음에 드는 스토리를 찾으셨나요?',
+    featuredStories: '추천 케이브',
+    featuredDescription: '놀라운 캐릭터들과 몰입감 있는 케이브를 발견하세요',
+    createPromotion: '마음에 드는 케이브를 찾으셨나요?',
     createPromotionSub: '직접 만들어보세요',
-    topStories: '인기 스토리 TOP 10',
-    newStories: '새로운 스토리'
+    topStories: '인기 케이브 TOP 10',
+    newStories: '새로운 케이브',
+    creator: '크리에이터'
   },
 
   // Popular Tags

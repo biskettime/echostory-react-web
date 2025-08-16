@@ -6,7 +6,7 @@ export const en = {
     search: 'Search',
     activity: 'Activity',
     profile: 'Profile',
-    stories: 'Stories'
+    stories: 'Cave'
   },
 
   // Home Screen
@@ -16,7 +16,8 @@ export const en = {
     createPromotion: 'If you find a story you like',
     createPromotionSub: 'Create your own',
     topStories: 'Top 10 Stories',
-    newStories: 'New Stories'
+    newStories: 'New Stories',
+    creator: 'Creator'
   },
 
   // Popular Tags

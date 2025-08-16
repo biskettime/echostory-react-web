@@ -303,7 +303,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         {/* Featured Stories Banner */}
-        <div className="mx-4 mt-4 mb-4">
+        <div className="mx-4 mt-1 mb-1">
           <div 
             className="relative cursor-pointer group overflow-hidden rounded-xl h-[180px]"
             onClick={() => onStorySelect(1)}
@@ -330,9 +330,9 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
         </div>
 
         {/* Story Creation Promotion */}
-        <div className="mx-4 mb-6">
+        <div className="mx-4 mb-1">
           <div 
-            className="relative cursor-pointer group overflow-hidden rounded-xl h-[140px] bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600"
+            className="relative cursor-pointer group overflow-hidden rounded-xl h-[119px] bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600"
             onClick={handleCreateClick}
           >
             {/* Background image positioned on the right, cropped from chest up */}
@@ -350,7 +350,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
             <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent"></div>
             
             <div className="relative flex items-center p-4">
-              <div className="flex-1 max-w-[55%]">
+              <div className="flex-1 max-w-[65%]">
                 <div className="flex items-center mb-2">
                   <img 
                     src="/images/echostory.png" 
@@ -367,10 +367,10 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                     }}
                   />
                   <div className="ml-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                    Creator
+                    {t('home.creator')}
                   </div>
                 </div>
-                <h3 className="text-white font-semibold mb-1 drop-shadow-xl">
+                <h3 className="text-white text-base font-medium mb-1 drop-shadow-xl">
                   {t('home.createPromotion')}
                 </h3>
                 <p className="text-white text-sm drop-shadow-lg font-medium">
@@ -387,7 +387,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
         {/* Popular Stories Section */}
         <div className="px-4 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-[#f5f6f6]">Top 10 Stories</h2>
+            <h2 className="text-lg font-bold text-[#f5f6f6]">{t('home.topStories')}</h2>
             <div className="flex space-x-2">
               <Button
                 variant="ghost"
@@ -411,20 +411,22 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
           </div>
           
           <div className="grid grid-cols-3 gap-3">
-            {currentPopularStories.map((story) => (
-              <div 
-                key={story.id}
-                className="cursor-pointer"
-                onClick={() => onStorySelect(story.id)}
-              >
-                <div className="relative mb-2">
-                  <StoryImage story={story} className="w-full h-[140px] object-cover rounded-xl" />
-                  {story.ranking && (
-                    <div className="absolute top-2 left-2 bg-black/70 rounded-md w-6 h-6 flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">{story.ranking}</span>
+            {currentPopularStories.map((story, index) => {
+              // Calculate the ranking based on current page and index
+              const ranking = popularCurrentPage * itemsPerPage + index + 1;
+              
+              return (
+                <div 
+                  key={story.id}
+                  className="cursor-pointer"
+                  onClick={() => onStorySelect(story.id)}
+                >
+                  <div className="relative mb-2">
+                    <StoryImage story={story} className="w-full h-[140px] object-cover rounded-xl" />
+                    <div className="absolute top-2 left-2 bg-black/80 rounded-md w-6 h-6 flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">{ranking}</span>
                     </div>
-                  )}
-                </div>
+                  </div>
                 
                 <div className="space-y-2">
                   <h3 className="text-white text-sm font-medium line-clamp-2 leading-tight">
@@ -448,14 +450,15 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                   <p className="text-[#808080] text-xs">{story.creatorHandle || story.author || ''}</p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* New Stories Section */}
         <div className="px-4 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-[#f5f6f6]">New Stories</h2>
+            <h2 className="text-lg font-bold text-[#f5f6f6]">{t('home.newStories')}</h2>
             <div className="flex space-x-2">
               <Button
                 variant="ghost"
