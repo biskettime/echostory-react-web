@@ -713,6 +713,9 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
         </div>
       </div>
 
+      {/* 여백 추가 */}
+      <div className="h-6"></div>
+
       {/* Story Images Section - AT THE BOTTOM */}
       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
         {/* Story Images Label */}
@@ -735,37 +738,29 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
         </div>
 
         {/* Image Upload Area */}
-        <div className="w-full">
+        <div className="w-full flex justify-start">
           {formData.storyImages.length === 0 ? (
             /* Empty State - Upload Box */
-            <div className="relative w-full h-[320px] border-2 border-dashed border-[#424242] rounded-lg bg-[#1a1a1a] flex flex-col items-center justify-center">
+            <div className="relative w-full max-w-[150px] h-[200px] border-2 border-dashed border-[#424242] rounded-lg bg-[#1a1a1a] flex flex-col items-center justify-center">
               {/* Image Icon */}
-              <div className="w-16 h-16 rounded-full bg-[#3a3a3a] flex items-center justify-center mb-6">
-                <svg className="w-8 h-8 text-[rgba(255,255,255,0.4)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 rounded-full bg-[#3a3a3a] flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-[rgba(255,255,255,0.4)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
               
               {/* Title */}
-              <h3 className="text-white text-[15px] font-medium mb-2">{t('create.storyImages')}</h3>
-              
-              {/* Description */}
-              <p className="text-[rgba(255,255,255,0.5)] text-[13px] mb-1">
-                {t('create.storyImagesDesc1')}
-              </p>
-              <p className="text-[rgba(255,255,255,0.4)] text-[12px] mb-6">
-                {t('create.storyImagesDesc2')}
-              </p>
+              <h3 className="text-white text-[14px] font-medium mb-4">{t('create.storyImages')}</h3>
               
               {/* Buttons */}
-              <div className="flex flex-col gap-3 w-[200px]">
-                <label className="w-full">
-                  <button className="w-full bg-[#ff6b00] text-white py-3 rounded-lg hover:bg-[#ff8800] transition-colors text-[14px] font-medium">
+              <div className="flex flex-col gap-2 items-center">
+                <label>
+                  <button className="bg-[#ff6b00] text-white px-4 py-2 rounded-md hover:bg-[#ff8800] transition-colors text-[13px] font-medium">
                     {t('create.generateWithAI')}
                   </button>
                 </label>
-                <label className="w-full cursor-pointer">
-                  <div className="w-full bg-[#3a3a3a] text-[rgba(255,255,255,0.85)] py-3 rounded-lg hover:bg-[#4a4a4a] transition-colors text-[14px] font-medium text-center">
+                <label className="cursor-pointer">
+                  <div className="bg-[#3a3a3a] text-[rgba(255,255,255,0.85)] px-4 py-2 rounded-md hover:bg-[#4a4a4a] transition-colors text-[13px] font-medium text-center">
                     {t('create.uploadImage')}
                   </div>
                   <input
@@ -776,11 +771,6 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                     className="hidden"
                   />
                 </label>
-              </div>
-              
-              {/* Character Count */}
-              <div className="absolute bottom-4 right-4 text-[rgba(255,255,255,0.45)] text-[13px]">
-                0 / 1000
               </div>
             </div>
           ) : (
@@ -842,13 +832,9 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
-              <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
-                <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
-                  <p className="block leading-[22px]">*</p>
-                </div>
-                <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[90px]">
-                  <p className="block leading-[22px]">Starting Situation</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#ff4d4f] text-[14px]">*</span>
+                <span className="text-[13.125px] text-[rgba(255,255,255,0.85)] font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif]">Starting Situation</span>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
@@ -880,17 +866,21 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
                       </div>
                     </div>
                   </div>
-                  <div className="absolute bottom-[-21.36px] box-border content-stretch flex flex-col items-start justify-start p-0 right-[0.21px]">
-                    <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.563px] text-[rgba(255,255,255,0.45)] text-left text-nowrap">
-                      <p className="block leading-[22px] whitespace-pre">{getCharCount('startingSituation', 1000)}</p>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
           </div>
         </div>
+        
+        {/* Character Count */}
+        <div className="flex justify-end mt-2">
+          <span className="text-[13.563px] text-[rgba(255,255,255,0.45)]">{getCharCount('startingSituation', 1000)}</span>
+        </div>
       </div>
+
+      {/* 여백 추가 */}
+      <div className="h-8"></div>
 
       {/* First Dialogue Section */}
       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
@@ -932,15 +922,16 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
                       </div>
                     </div>
                   </div>
-                  <div className="absolute bottom-[-21.36px] box-border content-stretch flex flex-col items-start justify-start p-0 right-[-0.27px]">
-                    <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.563px] text-[rgba(255,255,255,0.45)] text-left text-nowrap">
-                      <p className="block leading-[22px] whitespace-pre">{getCharCount('firstDialogue', 300)}</p>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* Character Count */}
+        <div className="flex justify-end mt-2">
+          <span className="text-[13.563px] text-[rgba(255,255,255,0.45)]">{getCharCount('firstDialogue', 300)}</span>
         </div>
       </div>
     </div>
@@ -973,13 +964,9 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
-              <div className="h-[22.63px] leading-[0] not-italic relative shrink-0 text-left w-full">
-                <div className="absolute flex flex-col font-['Apple_SD_Gothic_Neo:Regular',sans-serif] h-[22px] justify-center left-0 text-[#ff4d4f] text-[14px] top-[11.57px] translate-y-[-50%] w-[5.505px]">
-                  <p className="block leading-[22px]">*</p>
-                </div>
-                <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[70px]">
-                  <p className="block leading-[22px]">Introduction</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#ff4d4f] text-[14px]">*</span>
+                <span className="text-[13.125px] text-[rgba(255,255,255,0.85)] font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif]">Introduction</span>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
@@ -1011,17 +998,21 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                       </div>
                     </div>
                   </div>
-                  <div className="absolute bottom-[-21.36px] box-border content-stretch flex flex-col items-start justify-start p-0 right-[0.21px]">
-                    <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.563px] text-[rgba(255,255,255,0.45)] text-left text-nowrap">
-                      <p className="block leading-[22px] whitespace-pre">{getCharCount('introduction', 500)}</p>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
           </div>
         </div>
+        
+        {/* Character Count */}
+        <div className="flex justify-end mt-2">
+          <span className="text-[13.563px] text-[rgba(255,255,255,0.45)]">{getCharCount('introduction', 500)}</span>
+        </div>
       </div>
+
+      {/* 여백 추가 */}
+      <div className="h-8"></div>
 
       {/* Tags Section */}
       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
@@ -1107,6 +1098,9 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
         </div>
       </div>
 
+      {/* 여백 추가 */}
+      <div className="h-6"></div>
+
       {/* Visibility Section */}
       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
         {/* Visibility Label */}
@@ -1159,6 +1153,9 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
           </div>
         </div>
       </div>
+
+      {/* 여백 추가 */}
+      <div className="h-6"></div>
 
       {/* Safety Filter Section */}
       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
@@ -1213,6 +1210,9 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
         </div>
       </div>
 
+      {/* 여백 추가 */}
+      <div className="h-6"></div>
+
       {/* Creator Comment Section */}
       <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
         {/* Creator Comment Label */}
@@ -1253,15 +1253,16 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                       </div>
                     </div>
                   </div>
-                  <div className="absolute bottom-[-21.36px] box-border content-stretch flex flex-col items-start justify-start p-0 right-[-0.27px]">
-                    <div className="flex flex-col font-['Inter:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.563px] text-[rgba(255,255,255,0.45)] text-left text-nowrap">
-                      <p className="block leading-[22px] whitespace-pre">{getCharCount('creatorComment', 200)}</p>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* Character Count */}
+        <div className="flex justify-end mt-2">
+          <span className="text-[13.563px] text-[rgba(255,255,255,0.45)]">{getCharCount('creatorComment', 200)}</span>
         </div>
       </div>
     </div>
