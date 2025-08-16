@@ -7,6 +7,12 @@ export interface TextSegment {
 
 // 텍스트를 파싱하여 다른 타입의 세그먼트로 분리
 export const parseMessageText = (text: string): TextSegment[] => {
+  // null/undefined 체크
+  if (!text || typeof text !== 'string') {
+    console.warn('parseMessageText: Invalid text input:', text);
+    return [{ type: 'normal', content: '' }];
+  }
+  
   const segments: TextSegment[] = [];
   let currentIndex = 0;
   
@@ -94,6 +100,12 @@ export const parseMessageText = (text: string): TextSegment[] => {
 
 // 사용자 메시지 전용 포맷터
 export const renderUserFormattedText = (text: string): React.ReactNode => {
+  // null/undefined 체크
+  if (!text || typeof text !== 'string') {
+    console.warn('renderUserFormattedText: Invalid text input:', text);
+    return null;
+  }
+  
   const segments: TextSegment[] = [];
   let currentIndex = 0;
   
@@ -209,6 +221,12 @@ export const renderUserFormattedText = (text: string): React.ReactNode => {
 
 // 세그먼트를 React 엘리먼트로 렌더링 (캐릭터 메시지용)
 export const renderFormattedText = (text: string): React.ReactNode => {
+  // null/undefined 체크
+  if (!text || typeof text !== 'string') {
+    console.warn('renderFormattedText: Invalid text input:', text);
+    return null;
+  }
+  
   const segments = parseMessageText(text);
   console.log('🎨 [CHARACTER] Formatting text:', text);
   console.log('🎨 [CHARACTER] Parsed segments:', segments);

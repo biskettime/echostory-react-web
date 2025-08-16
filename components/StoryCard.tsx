@@ -103,7 +103,7 @@ export function StoryCard({
       }
 
       // Then try the provided imageUrl
-      if (imageUrl && imageUrl !== '/images/sample.png') {
+      if (imageUrl && imageUrl !== '/images/echostory.png') {
         try {
           const response = await fetch(imageUrl, { method: 'HEAD' });
           if (response.ok) {

@@ -600,9 +600,18 @@ export function ActivityScreen({ onNavigateToChat }: ActivityScreenProps = {}) {
     // Find the corresponding chat session to get the story ID
     const session = realChatSessions.find(s => s.characterName === chatRoom.characterName);
     if (session && onNavigateToChat) {
-      onNavigateToChat(session.storyId);
+      console.log('🔍 ActivityScreen - Found session:', session);
+      console.log('🔍 ActivityScreen - Session storyId:', session.storyId);
+      
+      // Extract the actual story ID from session ID if needed
+      // Session ID format: "storyId_userId_timestamp"
+      const actualStoryId = session.storyId || session.id.split('_')[0];
+      console.log('🔍 ActivityScreen - Using storyId:', actualStoryId);
+      
+      onNavigateToChat(actualStoryId);
     } else {
-      console.log('Chat room clicked:', chatRoom.characterName);
+      console.log('❌ ActivityScreen - No session found for:', chatRoom.characterName);
+      console.log('❌ ActivityScreen - Available sessions:', realChatSessions.map(s => s.characterName));
     }
   };
 

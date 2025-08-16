@@ -17,7 +17,7 @@ import { renderFormattedText, renderUserFormattedText } from '../utils/textForma
 import { IntegratedAIService, StoryContext, UserContext } from '../services/integratedAIService';
 import svgPaths from '../imports/svg-c6g2wd331h';
 // import imgThumbnail from "figma:asset/374d74b30fe73a06692e4b5c87efdada280aa447.png";
-const imgThumbnail = "/images/chat-thumbnail.svg";
+const imgThumbnail = "/images/echostory.png";
 
 // Create AI service instance
 const aiService = new IntegratedAIService();
@@ -79,7 +79,9 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   const nextMessageIdRef = useRef(3);
 
   // Get story data based on storyId (moved up to avoid hooks order issues)
+  console.log('🔍 ChatScreen - Received storyId:', storyId);
   const story = getStory(storyId);
+  console.log('🔍 ChatScreen - Found story:', story);
   const characterName = story?.content?.characterName || story?.title || 'Character';
 
   // Language change listener
@@ -353,6 +355,9 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   
   // Show error screen if no story
   if (!story) {
+    console.error('❌ ChatScreen - Story not found for storyId:', storyId);
+    console.log('🔍 ChatScreen - Available stories:', getPublishedStories().map(s => ({ id: s.id, title: s.title })));
+    
     return (
       <div className="flex flex-col items-center justify-center h-full bg-[#1a1b1b] text-white p-8">
         <h2 className="text-xl font-bold mb-4">스토리를 찾을 수 없습니다</h2>
@@ -360,6 +365,10 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
           요청하신 스토리 (ID: {storyId})를 찾을 수 없습니다.<br/>
           스토리가 삭제되었거나 존재하지 않을 수 있습니다.
         </p>
+        <div className="text-xs text-gray-500 mb-4 max-w-md text-center">
+          디버그 정보: storyId = "{storyId}"<br/>
+          타입: {typeof storyId}
+        </div>
         <button
           onClick={onBack}
           className="bg-[#dc5903] text-white px-6 py-2 rounded-md hover:bg-[#e6850e] transition-colors"
@@ -528,18 +537,18 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
 
   // Show first character message only for new chats
   useEffect(() => {
-    if (!isStoryMode && !firstMessageAdded) {
+    if (!isStoryMode && !firstMessageAdded && currentChatSession && currentChatSession.messages.length === 0) {
       console.log('⏰ Setting timer for first message animation');
       const timer = setTimeout(() => {
         setShowFirstMessage(true);
       }, 2000);
 
       return () => clearTimeout(timer);
-    } else if (firstMessageAdded) {
-      console.log('✅ First message already added, skipping animation');
+    } else if (firstMessageAdded || (currentChatSession && currentChatSession.messages.length > 0)) {
+      console.log('✅ First message already added or existing messages found, skipping animation');
       setShowFirstMessage(false);
     }
-  }, [isStoryMode, firstMessageAdded]);
+  }, [isStoryMode, firstMessageAdded, currentChatSession]);
 
   // Debug effect to monitor mode changes
   useEffect(() => {
@@ -557,7 +566,10 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   }, [story]);
 
   const handleFirstMessageComplete = useCallback(() => {
-    if (firstMessageAdded) return;
+    if (firstMessageAdded || (currentChatSession && currentChatSession.messages.length > 0)) {
+      console.log('First message already exists, skipping addition');
+      return;
+    }
     
     console.log('First message typing completed');
     setFirstMessageAdded(true);
@@ -565,14 +577,29 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
     
     const firstCharacterMessage = getInitialCharacterMessage();
     
-    setMessages(prev => [...prev, {
+    const firstMessage = {
       id: 2,
-      sender: 'character',
+      sender: 'character' as const,
       content: firstCharacterMessage,
       timestamp: new Date(),
       isTyping: false
-    }]);
-  }, [firstMessageAdded, getInitialCharacterMessage]);
+    };
+    
+    setMessages(prev => [...prev, firstMessage]);
+    
+    // Also save to chat session to prevent duplication
+    if (currentChatSession) {
+      const sessionMessage = {
+        id: Date.now().toString(),
+        senderId: 'character',
+        content: firstMessage.content,
+        timestamp: firstMessage.timestamp.toISOString(),
+        type: 'message' as const
+      };
+      
+      addChatMessage(currentChatSession.id, sessionMessage);
+    }
+  }, [firstMessageAdded, currentChatSession, getInitialCharacterMessage]);
 
   const getCharacterResponse = useCallback(async (userMessage: string, storyId: string): Promise<string> => {
     console.log('🤖 getCharacterResponse called with:', { userMessage, storyId });
@@ -1287,7 +1314,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                       <div className="max-w-[300px] flex flex-col items-end">
                         <div className="bg-[rgba(11,147,246,0.3)] backdrop-blur-sm px-3 py-2 rounded-bl-[12px] rounded-br-[3px] rounded-tl-[12px] rounded-tr-[12px] border border-[rgba(255,255,255,0.1)]">
                           <div className="text-[14.18px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
-                            {renderUserFormattedText(msg.content)}
+                            {renderUserFormattedText(msg.content || '')}
                           </div>
                         </div>
                         
@@ -1415,7 +1442,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
                                 />
                               ) : (
                                 <div className="text-[rgba(255,255,255,0.85)] text-[13.945px] font-['Inter:Light',_'Noto_Sans_KR:Regular',_sans-serif] font-light leading-[21.75px]">
-                                  {renderFormattedText(msg.content)}
+                                  {renderFormattedText(msg.content || '')}
                                 </div>
                               )}
                             </div>
