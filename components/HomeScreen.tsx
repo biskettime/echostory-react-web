@@ -355,7 +355,7 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
                   <img 
                     src="/images/echostory.png" 
                     alt="EchoStory" 
-                    className="h-8 w-auto object-contain"
+                    className="h-10 w-auto object-contain"
                     onError={(e) => {
                       // Fallback to text if image fails to load
                       const target = e.target as HTMLImageElement;
