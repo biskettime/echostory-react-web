@@ -190,6 +190,32 @@ export const ko = {
     justNow: '방금 전'
   },
 
+  // Image Generation
+  imageGeneration: {
+    guide: '이미지 생성 가이드',
+    keywords: '키워드',
+    keywordPlaceholder: '키워드 입력',
+    model: '모델',
+    imageCount: '이미지 개수',
+    generate: '생성하기',
+    suggestionKeywords: {
+      female: '여성',
+      dress: '드레스',
+      longHair: '긴 머리',
+      blueEyes: '파란 눈',
+      bobCut: '단발머리',
+      cute: '귀여운'
+    },
+    models: {
+      anime: '애니메이션',
+      '25d': '2.5D',
+      colorful: '컬러풀',
+      detailedAnime: '상세 애니메이션',
+      animeMovie: '애니메이션 영화',
+      realistic1: '리얼리스틱1'
+    }
+  },
+
 
 
   // Story Detail

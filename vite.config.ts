@@ -21,7 +21,7 @@ export default defineConfig({
       'localhost',
       '127.0.0.1',
       '192.168.0.40',
-      '7d0a8d207889.ngrok.app'
+      '74fd99e56501.ngrok.app'
     ],
     proxy: {
       '/api/nvidia': {

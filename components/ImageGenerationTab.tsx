@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronRight, Plus, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { t, addLanguageChangeListener, removeLanguageChangeListener } from '../utils/i18n';
 import svgPaths from '../imports/svg-cn1opys1e8';
 // 스타일 이미지들
 const imgAnime = "/images/style-anime.svg";
@@ -10,29 +11,45 @@ const imgColorful = "/images/style-colorful.svg";
 const imgDetailedAnime = "/images/style-detailed-anime.svg";
 const imgAnimeMovie = "/images/style-anime-movie.svg";
 const imgRealistic1 = "/images/style-realistic1.svg";
-const imgKorean = "/images/style-korean.svg";
-const imgJapanese = "/images/style-japanese.svg";
-const imgRealistic2 = "/images/style-realistic2.svg";
 
 export function ImageGenerationTab() {
   const [selectedModel, setSelectedModel] = useState('Anime');
   const [imageCount, setImageCount] = useState(1);
-  const [keywords, setKeywords] = useState<string[]>(['Female']);
+  const [keywords, setKeywords] = useState<string[]>([t('imageGeneration.suggestionKeywords.female')]);
   const [currentKeyword, setCurrentKeyword] = useState('');
 
+  // Language change listener
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      // Update keywords array when language changes
+      setKeywords(prev => {
+        if (prev.length === 1 && (prev[0] === 'Female' || prev[0] === '여성')) {
+          return [t('imageGeneration.suggestionKeywords.female')];
+        }
+        return prev;
+      });
+    };
+
+    addLanguageChangeListener(handleLanguageChange);
+    return () => removeLanguageChangeListener(handleLanguageChange);
+  }, []);
+
   const models = [
-    { name: 'Anime', image: imgAnime },
-    { name: '2.5D', image: img25D },
-    { name: 'Colorful', image: imgColorful },
-    { name: 'Detailed Anime', image: imgDetailedAnime },
-    { name: 'Anime Movie', image: imgAnimeMovie },
-    { name: 'Realistic1', image: imgRealistic1 },
-    { name: 'Korean', image: imgKorean },
-    { name: 'Japanese', image: imgJapanese },
-    { name: 'Realistic2', image: imgRealistic2 }
+    { name: t('imageGeneration.models.anime'), image: imgAnime },
+    { name: t('imageGeneration.models.25d'), image: img25D },
+    { name: t('imageGeneration.models.colorful'), image: imgColorful },
+    { name: t('imageGeneration.models.detailedAnime'), image: imgDetailedAnime },
+    { name: t('imageGeneration.models.animeMovie'), image: imgAnimeMovie },
+    { name: t('imageGeneration.models.realistic1'), image: imgRealistic1 }
   ];
 
-  const suggestionKeywords = ['Dress', 'Long Hair', 'Blue Eyes', 'Bob Cut', 'Cute'];
+  const suggestionKeywords = [
+    t('imageGeneration.suggestionKeywords.dress'),
+    t('imageGeneration.suggestionKeywords.longHair'),
+    t('imageGeneration.suggestionKeywords.blueEyes'),
+    t('imageGeneration.suggestionKeywords.bobCut'),
+    t('imageGeneration.suggestionKeywords.cute')
+  ];
 
   const handleAddKeyword = (keyword: string) => {
     if (keyword.trim() && !keywords.includes(keyword.trim())) {
@@ -64,7 +81,7 @@ export function ImageGenerationTab() {
       {/* Image Generation Guide Link */}
       <div className="flex justify-end">
         <div className="bg-[rgba(0,0,0,0.5)] rounded px-2.5 py-[3px] flex items-center gap-0.5">
-          <span className="text-[#ff9500] text-xs font-medium">Image Generation Guide</span>
+          <span className="text-[#ff9500] text-xs font-medium">{t('imageGeneration.guide')}</span>
           <div className="w-[13px] h-[13px]">
             <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13 13">
               <path
@@ -82,7 +99,7 @@ export function ImageGenerationTab() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <div className="w-1 h-4 bg-[#1890ff] rounded-sm"></div>
-          <h3 className="text-white text-[13.125px] font-medium">Generation Keywords</h3>
+          <h3 className="text-white text-[13.125px] font-medium">{t('imageGeneration.keywords')}</h3>
         </div>
 
         {/* Current Keywords */}
@@ -106,7 +123,7 @@ export function ImageGenerationTab() {
             value={currentKeyword}
             onChange={(e) => setCurrentKeyword(e.target.value)}
             onKeyDown={handleKeywordInput}
-            placeholder="Add keyword..."
+            placeholder={t('imageGeneration.keywordPlaceholder')}
             className="flex-1 bg-[#1d1d1d] border-[#424242] text-white placeholder-gray-400"
           />
           <Button
@@ -140,7 +157,7 @@ export function ImageGenerationTab() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <div className="w-1 h-4 bg-[#1890ff] rounded-sm"></div>
-          <h3 className="text-white text-[13.125px] font-medium">Model</h3>
+          <h3 className="text-white text-[13.125px] font-medium">{t('imageGeneration.model')}</h3>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -171,7 +188,7 @@ export function ImageGenerationTab() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <div className="w-1 h-4 bg-[#1890ff] rounded-sm"></div>
-          <h3 className="text-white text-[13.125px] font-medium">Number of Images</h3>
+          <h3 className="text-white text-[13.125px] font-medium">{t('imageGeneration.imageCount')}</h3>
         </div>
 
         <div className="flex gap-2">
@@ -197,7 +214,7 @@ export function ImageGenerationTab() {
           onClick={handleGenerate}
           className="w-full bg-[#dc5903] hover:bg-[#dc5903]/90 text-white h-8 rounded-md shadow-[0px_2px_0px_0px_rgba(180,60,0,0.15)]"
         >
-          Generate Images (10P)
+{t('imageGeneration.generate')} (10P)
         </Button>
       </div>
     </div>

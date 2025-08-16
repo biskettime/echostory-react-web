@@ -293,12 +293,16 @@ export default function App() {
           );
         case 'story-creation':
           return (
-            <StoryCreationScreen 
-              onBack={handleBackToCreate}
-              onSave={handleStoryCreated}
-              safetyMode={safetyMode}
-              onSafetyToggle={handleSafetyToggle}
-            />
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 pt-8 pb-4 px-4">
+              <div className="bg-[#1a1b1b] rounded-lg w-full max-w-[375px] h-[85vh] overflow-hidden flex flex-col">
+                <StoryCreationScreen 
+                  onBack={handleBackToCreate}
+                  onSave={handleStoryCreated}
+                  safetyMode={safetyMode}
+                  onSafetyToggle={handleSafetyToggle}
+                />
+              </div>
+            </div>
           );
         case 'in-progress-story':
           return (

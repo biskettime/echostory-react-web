@@ -284,26 +284,10 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   const finalStoryImages = safeStoryImages.length > 0 ? safeStoryImages : ['/images/echostory.png'];
   console.log('ChatScreen - storyId:', storyId, 'story:', story);
 
-  // Check ResponsiveVoice loading status
+  // Use browser TTS only (ResponsiveVoice removed due to 502 errors)
   useEffect(() => {
-    const checkResponsiveVoice = () => {
-      if (typeof (window as any).responsiveVoice !== 'undefined') {
-        console.log('✅ ResponsiveVoice loaded successfully');
-        setResponsiveVoiceReady(true);
-        
-        // List available voices for debugging
-        if ((window as any).responsiveVoice.getVoices) {
-          const voices = (window as any).responsiveVoice.getVoices();
-          console.log('🎵 Available ResponsiveVoice voices:', voices);
-        }
-      } else {
-        console.log('⏳ ResponsiveVoice not yet loaded, retrying...');
-        setTimeout(checkResponsiveVoice, 500);
-      }
-    };
-
-    // Start checking after a short delay
-    setTimeout(checkResponsiveVoice, 1000);
+    console.log('🎵 Using browser TTS only');
+    setResponsiveVoiceReady(false); // Always use browser TTS
   }, []);
 
   // Close voice selector when clicking outside
@@ -717,7 +701,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
       };
       setMessages(prev => [...prev, typingMessage]);
 
-      // Get AI response
+      // Get AI response using service layer
       try {
         console.log('🚀 Calling getCharacterResponse with:', { messageContent, storyId });
         const responseContent = await getCharacterResponse(messageContent, storyId);

@@ -56,14 +56,28 @@
    npm install
    ```
 
-3. **개발 서버 실행**
+3. **AI API 설정**
    ```bash
-   npm run dev
+   # 로컬 AI API 사용 (기본값)
+   VITE_AI_BASE_URL="http://192.168.0.40:1234/v1"
+   VITE_AI_API_KEY=""
+   VITE_AI_MODEL=""
+   
+   # 또는 NVIDIA API 사용
+   VITE_AI_BASE_URL="https://integrate.api.nvidia.com/v1"
+   VITE_AI_API_KEY="your-nvidia-api-key"
+   VITE_AI_MODEL="meta/llama-3.1-70b-instruct"
    ```
 
-4. **브라우저에서 확인**
-   - 로컬: http://localhost:5173
-   - 네트워크: http://0.0.0.0:5173
+4. **개발 서버 실행**
+   ```bash
+   # 환경변수와 함께 실행
+   VITE_AI_BASE_URL="http://192.168.0.40:1234/v1" npm run dev
+   ```
+
+5. **브라우저에서 확인**
+   - 로컬: http://localhost:3000
+   - 네트워크: http://192.168.0.40:3000
 
 ### 빌드 및 배포
 

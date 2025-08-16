@@ -217,9 +217,9 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-scroll w-full">
+      <div className="flex-1 overflow-y-scroll w-full min-h-0">
         <div className="relative w-full">
-          <div className="box-border content-stretch flex flex-col gap-[13.26px] items-start justify-start pb-[60px] pt-[46.5px] px-[15px] relative w-full">
+          <div className="box-border content-stretch flex flex-col gap-[13.26px] items-start justify-start pb-[120px] pt-[46.5px] px-[15px] relative w-full">
             
             {/* Story Creation Guide Link */}
             <div className="box-border content-stretch flex flex-row items-start justify-center p-0 relative shrink-0 w-full">
@@ -420,10 +420,10 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
   };
 
   return (
-    <div className="relative shrink-0 w-full">
+    <div className="min-h-[1800px] relative shrink-0 w-full">
       
       {/* Title Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-0">
         {/* Title Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -481,7 +481,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       </div>
 
       {/* Story Settings Section */}
-      <div className="box-border content-stretch flex flex-col gap-[0.01px] items-start justify-start p-0 w-full mt-6">
+      <div className="absolute box-border content-stretch flex flex-col gap-[0.01px] items-start justify-start left-0 p-0 right-0 top-[120px]">
         {/* Story Settings Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -537,7 +537,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       </div>
 
       {/* Secret Settings Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full mt-6">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[326px]">
         {/* Secret Settings Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -589,18 +589,22 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       </div>
 
       {/* Character Section Separator */}
-      <div className="flex items-center justify-center py-4 w-full mt-6">
-        <div className="flex-1 h-[1px] bg-[rgba(253,253,253,0.01)]"></div>
-        <div className="px-4">
+      <div className="absolute h-[25.14px] left-0 right-0 top-[475px]">
+        <div className="absolute box-border content-stretch flex flex-col items-center justify-start left-[19.82px] px-4 py-0 translate-y-[-50%]" style={{ top: "calc(50% + 0.43px)" }}>
           <div className="flex flex-col font-['Inter:Medium','Noto_Sans_KR:Regular',sans-serif] font-medium justify-center leading-[0] not-italic relative shrink-0 text-[15px] text-[rgba(255,255,255,0.85)] text-center text-nowrap">
             <p className="block leading-[25.14px] whitespace-pre">Character</p>
           </div>
         </div>
-        <div className="flex-1 h-[1px] bg-[rgba(253,253,253,0.01)]"></div>
+        <div className="absolute h-[0.63px] left-0 right-[95.78%] translate-y-[-50%]" style={{ top: "calc(50% + 0.315px)" }}>
+          <div aria-hidden="true" className="absolute border-[0.625px_0px_0px] border-[rgba(253,253,253,0.01)] border-solid inset-0 pointer-events-none" />
+        </div>
+        <div className="absolute h-[0.63px] left-[19.85%] right-0 translate-y-[-50%]" style={{ top: "calc(50% + 0.315px)" }}>
+          <div aria-hidden="true" className="absolute border-[0.625px_0px_0px] border-[rgba(253,253,253,0.01)] border-solid inset-0 pointer-events-none" />
+        </div>
       </div>
 
       {/* Character Name Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full mt-6">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[551px]">
         {/* Character Name Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -658,7 +662,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       </div>
 
       {/* Character Description Section */}
-      <div className="box-border content-stretch flex flex-col gap-[0.01px] items-start justify-start p-0 w-full mt-6">
+      <div className="absolute box-border content-stretch flex flex-col gap-[0.01px] items-start justify-start left-0 p-0 right-0 top-[660px]">
         {/* Character Description Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -714,7 +718,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
       </div>
 
       {/* Story Images Section - AT THE BOTTOM */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[950px]">
         {/* Story Images Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -826,7 +830,6 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
           )}
         </div>
       </div>
-
     </div>
   );
 }
@@ -834,10 +837,10 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
 // Start Situation Tab Panel - Complete Implementation
 function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPanelProps) {
   return (
-    <div className="relative shrink-0 w-full">
+    <div className="h-[800px] relative shrink-0 w-full">
       
       {/* Starting Situation Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-0">
         {/* Starting Situation Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -893,7 +896,7 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
       </div>
 
       {/* First Dialogue Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[250px]">
         {/* First Dialogue Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -965,10 +968,10 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
   };
 
   return (
-    <div className="relative shrink-0 w-full">
+    <div className="h-[1200px] relative shrink-0 w-full">
       
       {/* Introduction Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-0">
         {/* Introduction Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -1024,7 +1027,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       </div>
 
       {/* Tags Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[230px]">
         {/* Tags Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -1108,7 +1111,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       </div>
 
       {/* Visibility Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[450px]">
         {/* Visibility Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -1161,7 +1164,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       </div>
 
       {/* Safety Filter Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[580px]">
         {/* Safety Filter Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">
@@ -1214,7 +1217,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
       </div>
 
       {/* Creator Comment Section */}
-      <div className="box-border content-stretch flex flex-col items-start justify-start p-0 w-full">
+      <div className="absolute box-border content-stretch flex flex-col items-start justify-start left-0 p-0 right-0 top-[720px]">
         {/* Creator Comment Label */}
         <div className="box-border content-stretch flex flex-col items-start justify-start max-w-[350px] min-h-px overflow-clip pb-2 pt-0 px-0 relative shrink-0 w-full">
           <div className="box-border content-stretch flex flex-row items-center justify-start max-w-[350px] pl-0 pr-[13.68px] py-0 relative shrink-0">

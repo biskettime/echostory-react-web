@@ -156,8 +156,8 @@ export function StoryCreationTab({ onNavigateToStoryCreation, onNavigateToInProg
   const handleStoryClick = (story: Story) => {
     // Navigate to edit screen for drafts/in-progress, or view for published
     if (story.originalData && 'lastSaved' in story.originalData) {
-      // It's a draft
-      onNavigateToInProgressStory(story.id);
+      // It's a draft - open in popup modal for editing
+      onNavigateToStoryCreation();
     } else {
       // It's a published story - could navigate to view/edit screen
       onNavigateToInProgressStory(story.id);

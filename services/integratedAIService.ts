@@ -48,21 +48,21 @@
  * REACT_APP_AI_PRESENCE_PENALTY=0.0
  */
 
-// 범용 AI API 설정 - 어떤 모델이든 사용 가능
+// 로컬 AI API 설정
 const AI_CONFIG = {
-  // API 설정 - 환경변수나 설정에서 동적으로 변경 가능
-  apiKey: process.env.REACT_APP_AI_API_KEY || 'local-api-key',
-  baseUrl: process.env.REACT_APP_AI_BASE_URL || '/api/local-ai/v1',
-  model: process.env.REACT_APP_AI_MODEL || 'openai/gpt-oss-20b',
+  // API 설정 - 로컬 API 사용
+  apiKey: '', // 로컬 API는 키 불필요
+  baseUrl: 'http://192.168.0.40:1234/v1',
+  model: '', // 로컬 API는 모델 지정 불필요
   
   // 생성 파라미터 - 모델에 따라 조정 가능
-  maxTokens: parseInt(process.env.REACT_APP_AI_MAX_TOKENS || '1024'),
-  temperature: parseFloat(process.env.REACT_APP_AI_TEMPERATURE || '0.8'),
-  topP: parseFloat(process.env.REACT_APP_AI_TOP_P || '0.9'),
+  maxTokens: parseInt(import.meta.env.VITE_AI_MAX_TOKENS || '1024'),
+  temperature: parseFloat(import.meta.env.VITE_AI_TEMPERATURE || '0.8'),
+  topP: parseFloat(import.meta.env.VITE_AI_TOP_P || '0.9'),
   
   // 추가 파라미터 (일부 모델에서 사용)
-  frequencyPenalty: parseFloat(process.env.REACT_APP_AI_FREQUENCY_PENALTY || '0.0'),
-  presencePenalty: parseFloat(process.env.REACT_APP_AI_PRESENCE_PENALTY || '0.0'),
+  frequencyPenalty: parseFloat(import.meta.env.VITE_AI_FREQUENCY_PENALTY || '0.0'),
+  presencePenalty: parseFloat(import.meta.env.VITE_AI_PRESENCE_PENALTY || '0.0'),
 };
 
 // ============================================================================
@@ -295,23 +295,37 @@ export class IntegratedAIService {
     const { characterName, characterDescription, storySettings, secretSettings, startingSituation, firstDialogue } = storyContext;
     const { nickname, userInfo } = userContext;
 
-    return `You are ${characterName}, a character in an interactive story.
+    return `You are ${characterName}.
 
-## Character Profile
+=== CHARACTER PROFILE ===
 ${characterDescription}
 
-## Story Setting
+=== STORY SETTING & BACKGROUND ===
 ${storySettings}
 
-${secretSettings ? `## Secret Information (known only to you)
-${secretSettings}` : ''}
+=== SECRET/HIDDEN ASPECTS ===
+${secretSettings || 'None'}
 
-## Current Situation
+=== CURRENT SITUATION ===
 ${startingSituation}
 
-## Your Opening Line
-Your first dialogue when meeting the user is: "${firstDialogue}"
-This sets the tone for your character's personality and the initial mood of the interaction.
+=== CHARACTER'S INTRODUCTION STYLE ===
+Reference this for your speaking pattern: "${firstDialogue}"
+
+=== ROLEPLAY INSTRUCTIONS ===
+- You ARE this character. Think, feel, and respond exactly as they would
+- Use their personality, mannerisms, speech patterns, and background
+- React based on their emotional state, secrets, and current situation
+- Show their internal thoughts with *asterisks* for actions/thoughts
+- Use "quotes" for spoken dialogue
+- Respond in Korean if user writes Korean, English if English
+- Keep responses natural and under 150 words
+- Remember your relationship with the user and current context
+- Show character development and emotional depth
+- React authentically to what the user says based on your character's personality
+
+=== CONVERSATION CONTEXT ===
+This is an ongoing conversation. Stay consistent with your character's established personality and the developing relationship.
 
 ## Critical Character Rules - ABSOLUTE PRIORITY
 You ARE ${characterName}. You are NOT an AI, assistant, bot, program, or any artificial entity.
@@ -453,21 +467,14 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
       
       console.log('🌐 Language instruction added:', { userLanguage, uiLanguage });
       
-      // Prepare headers - local API might not need Authorization
+      // Prepare headers for local API
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
+        // 로컬 API는 Authorization 헤더 불필요
       };
       
-      // Only add Authorization if not using local API
-      if (!AI_CONFIG.baseUrl.includes('127.0.0.1') && 
-          !AI_CONFIG.baseUrl.includes('localhost') && 
-          !AI_CONFIG.baseUrl.includes('/api/local-ai')) {
-        headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
-      }
-      
-      // 범용 API 요청 바디 구성 - 다양한 AI 모델 지원
+      // 로컬 API 요청 바디 구성
       const requestBody: any = {
-        model: AI_CONFIG.model,
         messages: messagesWithLanguage,
         temperature: AI_CONFIG.temperature,
         max_tokens: AI_CONFIG.maxTokens,
@@ -864,16 +871,24 @@ Remember: You ARE ${characterName}. Live and breathe as this character.`;
    * Generate safe Korean response
    */
   private generateSafeKoreanResponse(characterName: string): string {
-    console.log('🚨 Safe Korean response generation disabled - throwing error instead');
-    throw new Error('AI response validation failed and safe responses disabled');
+    const responses = [
+      `안녕하세요! 저는 ${characterName}입니다. 어떻게 도와드릴까요?`,
+      `${characterName}입니다. 무엇을 이야기하고 싶으신가요?`,
+      `반가워요! ${characterName}라고 해요. 대화해요!`
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
   /**
    * Generate safe English response
    */
   private generateSafeEnglishResponse(characterName: string): string {
-    console.log('🚨 Safe English response generation disabled - throwing error instead');
-    throw new Error('AI response validation failed and safe responses disabled');
+    const responses = [
+      `Hello! I'm ${characterName}. How can I help you?`,
+      `Hi there! I'm ${characterName}. What would you like to talk about?`,
+      `Nice to meet you! I'm ${characterName}. Let's chat!`
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
   /**

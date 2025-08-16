@@ -190,6 +190,32 @@ export const en = {
     justNow: 'just now'
   },
 
+  // Image Generation
+  imageGeneration: {
+    guide: 'Image Generation Guide',
+    keywords: 'Keywords',
+    keywordPlaceholder: 'Enter keyword',
+    model: 'Model',
+    imageCount: 'Image Count',
+    generate: 'Generate',
+    suggestionKeywords: {
+      female: 'Female',
+      dress: 'Dress',
+      longHair: 'Long Hair',
+      blueEyes: 'Blue Eyes',
+      bobCut: 'Bob Cut',
+      cute: 'Cute'
+    },
+    models: {
+      anime: 'Anime',
+      '25d': '2.5D',
+      colorful: 'Colorful',
+      detailedAnime: 'Detailed Anime',
+      animeMovie: 'Anime Movie',
+      realistic1: 'Realistic1'
+    }
+  },
+
 
 
   // Story Detail
