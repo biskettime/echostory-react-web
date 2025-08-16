@@ -219,14 +219,14 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-scroll w-full">
         <div className="relative w-full">
-          <div className="box-border content-stretch flex flex-col gap-[13.26px] items-start justify-start pb-[60px] pt-[46.5px] px-[15px] relative w-full">
+          <div className="box-border content-stretch flex flex-col gap-[13.26px] items-start justify-start pb-[60px] pt-[30px] px-[15px] relative w-full">
             
             {/* Story Creation Guide Link */}
             <div className="box-border content-stretch flex flex-row items-start justify-center p-0 relative shrink-0 w-full">
-              <div className="basis-0 box-border content-stretch flex flex-col grow items-start justify-start min-h-px min-w-px p-0 relative shrink-0">
-                <div className="bg-[rgba(0,0,0,0.5)] box-border content-stretch flex flex-row gap-[1.99px] items-center justify-start pb-[3.115px] pt-[3.125px] px-2.5 relative rounded shrink-0 hover:bg-[rgba(0,0,0,0.6)] transition-colors cursor-pointer">
+              <div className="basis-0 box-border content-stretch flex flex-col grow items-end justify-end min-h-px min-w-px p-0 relative shrink-0">
+                <div className="bg-[rgba(0,0,0,0.5)] box-border content-stretch flex flex-row gap-[1.99px] items-center justify-center pb-[3.115px] pt-[3.125px] px-2.5 relative rounded shrink-0 hover:bg-[rgba(0,0,0,0.6)] transition-colors cursor-pointer">
                   <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ff9500] text-[13.453px] text-left text-nowrap">
-                    <p className="block leading-[22px] whitespace-pre">{`Story Creation Guide `}</p>
+                    <p className="block leading-[22px] whitespace-pre">{t('create.storyCreationGuide')}</p>
                   </div>
                   <div className="relative shrink-0 size-[13.99px]">
                     <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
@@ -258,66 +258,62 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
                       {/* Content Tab */}
                       <button
                         onClick={() => setActiveTab('content')}
-                        className="box-border content-stretch flex flex-row h-full items-center justify-start px-0 py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[70px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                       >
-                        <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0">
-                          <div className={`flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-left text-nowrap ${
+                        <div className="box-border content-stretch flex flex-col items-center justify-center p-0 relative shrink-0">
+                          <div className={`flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-center text-nowrap ${
                             activeTab === 'content'
                               ? '[text-shadow:#dc5903_0px_0px_0.25px] text-[#dc5903]' 
                               : 'text-[rgba(255,255,255,0.85)]'
                           }`}>
-                            <p className="block leading-[22px] whitespace-pre">Content</p>
+                            <p className="block leading-[22px] whitespace-pre">{t('create.content')}</p>
                           </div>
                         </div>
                       </button>
 
                       {/* Start Situation Tab */}
-                      <div className="box-border content-stretch flex flex-col h-full items-start justify-center pl-8 pr-0 py-0 relative shrink-0">
-                        <button
-                          onClick={() => setActiveTab('start-situation')}
-                          className="basis-0 box-border content-stretch flex flex-row grow items-center justify-start min-h-px min-w-px px-0 py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
-                        >
-                          <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0">
-                            <div className={`flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-left text-nowrap ${
-                              activeTab === 'start-situation' 
-                                ? '[text-shadow:#dc5903_0px_0px_0.25px] text-[#dc5903]' 
-                                : 'text-[rgba(255,255,255,0.85)]'
-                            }`}>
-                              <p className="block leading-[22px] whitespace-pre">Start Situation</p>
-                            </div>
+                      <button
+                        onClick={() => setActiveTab('start-situation')}
+                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[90px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                      >
+                        <div className="box-border content-stretch flex flex-col items-center justify-center p-0 relative shrink-0">
+                          <div className={`flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-center text-nowrap ${
+                            activeTab === 'start-situation' 
+                              ? '[text-shadow:#dc5903_0px_0px_0.25px] text-[#dc5903]' 
+                              : 'text-[rgba(255,255,255,0.85)]'
+                          }`}>
+                            <p className="block leading-[22px] whitespace-pre">{t('create.startSituation')}</p>
                           </div>
-                        </button>
-                      </div>
+                        </div>
+                      </button>
 
                       {/* Introduction Tab */}
-                      <div className="box-border content-stretch flex flex-col h-full items-start justify-center pl-8 pr-0 py-0 relative shrink-0">
-                        <button
-                          onClick={() => setActiveTab('introduction')}
-                          className="basis-0 box-border content-stretch flex flex-row grow items-center justify-start min-h-px min-w-px px-0 py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
-                        >
-                          <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0">
-                            <div className={`flex flex-col font-['Inter:Medium','Noto_Sans_KR:Regular',sans-serif] ${
-                              activeTab === 'introduction' ? 'font-medium' : 'font-normal'
-                            } justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-left text-nowrap ${
-                              activeTab === 'introduction' 
-                                ? '[text-shadow:#dc5903_0px_0px_0.25px] text-[#dc5903]' 
-                                : 'text-[rgba(255,255,255,0.85)]'
-                            }`}>
-                              <p className="block leading-[22px] whitespace-pre">Introduction</p>
-                            </div>
+                      <button
+                        onClick={() => setActiveTab('introduction')}
+                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[70px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                      >
+                        <div className="box-border content-stretch flex flex-col items-center justify-center p-0 relative shrink-0">
+                          <div className={`flex flex-col font-['Inter:Medium','Noto_Sans_KR:Regular',sans-serif] ${
+                            activeTab === 'introduction' ? 'font-medium' : 'font-normal'
+                          } justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-center text-nowrap ${
+                            activeTab === 'introduction' 
+                              ? '[text-shadow:#dc5903_0px_0px_0.25px] text-[#dc5903]' 
+                              : 'text-[rgba(255,255,255,0.85)]'
+                          }`}>
+                            <p className="block leading-[22px] whitespace-pre">{t('create.introduction')}</p>
                           </div>
-                        </button>
-                      </div>
+                        </div>
+                      </button>
 
                       {/* Active Tab Indicator - Mobile Optimized */}
                       {activeTab === 'content' && (
-                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[0px] w-[50px]" />
+                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[15px] w-[40px]" />
                       )}
                       {activeTab === 'start-situation' && (
-                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[82px] w-[85px]" />
+                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[85px] w-[60px]" />
                       )}
                       {activeTab === 'introduction' && (
-                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[199px] w-[70px]" />
+                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[175px] w-[40px]" />
                       )}
                     </div>
                   </div>
@@ -433,12 +429,12 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.234px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[24.4px]">
-                  <p className="block leading-[22px]">Title</p>
+                  <p className="block leading-[22px]">{t('create.title')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Enter the story title.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.titleDesc')}</p>
                 </div>
               </div>
             </div>
@@ -458,7 +454,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                         type="text"
                         value={formData.title}
                         onChange={(e) => onInputChange('title', e.target.value)}
-                        placeholder="e.g. Childhood friend Yuna"
+                        placeholder={t('create.titlePlaceholder')}
                         maxLength={32}
                         className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] bg-transparent border-0 outline-none text-left w-full placeholder:text-[rgba(255,255,255,0.25)] focus:ring-0 focus:border-0"
                       />
@@ -491,13 +487,13 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[80px]">
-                  <p className="block leading-[22px]">{t('storyDetail.storySettingsLabel')}</p>
+                  <p className="block leading-[22px]">{t('create.storySettings')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
-                  <p className="block mb-0">Describe the story's world, relationships, etc.</p>
-                  <p className="block">{`Use {{user}} to replace with the chatting user's name.`}</p>
+                  <p className="block mb-0">{t('create.storySettingsDesc')}</p>
+                  <p className="block">{`{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.`}</p>
                 </div>
               </div>
             </div>
@@ -517,7 +513,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                         <textarea
                           value={formData.storySettings}
                           onChange={(e) => onInputChange('storySettings', e.target.value)}
-                          placeholder={`e.g. Yuna / 18 years old\n- Height: 165cm, Weight: 45kg\n- Since becoming a high school student, Yuna has become delinquent by hanging out with troublemaker friends.\n- She grew distant from {{user}}, her childhood friend who moved away when they were young.`}
+                          placeholder={t('create.storySettingsPlaceholder')}
                           maxLength={2000}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.016px] leading-[21px] focus:ring-0"
                         />
@@ -544,12 +540,12 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                  <p className="block leading-[22px] whitespace-pre">Secret Settings</p>
+                  <p className="block leading-[22px] whitespace-pre">{t('create.secretSettings')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.063px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Settings not exposed to users, delivered to the generation AI.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.secretSettingsDesc')}</p>
                 </div>
               </div>
             </div>
@@ -569,7 +565,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                         <textarea
                           value={formData.secretSettings}
                           onChange={(e) => onInputChange('secretSettings', e.target.value)}
-                          placeholder={`e.g. Yuna used to like {{user}}, her childhood friend.`}
+                          placeholder={t('create.secretSettingsPlaceholder')}
                           maxLength={500}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.125px] leading-[21px] focus:ring-0"
                         />
@@ -610,12 +606,12 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[80px]">
-                  <p className="block leading-[22px]">{t('storyDetail.characterNameLabel')}</p>
+                  <p className="block leading-[22px]">{t('create.characterName')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Enter the character's name.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">캐릭터의 이름을 입력하세요.</p>
                 </div>
               </div>
             </div>
@@ -635,7 +631,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                         type="text"
                         value={formData.characterName}
                         onChange={(e) => onInputChange('characterName', e.target.value)}
-                        placeholder="e.g. Yuna"
+                        placeholder={t('create.characterNamePlaceholder')}
                         maxLength={20}
                         className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] bg-transparent border-0 outline-none text-left w-full placeholder:text-[rgba(255,255,255,0.25)] focus:ring-0 focus:border-0"
                       />
@@ -668,13 +664,13 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                   <p className="block leading-[22px]">*</p>
                 </div>
                 <div className="absolute flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal h-[22px] justify-center left-[9.19px] text-[13.125px] text-[rgba(255,255,255,0.85)] top-[10.63px] translate-y-[-50%] w-[100px]">
-                  <p className="block leading-[22px]">{t('storyDetail.characterDescriptionLabel')}</p>
+                  <p className="block leading-[22px]">{t('create.characterDescription')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
-                  <p className="block mb-0">Describe the character's appearance, personality, etc.</p>
-                  <p className="block">{`Use {{user}} to replace with the chatting user's name.`}</p>
+                  <p className="block mb-0">{t('create.characterDescriptionDesc')}</p>
+                  <p className="block">{`{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.`}</p>
                 </div>
               </div>
             </div>
@@ -694,7 +690,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
                         <textarea
                           value={formData.characterDescription}
                           onChange={(e) => onInputChange('characterDescription', e.target.value)}
-                          placeholder={`e.g. 18 years old, 165cm/47kg\n- Long black hair, bright eyes\n- Wears school uniform neatly\n- Cheerful personality but has a stubborn side\n- Lost contact with {{user}} since childhood`}
+                          placeholder={t('create.characterDescriptionPlaceholder')}
                           maxLength={1500}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.016px] leading-[21px] focus:ring-0"
                         />
@@ -834,12 +830,12 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="flex items-center gap-2">
                 <span className="text-[#ff4d4f] text-[14px]">*</span>
-                <span className="text-[13.125px] text-[rgba(255,255,255,0.85)] font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif]">Starting Situation</span>
+                <span className="text-[13.125px] text-[rgba(255,255,255,0.85)] font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif]">{t('create.startingSituation')}</span>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
-                  <p className="block mb-0">Describe the initial situation when the story begins.</p>
-                  <p className="block">{`Use {{user}} to replace with the chatting user's name.`}</p>
+                  <p className="block mb-0">{t('create.startingSituationDesc')}</p>
+                  <p className="block">{`{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.`}</p>
                 </div>
               </div>
             </div>
@@ -859,7 +855,7 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
                         <textarea
                           value={formData.startingSituation}
                           onChange={(e) => onInputChange('startingSituation', e.target.value)}
-                          placeholder={`e.g. {{user}} runs into Yuna at a crowded subway station during rush hour. It's been 5 years since they last met, and Yuna looks completely different - more mature, with a distant expression. The awkward silence stretches between them as commuters rush past.`}
+                          placeholder={t('create.startingSituationPlaceholder')}
                           maxLength={1000}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.016px] leading-[21px] focus:ring-0"
                         />
@@ -890,12 +886,12 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                  <p className="block leading-[22px] whitespace-pre">Character's First Line</p>
+                  <p className="block leading-[22px] whitespace-pre">{t('create.firstDialogue')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.063px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">The character's first words to start the conversation.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.firstDialogueDesc')}</p>
                 </div>
               </div>
             </div>
@@ -915,7 +911,7 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
                         <textarea
                           value={formData.firstDialogue}
                           onChange={(e) => onInputChange('firstDialogue', e.target.value)}
-                          placeholder={`e.g. "{{user}}? Is that really you? I can't believe we're running into each other here..."`}
+                          placeholder={t('create.firstDialoguePlaceholder')}
                           maxLength={300}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.125px] leading-[21px] focus:ring-0"
                         />
@@ -966,12 +962,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.98px] pt-0 px-0 relative shrink-0">
               <div className="flex items-center gap-2">
                 <span className="text-[#ff4d4f] text-[14px]">*</span>
-                <span className="text-[13.125px] text-[rgba(255,255,255,0.85)] font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif]">Introduction</span>
+                <span className="text-[13.125px] text-[rgba(255,255,255,0.85)] font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif]">{t('create.introduction')}</span>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
-                  <p className="block mb-0">Write an introduction for users browsing stories.</p>
-                  <p className="block">This will be shown as a preview to attract readers.</p>
+                  <p className="block mb-0">{t('create.introductionDesc')}</p>
+                  <p className="block">독자들의 관심을 끌기 위한 미리보기로 표시됩니다.</p>
                 </div>
               </div>
             </div>
@@ -991,7 +987,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                         <textarea
                           value={formData.introduction}
                           onChange={(e) => onInputChange('introduction', e.target.value)}
-                          placeholder={`e.g. A chance encounter with your childhood friend Yuna after years of separation. She's changed so much - can you reconnect with the person you once knew so well?`}
+                          placeholder={t('create.introductionPlaceholder')}
                           maxLength={500}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.016px] leading-[21px] focus:ring-0"
                         />
@@ -1022,12 +1018,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                  <p className="block leading-[22px] whitespace-pre">Tags</p>
+                  <p className="block leading-[22px] whitespace-pre">{t('create.tags')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.063px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Add tags to help users find your story (up to 5 tags).</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.tagsDesc')}</p>
                 </div>
               </div>
             </div>
@@ -1060,7 +1056,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                     <div className="box-border content-stretch flex flex-col items-start justify-start overflow-clip p-0 relative shrink-0 w-full">
                       <input
                         type="text"
-                        placeholder="Enter tag and press Enter (e.g. Romance, School, Friendship)"
+                        placeholder="태그를 입력하고 엔터를 누르세요 (예: 로맨스, 학교, 우정)"
                         maxLength={20}
                         className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] bg-transparent border-0 outline-none text-left w-full placeholder:text-[rgba(255,255,255,0.25)] focus:ring-0 focus:border-0"
                         onKeyDown={(e) => {
@@ -1082,9 +1078,9 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
 
         {/* Popular Tags */}
         <div className="mt-3">
-          <p className="text-[rgba(255,255,255,0.5)] text-[11px] mb-2">Popular tags:</p>
+          <p className="text-[rgba(255,255,255,0.5)] text-[11px] mb-2">인기 태그:</p>
           <div className="flex flex-wrap gap-2">
-            {['Romance', 'School', 'Friendship', 'Drama', 'Comedy', 'Fantasy', 'Mystery', 'Slice of Life'].map((tag) => (
+            {['로맨스', '학교', '우정', '드라마', '코미디', '판타지', '미스터리', '일상'].map((tag) => (
               <button
                 key={tag}
                 onClick={() => addTag(tag)}
@@ -1109,12 +1105,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                  <p className="block leading-[22px] whitespace-pre">Visibility Settings</p>
+                  <p className="block leading-[22px] whitespace-pre">{t('create.visibilitySettings')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.063px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Choose who can see and interact with your story.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.visibilitySettingsDesc')}</p>
                 </div>
               </div>
             </div>
@@ -1134,7 +1130,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
               className="w-4 h-4 text-[#dc5903] bg-[#141414] border-[#424242] focus:ring-[#dc5903] focus:ring-2"
             />
             <label htmlFor="public" className="text-[rgba(255,255,255,0.85)] text-[13px]">
-              Public - Anyone can see and chat with this story
+{t('create.public')} - {t('create.publicDesc')}
             </label>
           </div>
           <div className="flex items-center space-x-3">
@@ -1148,7 +1144,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
               className="w-4 h-4 text-[#dc5903] bg-[#141414] border-[#424242] focus:ring-[#dc5903] focus:ring-2"
             />
             <label htmlFor="private" className="text-[rgba(255,255,255,0.85)] text-[13px]">
-              Private - Only I can access this story
+{t('create.private')} - {t('create.privateDesc')}
             </label>
           </div>
         </div>
@@ -1165,12 +1161,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                  <p className="block leading-[22px] whitespace-pre">Content Rating</p>
+                  <p className="block leading-[22px] whitespace-pre">{t('create.contentRating')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.063px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Set the appropriate content rating for your story.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.contentRatingDesc')}</p>
                 </div>
               </div>
             </div>
@@ -1190,7 +1186,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
               className="w-4 h-4 text-[#dc5903] bg-[#141414] border-[#424242] focus:ring-[#dc5903] focus:ring-2"
             />
             <label htmlFor="all-users" className="text-[rgba(255,255,255,0.85)] text-[13px]">
-              All Ages - Suitable for everyone
+{t('create.allUsers')} - {t('create.allUsersDesc')}
             </label>
           </div>
           <div className="flex items-center space-x-3">
@@ -1204,7 +1200,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
               className="w-4 h-4 text-[#dc5903] bg-[#141414] border-[#424242] focus:ring-[#dc5903] focus:ring-2"
             />
             <label htmlFor="mature" className="text-[rgba(255,255,255,0.85)] text-[13px]">
-              Mature (18+) - Contains adult themes
+{t('create.mature')} - {t('create.matureDesc')}
             </label>
           </div>
         </div>
@@ -1221,12 +1217,12 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
             <div className="box-border content-stretch flex flex-col gap-1 items-start justify-start pb-[3.99px] pt-0 px-0 relative shrink-0">
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] text-left text-nowrap">
-                  <p className="block leading-[22px] whitespace-pre">Creator's Note</p>
+                  <p className="block leading-[22px] whitespace-pre">{t('create.creatorNote')}</p>
                 </div>
               </div>
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[11.063px] text-[rgba(255,255,255,0.5)] text-left text-nowrap">
-                  <p className="block leading-[14.4px] whitespace-pre">Optional message to readers about your story.</p>
+                  <p className="block leading-[14.4px] whitespace-pre">{t('create.creatorNoteDesc')}</p>
                 </div>
               </div>
             </div>
@@ -1246,7 +1242,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                         <textarea
                           value={formData.creatorComment}
                           onChange={(e) => onInputChange('creatorComment', e.target.value)}
-                          placeholder={`e.g. I hope you enjoy reconnecting with old friends through this story. Feel free to share your thoughts!`}
+                          placeholder={t('create.creatorNotePlaceholder')}
                           maxLength={200}
                           className="w-full h-full bg-transparent border-0 outline-none resize-none text-[rgba(255,255,255,0.85)] placeholder:text-[rgba(255,255,255,0.25)] text-[13.125px] leading-[21px] focus:ring-0"
                         />
