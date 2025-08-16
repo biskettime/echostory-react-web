@@ -1050,7 +1050,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                     <div className="box-border content-stretch flex flex-col items-start justify-start overflow-clip p-0 relative shrink-0 w-full">
                       <input
                         type="text"
-                        placeholder="Enter tag and press Enter (e.g. Romance, School, Friendship)"
+                        placeholder={t('create.tagInputPlaceholder')}
                         maxLength={20}
                         className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] bg-transparent border-0 outline-none text-left w-full placeholder:text-[rgba(255,255,255,0.25)] focus:ring-0 focus:border-0"
                         onKeyDown={(e) => {
@@ -1072,9 +1072,18 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
 
         {/* Popular Tags */}
         <div className="mt-3">
-          <p className="text-[rgba(255,255,255,0.5)] text-[11px] mb-2">Popular tags:</p>
+          <p className="text-[rgba(255,255,255,0.5)] text-[11px] mb-2">{t('create.popularTags')}</p>
           <div className="flex flex-wrap gap-2">
-            {['Romance', 'School', 'Friendship', 'Drama', 'Comedy', 'Fantasy', 'Mystery', 'Slice of Life'].map((tag) => (
+            {[
+              t('create.tagRomance'), 
+              t('create.tagSchool'), 
+              t('create.tagFriendship'), 
+              t('create.tagDrama'), 
+              t('create.tagComedy'), 
+              t('create.tagFantasy'), 
+              t('create.tagMystery'), 
+              t('create.tagSliceOfLife')
+            ].map((tag) => (
               <button
                 key={tag}
                 onClick={() => addTag(tag)}

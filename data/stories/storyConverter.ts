@@ -1,5 +1,6 @@
 import { CreatedStoryData, StoryDraft } from './types';
 import { createStory, updateStory, saveDraft } from './storyDatabase';
+import { t } from '../../utils/i18n';
 
 // StoryCreationScreen의 formData 타입 (기존 컴포넌트와 호환)
 export interface StoryFormData {
@@ -71,7 +72,7 @@ export function convertFormDataToStoryData(
   const estimatedPlayTime = calculatePlayTime(formData);
 
   return {
-    title: formData.title || '제목 없음',
+    title: formData.title || t('create.untitledStory'),
     creatorId,
     creatorHandle,
     
@@ -317,7 +318,7 @@ export async function saveStoryDraft(
     const progress = calculateProgress(formData);
     
     const draft: Omit<StoryDraft, 'id' | 'lastSaved'> = {
-      title: formData.title || '제목 없는 초안',
+      title: formData.title || t('create.untitledDraft'),
       updatedAt: new Date().toISOString(),
       progress,
       data: {

@@ -224,11 +224,11 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
             {/* Story Creation Guide Link */}
             <div className="box-border content-stretch flex flex-row items-start justify-center p-0 relative shrink-0 w-full">
               <div className="basis-0 box-border content-stretch flex flex-col grow items-end justify-end min-h-px min-w-px p-0 relative shrink-0">
-                <div className="bg-[rgba(0,0,0,0.5)] box-border content-stretch flex flex-row gap-[1.99px] items-center justify-center pb-[3.115px] pt-[3.125px] px-2.5 relative rounded shrink-0 hover:bg-[rgba(0,0,0,0.6)] transition-colors cursor-pointer">
-                  <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ff9500] text-[13.453px] text-left text-nowrap">
-                    <p className="block leading-[22px] whitespace-pre">{t('create.storyCreationGuide')}</p>
+                <div className="bg-[rgba(0,0,0,0.5)] box-border content-stretch flex flex-row gap-[1.6px] items-center justify-center pb-[2.5px] pt-[2.5px] px-2 relative rounded shrink-0 hover:bg-[rgba(0,0,0,0.6)] transition-colors cursor-pointer">
+                  <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#ff9500] text-[10.8px] text-left text-nowrap">
+                    <p className="block leading-[17.6px] whitespace-pre">{t('create.storyCreationGuide')}</p>
                   </div>
-                  <div className="relative shrink-0 size-[13.99px]">
+                  <div className="relative shrink-0 size-[11.2px]">
                     <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
                       <path
                         clipRule="evenodd"
@@ -258,7 +258,7 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
                       {/* Content Tab */}
                       <button
                         onClick={() => setActiveTab('content')}
-                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[70px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[80px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                       >
                         <div className="box-border content-stretch flex flex-col items-center justify-center p-0 relative shrink-0">
                           <div className={`flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.234px] text-center text-nowrap ${
@@ -274,7 +274,7 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
                       {/* Start Situation Tab */}
                       <button
                         onClick={() => setActiveTab('start-situation')}
-                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[90px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[110px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                       >
                         <div className="box-border content-stretch flex flex-col items-center justify-center p-0 relative shrink-0">
                           <div className={`flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-center text-nowrap ${
@@ -290,7 +290,7 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
                       {/* Introduction Tab */}
                       <button
                         onClick={() => setActiveTab('introduction')}
-                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[70px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        className="box-border content-stretch flex flex-row h-full items-center justify-center w-[100px] py-3 relative shrink-0 hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                       >
                         <div className="box-border content-stretch flex flex-col items-center justify-center p-0 relative shrink-0">
                           <div className={`flex flex-col font-['Inter:Medium','Noto_Sans_KR:Regular',sans-serif] ${
@@ -307,13 +307,13 @@ export function StoryCreationScreen({ onBack, onSave, safetyMode, onSafetyToggle
 
                       {/* Active Tab Indicator - Mobile Optimized */}
                       {activeTab === 'content' && (
-                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[15px] w-[40px]" />
+                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[20px] w-[40px]" />
                       )}
                       {activeTab === 'start-situation' && (
-                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[85px] w-[60px]" />
+                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[105px] w-[70px]" />
                       )}
                       {activeTab === 'introduction' && (
-                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[175px] w-[40px]" />
+                        <div className="absolute bg-[#dc5903] bottom-[0.01px] h-[1.99px] left-[215px] w-[60px]" />
                       )}
                     </div>
                   </div>
@@ -493,7 +493,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
                   <p className="block mb-0">{t('create.storySettingsDesc')}</p>
-                  <p className="block">{`{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.`}</p>
+                  <p className="block">{t('create.userPlaceholderDesc')}</p>
                 </div>
               </div>
             </div>
@@ -670,7 +670,7 @@ function ContentTabPanel({ formData, onInputChange, getCharCount }: TabPanelProp
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
                   <p className="block mb-0">{t('create.characterDescriptionDesc')}</p>
-                  <p className="block">{`{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.`}</p>
+                  <p className="block">{t('create.userPlaceholderDesc')}</p>
                 </div>
               </div>
             </div>
@@ -835,7 +835,7 @@ function StartSituationTabPanel({ formData, onInputChange, getCharCount }: TabPa
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
                   <p className="block mb-0">{t('create.startingSituationDesc')}</p>
-                  <p className="block">{`{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.`}</p>
+                  <p className="block">{t('create.userPlaceholderDesc')}</p>
                 </div>
               </div>
             </div>
@@ -967,7 +967,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
               <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
                 <div className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[14.4px] not-italic relative shrink-0 text-[11.25px] text-[rgba(255,255,255,0.5)] text-left text-nowrap whitespace-pre">
                   <p className="block mb-0">{t('create.introductionDesc')}</p>
-                  <p className="block">독자들의 관심을 끌기 위한 미리보기로 표시됩니다.</p>
+                  <p className="block">{t('create.introductionPreviewDesc')}</p>
                 </div>
               </div>
             </div>
@@ -1056,7 +1056,7 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
                     <div className="box-border content-stretch flex flex-col items-start justify-start overflow-clip p-0 relative shrink-0 w-full">
                       <input
                         type="text"
-                        placeholder="태그를 입력하고 엔터를 누르세요 (예: 로맨스, 학교, 우정)"
+                        placeholder={t('create.tagInputPlaceholder')}
                         maxLength={20}
                         className="flex flex-col font-['Inter:Regular','Noto_Sans_KR:Regular',sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[13.125px] text-[rgba(255,255,255,0.85)] bg-transparent border-0 outline-none text-left w-full placeholder:text-[rgba(255,255,255,0.25)] focus:ring-0 focus:border-0"
                         onKeyDown={(e) => {
@@ -1078,9 +1078,18 @@ function IntroductionTabPanel({ formData, onInputChange, getCharCount }: TabPane
 
         {/* Popular Tags */}
         <div className="mt-3">
-          <p className="text-[rgba(255,255,255,0.5)] text-[11px] mb-2">인기 태그:</p>
+          <p className="text-[rgba(255,255,255,0.5)] text-[11px] mb-2">{t('create.popularTags')}</p>
           <div className="flex flex-wrap gap-2">
-            {['로맨스', '학교', '우정', '드라마', '코미디', '판타지', '미스터리', '일상'].map((tag) => (
+            {[
+              t('create.tagRomance'), 
+              t('create.tagSchool'), 
+              t('create.tagFriendship'), 
+              t('create.tagDrama'), 
+              t('create.tagComedy'), 
+              t('create.tagFantasy'), 
+              t('create.tagMystery'), 
+              t('create.tagSliceOfLife')
+            ].map((tag) => (
               <button
                 key={tag}
                 onClick={() => addTag(tag)}

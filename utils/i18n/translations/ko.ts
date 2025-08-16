@@ -19,6 +19,28 @@ export const ko = {
     newStories: '새로운 스토리'
   },
 
+  // Popular Tags
+  tags: {
+    female: '#여성',
+    male: '#남성',
+    romance: '#로맨스',
+    fantasy: '#판타지',
+    seduction: '#유혹',
+    older: '#연상',
+    academy: '#학원',
+    daily: '#일상',
+    highSchool: '#고등학교',
+    office: '#직장',
+    delinquent: '#불량',
+    younger: '#연하',
+    school: '#학교',
+    tutoring: '#과외',
+    childhoodFriend: '#소꿉친구',
+    student: '#학생',
+    royal: '#왕족',
+    wealthy: '#부유'
+  },
+
   // Chat Screen
   chat: {
     info: '정보',
@@ -232,7 +254,21 @@ export const ko = {
     matureDesc: '성인 주제 포함',
     creatorNote: '제작자 노트',
     creatorNoteDesc: '스토리에 대한 선택적 메시지를 독자들에게 남기세요.',
-    creatorNotePlaceholder: '예: 오래된 친구들과의 재연결을 통해 이 스토리를 즐기시길 바랍니다. 여러분의 생각을 자유롭게 공유해 주세요!'
+    creatorNotePlaceholder: '예: 오래된 친구들과의 재연결을 통해 이 스토리를 즐기시길 바랍니다. 여러분의 생각을 자유롭게 공유해 주세요!',
+    userPlaceholderDesc: '{{user}}를 사용하여 채팅 유저의 이름으로 대체하세요.',
+    introductionPreviewDesc: '독자들의 관심을 끌기 위한 미리보기로 표시됩니다.',
+    tagInputPlaceholder: '태그를 입력하고 엔터를 누르세요 (예: 로맨스, 학교, 우정)',
+    popularTags: '인기 태그:',
+    tagRomance: '로맨스',
+    tagSchool: '학교',
+    tagFriendship: '우정',
+    tagDrama: '드라마',
+    tagComedy: '코미디',
+    tagFantasy: '판타지',
+    tagMystery: '미스터리',
+    tagSliceOfLife: '일상',
+    untitledDraft: '제목 없는 초안',
+    untitledStory: '제목 없음'
   },
 
   // Image Generation

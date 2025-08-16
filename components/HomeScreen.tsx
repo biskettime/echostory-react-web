@@ -136,9 +136,9 @@ export function HomeScreen({ onStorySelect, safetyMode, onSafetyToggle, onNaviga
 
   // Popular tags
   const popularTags = [
-    "#Female", "#Male", "#Romance", "#Fantasy", "#Seduction", "#Older",
-    "#Academy", "#Daily", "#HighSchool", "#Office", "#Delinquent", "#Younger",
-    "#School", "#Tutoring", "#ChildhoodFriend", "#Student", "#Royal", "#Wealthy"
+    t('tags.female'), t('tags.male'), t('tags.romance'), t('tags.fantasy'), t('tags.seduction'), t('tags.older'),
+    t('tags.academy'), t('tags.daily'), t('tags.highSchool'), t('tags.office'), t('tags.delinquent'), t('tags.younger'),
+    t('tags.school'), t('tags.tutoring'), t('tags.childhoodFriend'), t('tags.student'), t('tags.royal'), t('tags.wealthy')
   ];
 
   // Carousel logic for popular stories
