@@ -1070,8 +1070,15 @@ Remember: {{char}} is a living character with desires, fears, and autonomous age
     };
 
     try {
-      // Use Vite proxy to reach the proxy server
-      const response = await fetch('/api/proxy/api/chat', {
+      // Check if running on Vercel
+      const isVercel = window.location.hostname.includes('vercel.app') || import.meta.env.VITE_USE_VERCEL === 'true';
+      
+      // Use different endpoints for Vercel vs local
+      const chatEndpoint = isVercel ? '/api/proxy/chat' : '/api/proxy/api/chat';
+      
+      console.log(`📍 Using endpoint: ${chatEndpoint} (Vercel: ${isVercel})`);
+      
+      const response = await fetch(chatEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -1105,26 +1112,26 @@ Remember: {{char}} is a living character with desires, fears, and autonomous age
    */
   public async checkConnectionStatus(): Promise<'connected' | 'disconnected' | 'error'> {
     try {
-      const response = await fetch('/api/proxy/health', {
-        method: 'GET',
-        signal: AbortSignal.timeout(5000) // 5 second timeout
+      // Check if running on Vercel
+      const isVercel = window.location.hostname.includes('vercel.app') || import.meta.env.VITE_USE_VERCEL === 'true';
+      
+      // Use different endpoints for Vercel vs local
+      const testEndpoint = isVercel ? '/api/proxy/test' : '/api/proxy/api/test';
+      
+      // Try a simple test message
+      const testResponse = await fetch(testEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        signal: AbortSignal.timeout(10000) // 10 second timeout
       });
       
-      if (response.ok) {
-        // Try a simple test message
-        const testResponse = await fetch('/api/proxy/api/test', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          signal: AbortSignal.timeout(10000) // 10 second timeout
-        });
-        
-        if (testResponse.ok) {
-          const data = await testResponse.json();
-          return data.success ? 'connected' : 'error';
-        }
+      if (testResponse.ok) {
+        const data = await testResponse.json();
+        return data.success ? 'connected' : 'error';
       }
+      
       return 'disconnected';
     } catch (error) {
       console.error('Connection check failed:', error);
