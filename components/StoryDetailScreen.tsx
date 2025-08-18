@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Heart, Bookmark } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { getStory, initializeSampleStories, getCreatorById, updateStory } from '../data/stories';
 import { ProfileCreationModal } from './ProfileCreationModal';
 import { StoryEditModal } from './StoryEditModal';
@@ -748,8 +749,22 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
 
 
   return (
-    <div className="bg-[#1a1b1b] relative overflow-hidden">
-      <div className="mobile-container mx-auto h-full relative">
+    <>
+      <Helmet>
+        <title>EchoStory — {translateCharacterName(story.content.characterName, language)}</title>
+        <meta 
+          name="description" 
+          content={`Chat with ${translateCharacterName(story.content.characterName, language)} in ${translateStoryTitle(story.title, language)}. ${translateStoryDescription(story.content.characterDescription, language)}`} 
+        />
+        <meta property="og:title" content={`EchoStory — ${translateCharacterName(story.content.characterName, language)}`} />
+        <meta property="og:description" content={translateStoryDescription(story.content.characterDescription, language)} />
+        <meta property="og:image" content={characterImageSrc || '/icon.png'} />
+        <meta name="twitter:title" content={`EchoStory — ${translateCharacterName(story.content.characterName, language)}`} />
+        <meta name="twitter:description" content={translateStoryDescription(story.content.characterDescription, language)} />
+        <meta name="twitter:image" content={characterImageSrc || '/icon.png'} />
+      </Helmet>
+      <div className="bg-[#1a1b1b] relative overflow-hidden">
+        <div className="mobile-container mx-auto h-full relative">
         
         {/* Fixed Header */}
         <div className="relative bg-[#1a1b1b] h-10 w-full z-30 flex-shrink-0 border-b border-[rgba(66,66,66,1)] sticky top-0">
@@ -1500,7 +1515,8 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
             onFollowChange={onFollowChange}
           />
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { getStory, getPublishedStories, initializeSampleStories } from '../data/stories';
 import { getOrCreateChatSession, addChatMessage, markChatAsRead, ChatSession } from '../data/chatSessions';
 import { TypingAnimation } from './TypingAnimation';
@@ -1522,7 +1523,19 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
   }
 
   return (
-    <div className="bg-[#000000] relative w-full min-h-screen flex flex-col overflow-hidden">
+    <>
+      <Helmet>
+        <title>EchoStory — Chat with {translateCharacterName(characterName, language)}</title>
+        <meta 
+          name="description" 
+          content={`Chatting with ${translateCharacterName(characterName, language)} in ${translateStoryTitle(story.title, language)}. An immersive AI-powered story experience.`} 
+        />
+        <meta property="og:title" content={`EchoStory — Chat with ${translateCharacterName(characterName, language)}`} />
+        <meta property="og:description" content={`Live conversation with ${translateCharacterName(characterName, language)}`} />
+        <meta name="twitter:title" content={`EchoStory — Chat with ${translateCharacterName(characterName, language)}`} />
+        <meta name="twitter:description" content={`Live conversation with ${translateCharacterName(characterName, language)}`} />
+      </Helmet>
+      <div className="bg-[#000000] relative w-full min-h-screen flex flex-col overflow-hidden">
       {/* Background Image Container - 65% of screen height */}
       <div className="absolute left-0 right-0 top-0 w-full h-[65vh] z-0">
         <div className="relative w-full h-full">
@@ -2158,6 +2171,7 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
           }}
         />
       )}
-    </div>
+      </div>
+    </>
   );
 }
