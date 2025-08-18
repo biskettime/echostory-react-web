@@ -1522,6 +1522,8 @@ export function ChatScreen({ storyId, onBack, onHome, nickname }: ChatScreenProp
     );
   }
 
+  const language = getCurrentLanguage();
+  
   return (
     <>
       <Helmet>

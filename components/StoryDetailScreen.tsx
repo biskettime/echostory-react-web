@@ -748,6 +748,8 @@ export function StoryDetailScreen({ storyId, onBack, onStartChat, safetyMode, on
 
 
 
+  const language = getCurrentLanguage();
+  
   return (
     <>
       <Helmet>
