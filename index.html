@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>EchoStory</title>
+    <style>
+      #root {
+        overflow: auto !important;
+        height: 100vh;
+        width: 100vw;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      #root::-webkit-scrollbar {
+        display: none !important;
+      }
+      html, body {
+        overflow: auto !important;
+        touch-action: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Browser TTS only - ResponsiveVoice removed due to 502 errors -->
+    <script type="module" src="/main.tsx"></script>
+  </body>
+</html>
